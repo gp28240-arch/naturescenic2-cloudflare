@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>naturescenic2-ai | دیلگون کهگیلویه و بویراحمد / Dilgon Zagros AI</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        header {
+            background-color: #1e293b;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid #334155;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .logo-img {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #38bdf8;
+        }
+        .header-titles h1 {
+            font-size: 1.3rem;
+            color: #38bdf8;
+            margin-bottom: 2px;
+        }
+        .header-titles p {
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+        .youtube-btn {
+            background-color: #ff0000;
+            color: #ffffff;
+            padding: 10px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        .youtube-btn:hover {
+            background-color: #cc0000;
+        }
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        .sidebar {
+            width: 320px;
+            background-color: #1e293b;
+            padding: 15px;
+            border-left: 1px solid #334155;
+            overflow-y: auto;
+        }
+        .sidebar h2 {
+            font-size: 0.95rem;
+            margin-bottom: 2px;
+            color: #4ade80;
+        }
+        .sidebar .sub-head {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-bottom: 12px;
+        }
+        .reference-card {
+            background-color: #334155;
+            border-radius: 8px;
+            padding: 8px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
+            border: 1px solid transparent;
+        }
+        .reference-card:hover {
+            transform: scale(1.02);
+            border-color: #38bdf8;
+        }
+        .reference-card img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 6px;
+            background-color: #0f172a;
+        }
+        .reference-card p {
+            font-size: 0.85rem;
+            margin-top: 6px;
+            text-align: center;
+            color: #f1f5f9;
+            font-weight: 500;
+        }
+        .reference-card span {
+            display: block;
+            font-size: 0.75rem;
+            color: #cbd5e1;
+            text-align: center;
+        }
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #0f172a;
+        }
+        .messages-box {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            line-height: 1.5;
+            font-size: 0.95rem;
+            white-space: pre-wrap;
+        }
+        .user-message {
+            background-color: #0284c7;
+            align-self: flex-start;
+            border-bottom-right-radius: 2px;
+        }
+        .ai-message {
+            background-color: #334155;
+            align-self: flex-end;
+            border-bottom-left-radius: 2px;
+        }
+        .generated-img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-top: 10px;
+            border: 1px solid #475569;
+            display: block;
+            cursor: pointer;
+        }
+        .img-link-btn {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 6px 12px;
+            background-color: #38bdf8;
+            color: #0f172a;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.8rem;
+            border-radius: 6px;
+        }
+        .input-area {
+            padding: 15px;
+            background-color: #1e293b;
+            display: flex;
+            gap: 10px;
+            border-top: 1px solid #334155;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #475569;
+            background-color: #0f172a;
+            color: #fff;
+            outline: none;
+            font-size: 0.95rem;
+        }
+        .send-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            background-color: #10b981;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            white-space: nowrap;
+            font-size: 0.95rem;
+        }
+        .send-btn:hover {
+            background-color: #059669;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: 220px;
+                border-left: none;
+                border-bottom: 1px solid #334155;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-brand">
+            <img src="https://lh3.googleusercontent.com/d/1ghOOM8hRETGrDVP26BbgjFIVl89hNQf-" alt="naturescenic2 logo" class="logo-img">
+            <div class="header-titles">
+                <h1>naturescenic2-ai</h1>
+                <p>طبیعت دیلگون، کهگیلویه و بویراحمد (کوهستان زاگرس) / Dilgon Zagros Mountains</p>
+            }
+        </div>
+        <a href="https://www.youtube.com/@naturescenic2" target="_blank" rel="noopener noreferrer" class="youtube-btn">
+            ▶ کانال یوتیوب / YouTube: @naturescenic2
+        </a>
+    </header>
+
+    <div class="main-container">
+        <div class="sidebar">
+            <h2>🏔️ منطقه دیلگون - ایران، کهگیلویه و بویراحمد</h2>
+            <h2>Dilgon Region - Iran, Kohgiluyeh and Boyer-Ahmad</h2>
+            <p class="sub-head">روی عکس کلیک کنید / Click to select reference:</p>
+
+            <!-- CARD 1 -->
+            <div class="reference-card" onclick="useReference('کوهستان‌های دیلگون در کهگیلویه و بویراحمد، ایران', 'high zagros mountains range, dilgon area, kohgiluyeh and boyer-ahmad province, iran, natural landscape photography, cinematic lighting')">
+                <img src="https://lh3.googleusercontent.com/d/162c6fzZnSo-wAWq2eWnfhcFOWLBnpb8B" alt="دیلگون، ایران 1">
+                <p>کوهستان‌های دیلگون در کهگیلویه و بویراحمد، ایران</p>
+                <span>Dilgon Mountains, Kohgiluyeh and Boyer-Ahmad, Iran</span>
+            }
+
+            <!-- CARD 2 -->
+            <div class="reference-card" onclick="useReference('چشم‌انداز طبیعی دیلگون، ایران', 'scenic landscape of dilgon region, kohgiluyeh and boyer-ahmad, southwest iran, zagros foothills, early spring nature')">
+                <img src="https://lh3.googleusercontent.com/d/1bjsxDfpR9fxxaeWsMUZ-XATMAzM9mGhB" alt="دیلگون، ایران 2">
+                <p>چشم‌انداز طبیعی دیلگون، ایران</p>
+                <span>Scenic Landscape of Dilgon, Iran</span>
+            }
+
+            <!-- CARD 3 -->
+            <div class="reference-card" onclick="useReference('طبیعت کوهستانی زاگرس جنوبی، ایران', 'south zagros mountain range landscape, lush vegetation, dilgon village outskirts, iran, high detailed photo')">
+                <img src="https://lh3.googleusercontent.com/d/1H3Tz6fm6QpHxJHDg8lpmraD14oNEhvlh" alt="دیلگون، ایران 3">
+                <p>طبیعت کوهستانی زاگرس جنوبی، ایران</p>
+                <span>Zagros Mountain Nature, South Iran</span>
+            }
+
+            <!-- CARD 4 -->
+            <div class="reference-card" onclick="useReference('دره و دامنه‌های دیلگون، ایران', 'deep valley and green slopes of dilgon area, kohgiluyeh, zagros mountains, drone shot style')">
+                <img src="https://lh3.googleusercontent.com/d/19NAqOBVYqS3FScZNYJB86ukeppKVI0a4" alt="دیلگون، ایران 4">
+                <p>دره و دامنه‌های دیلگون، ایران</p>
+                <span>Dilgon Valley and Slopes, Iran</span>
+            }
+
+            <!-- CARD 5 -->
+            <div class="reference-card" onclick="useReference('ارتفاعات زاگرس در منطقه دیلگون، ایران', 'high altitude zagros peak, rocky landscape, snow remnants, dilgon cold region, iran')">
+                <img src="https://lh3.googleusercontent.com/d/14iWVL-PMQ0Y3fbGXFUxFfweg0FiUo6Hj" alt="دیلگون، ایران 5">
+                <p>ارتفاعات زاگرس در منطقه دیلگون، ایران</p>
+                <span>Zagros Heights, Dilgon Region, Iran</span>
+            }
+
+            <!-- CARD 6 -->
+            <div class="reference-card" onclick="useReference('طبیعت بکر و کوهستانی دیلگون، ایران', 'pristine and wild nature of dilgon cold mountain area, southwestern iran, atmospheric landscape')">
+                <img src="https://lh3.googleusercontent.com/d/1qWBuNrFv7Ax2tJYCgFmvz5yBOiF4xcsW" alt="دیلگون، ایران 6">
+                <p>طبیعت بکر و کوهستانی دیلگون، ایران</p>
+                <span>Pristine Nature of Dilgon, Iran</span>
+            }
+
+            <!-- CARD 7 -->
+            <div class="reference-card" onclick="useReference('پوشش گیاهی دامنه‌های دیلگون، ایران', 'diverse mountain vegetation on zagros slopes, dilgon village, kohgiluyeh, iran')">
+                <img src="https://lh3.googleusercontent.com/d/1JbrFH3-jjydWIeWnLVstVm3VS38pXfph" alt="دیلگون، ایران 7">
+                <p>پوشش گیاهی دامنه‌های دیلگون، ایران</p>
+                <span>Slopes Vegetation in Dilgon, Iran</span>
+            }
+
+            <!-- CARD 8 -->
+            <div class="reference-card" onclick="useReference('افق کوهستانی دیلگون در کهگیلویه و بویراحمد، ایران', 'panoramic view of dilgon cold mountain horizon, southwest zagros range, kohgiluyeh iran, stunning view')">
+                <img src="https://lh3.googleusercontent.com/d/1wKZAIPJRgGMEMrcGULV-9x9reqUBDGJg" alt="دیلگون، ایران 8">
+                <p>افق کوهستانی دیلگون در کهگیلویه و بویراحمد، ایران</p>
+                <span>Dilgon Mountain Horizon, Iran</span>
+            }
+
+            <!-- CARD 9 -->
+            <div class="reference-card" onclick="useReference('زیبایی‌های طبیعی منطقه دیلگون، ایران', 'natural beauty of dilgon valley and mountains, kohgiluyeh and boyer-ahmad province, zagros chain iran')">
+                <img src="https://lh3.googleusercontent.com/d/1gS6EubUtQuHZMwBfYrhOYVfmG4RPctsN" alt="دیلگون، ایران 9">
+                <p>زیبایی‌های طبیعی منطقه دیلگون، ایران</p>
+                <span>Natural Beauty of Dilgon, Iran</span>
+            }
+
+        </div>
+
+        <div class="chat-container">
+            <div class="messages-box" id="chatBox">
+                <div class="message ai-message">
+                    به دستیار هوشمند <b>naturescenic2-ai</b> خوش آمدید! <br>
+                    می‌توانید آزادانه با من چت کنید، سوال بپرسید یا برای ساخت تصویر کلماتی مانند "عکس"، "تصویر" را بکار ببرید یا کارت‌های سمت راست را انتخاب کنید.<br><br>
+                    Welcome! Chat freely with AI or generate images using keywords.
+                </div>
+            </div>
+
+            <div class="input-area">
+                <input type="text" id="userInput" placeholder="پیام یا توصیف تصویر را بنویسید / Write prompt...">
+                <button class="send-btn" onclick="handleSend()">
+                    ارسال / ساخت (Send / Create)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedPrompt = "";
+
+        function useReference(title, promptStyle) {
+            selectedPrompt = promptStyle;
+            const input = document.getElementById('userInput');
+            input.value = `${title} با `;
+            input.focus();
+        }
+
+        async function translateToEnglish(text) {
+            const hasPersian = /[\u0600-\u06FF]/.test(text);
+            if (!hasPersian) return text;
+
+            try {
+                const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=fa|en`);
+                const data = await res.json();
+                if (data && data.responseData && data.responseData.translatedText) {
+                    return data.responseData.translatedText;
+                }
+            } catch (err) {
+                console.log("Translation fallback used");
+            }
+            return text;
+        }
+
+        // ارسال چت متنی به تابع نتلیفای
+        async function fetchAIChatResponse(userText) {
+            try {
+                const response = await fetch('/.netlify/functions/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: userText })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    return data.reply || "پاسخی دریافت نشد.";
+                } else {
+                    return "در حال حاضر ارتباط برقرار نشد. لطفاً مجدداً پیام بفرستید.";
+                }
+            } catch (err) {
+                return "خطا در برقراری ارتباط با سرور.";
+            }
+        }
+
+        async function handleSend() {
+            const input = document.getElementById('userInput');
+            const chatBox = document.getElementById('chatBox');
+            const text = input.value.trim();
+
+            if (!text) return;
+
+            appendMessage(text, 'user-message');
+            input.value = '';
+
+            const lowerText = text.toLowerCase();
+            const isImageReq = text.includes('عکس') || text.includes('تصویر') || 
+                               text.includes('بساز') || text.includes('بکش') ||
+                               lowerText.includes('make') || lowerText.includes('image') || 
+                               lowerText.includes('create') || selectedPrompt !== "";
+
+            if (isImageReq) {
+                const loadingId = 'loading-' + Date.now();
+                appendMessage("در حال ساخت تصویر طبق توصیف شما... 🎨 / Generating image...", 'ai-message', loadingId);
+
+                let rawPrompt = selectedPrompt ? `${selectedPrompt}, ${text}` : text;
+                let englishPrompt = await translateToEnglish(rawPrompt);
+
+                let finalPrompt = encodeURIComponent(englishPrompt + ", 8k resolution, highly detailed photorealistic nature photography, zagros mountains style");
+
+                const randomSeed = Math.floor(Math.random() * 10000);
+                const imageUrl = `https://image.pollinations.ai/prompt/${finalPrompt}?width=1024&height=768&seed=${randomSeed}&nologo=true`;
+
+                const img = new Image();
+                img.src = imageUrl;
+                img.onload = () => {
+                    removeMessage(loadingId);
+                    const imgMsg = document.createElement('div');
+                    imgMsg.className = 'message ai-message';
+                    imgMsg.innerHTML = `
+                        تصویر طبق توصیف شما ساخته شد / Image generated:
+                        <br>
+                        <a href="${imageUrl}" target="_blank" rel="noopener noreferrer">
+                            <img src="${imageUrl}" class="generated-img" alt="Nature AI Image">
+                        </a>
+                        <a href="${imageUrl}" target="_blank" rel="noopener noreferrer" class="img-link-btn">
+                            🔗 باز کردن/دانلود تصویر با کیفیت اصلی
+                        </a>
+                    `;
+                    chatBox.appendChild(imgMsg);
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                };
+
+                img.onerror = () => {
+                    removeMessage(loadingId);
+                    appendMessage("خطا در ساخت تصویر. لطفاً دوباره امتحان کنید.", 'ai-message');
+                };
+
+                selectedPrompt = "";
+            } else {
+                const loadingId = 'loading-' + Date.now();
+                appendMessage("در حال نوشتن پاسخ... 🧠", 'ai-message', loadingId);
+
+                const aiResponse = await fetchAIChatResponse(text);
+                removeMessage(loadingId);
+                appendMessage(aiResponse, 'ai-message');
+            }
+        }
+
+        function appendMessage(text, className, id = null) {
+            const chatBox = document.getElementById('chatBox');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message ${className}`;
+            if (id) msgDiv.id = id;
+            msgDiv.innerText = text;
+            chatBox.appendChild(msgDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function removeMessage(id) {
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        }
+
+        document.getElementById('userInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') handleSend();
+        });
+    </script>
+</body>
+</html>
