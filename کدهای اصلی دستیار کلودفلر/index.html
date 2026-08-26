@@ -6,29 +6,29 @@
     <title>naturescenic2 | دستیار طبیعت و گردشگری</title>
     <style>
         :root { --primary-color: #2e7d32; --bg-color: #f0f4f8; }
-        body { font-family: Tahoma, 'Segoe UI', sans-serif; background-color: var(--bg-color); margin: 0; padding: 0; direction: rtl; color: #2c3e50; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg-color); margin: 0; padding: 20px; direction: rtl; color: #333; text-align: center; }
+        .container { max-width: 800px; margin: 0 auto; }
         
-        /* هدر اختصاصی همراه با لوگو و لینک کانال */
-        header { background: linear-gradient(135deg, #1e4620, #2e7d32); color: white; padding: 20px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-        .header-container { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
-        .channel-logo { width: 90px; height: 90px; border-radius: 50%; border: 3px solid #ffffff; box-shadow: 0 2px 8px rgba(0,0,0,0.2); object-fit: cover; }
-        .channel-title { font-size: 24px; font-weight: bold; margin: 0; }
-        .yt-subscribe-btn { display: inline-flex; align-items: center; gap: 8px; background-color: #ff0000; color: white; text-decoration: none; padding: 10px 20px; border-radius: 25px; font-weight: bold; font-size: 14px; transition: 0.2s ease; margin-top: 5px; }
-        .yt-subscribe-btn:hover { background-color: #cc0000; transform: scale(1.03); }
+        /* بخش هدر و مشخصات کانال */
+        header { background: linear-gradient(135deg, #1e4620, #2e7d32); color: white; padding: 25px 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+        .channel-title { font-size: 26px; font-weight: bold; margin: 0 0 10px 0; }
+        .yt-btn { display: inline-block; background-color: #ff0000; color: white; text-decoration: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; font-size: 14px; transition: 0.2s; }
+        .yt-btn:hover { background-color: #cc0000; }
 
-        /* ابزار ترجمه گوگل */
-        #google_translate_element { background: #ffffff; padding: 10px 20px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        /* ابزار ترجمه خودکار */
+        #google_translate_element { margin-bottom: 15px; text-align: left; }
 
-        /* چیدمان بخش‌ها و کارت‌ها */
-        .container { max-width: 850px; margin: 25px auto; padding: 0 15px; }
-        .section-header { display: flex; align-items: center; gap: 10px; color: #1e4620; border-right: 4px solid var(--primary-color); padding-right: 12px; margin-top: 35px; margin-bottom: 15px; font-size: 20px; }
-        .card { background: #ffffff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 3px 10px rgba(0,0,0,0.05); text-align: right; }
+        /* کارت‌های محتوا */
+        .card { background: white; padding: 20px; margin: 15px 0; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); text-align: right; }
+        audio, video { width: 100%; margin-top: 10px; border-radius: 8px; }
+        img { max-width: 100%; height: auto; border-radius: 8px; display: block; margin: 10px 0; }
+        h2 { color: #1e4620; border-bottom: 2px solid #2e7d32; padding-bottom: 5px; text-align: right; margin-top: 30px; }
+        h3 { color: #1e3a8a; margin-top: 0; margin-bottom: 8px; }
         
-        audio, video { width: 100%; border-radius: 8px; margin-top: 12px; outline: none; }
-        img.content-img { max-width: 100%; height: auto; border-radius: 8px; display: block; margin-top: 12px; }
-        
-        .description-box { background-color: #f1f8f1; padding: 12px 15px; border-right: 3px solid #2e7d32; border-radius: 4px; font-size: 14px; margin-top: 12px; line-height: 1.7; color: #1b431e; }
+        /* کادر توضیحات قابل ترجمه */
+        .description { background-color: #f8fafc; padding: 12px 15px; border-right: 4px solid #3b82f6; border-radius: 4px; font-size: 0.95em; line-height: 1.6; color: #475569; margin-top: 10px; }
     </style>
+    <!-- ابزار ترجمه اتوماتیک گوگل -->
     <script type="text/javascript">
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({pageLanguage: 'fa', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
@@ -38,57 +38,50 @@
 </head>
 <body>
 
-    <!-- منوی تغییر زبان برای مخاطبان بین‌المللی -->
-    <div id="google_translate_element"></div>
-
-    <!-- هدر اصلی با لوگو و مشخصات کانال شما -->
-    <header>
-        <div class="header-container">
-            <img src="https://yt3.googleusercontent.com/ytc/AIdro_n8-example-logo" alt="naturescenic2 Logo" class="channel-logo" onerror="this.src='https://via.placeholder.com/90/2e7d32/ffffff?text=NS2'">
-            <h1 class="channel-title">naturescenic2</h1>
-            <p style="margin: 0; font-size: 14px; opacity: 0.9;">دستیار اختصاصی ویدیوها، صداها و تصاویر طبیعت</p>
-            <a href="https://www.youtube.com/@naturescenic2" target="_blank" class="yt-subscribe-btn">
-                ▶ عضویت در کانال یوتیوب naturescenic2
-            </a>
-        </div>
-    </header>
-
     <div class="container">
+        <!-- منوی تغییر زبان برای کاربران جهانی -->
+        <div id="google_translate_element"></div>
 
-        <!-- منوی فایل‌های صوتی -->
-        <div class="section-header">🎵 فایل‌های صوتی طبیعت</div>
+        <!-- هدر اصلی -->
+        <header>
+            <div class="channel-title">🌿 کانال طبیعت naturescenic2</div>
+            <p style="margin: 0 0 12px 0; opacity: 0.9;">دستیار اختصاصی تصاویر، ویدیوها و صدای طبیعت</p>
+            <a href="https://www.youtube.com/@naturescenic2" target="_blank" class="yt-btn">▶ عضویت در کانال یوتیوب naturescenic2</a>
+        </header>
+
+        <!-- بخش فایل‌های صوتی -->
+        <h2>🎵 فایل‌های صوتی</h2>
         <div class="card">
-            <h3 style="margin:0; color:#2c3e50;">صدای طبیعت و پرندگان</h3>
+            <h3>صدای طبیعت (بلبل و گنجشک)</h3>
             <audio controls preload="metadata">
                 <source src="https://github.com/gp28240-arch/naturescenic2-cloudflare/releases/download/v1/default.m4a" type="audio/mp4">
             </audio>
-            <div class="description-box">
-                <strong>توضیحات:</strong> ضبط‌شده در طبیعت بکر دشت چرام و دیلگون. صدای دلنشین پرندگان و محیط کوهستانی.
+            <div class="description">
+                <strong>توضیحات:</strong> ضبط‌شده در طبیعت دل‌انگیز دشت چرام و دیلگون. صدای دلنشین پرندگان و بلبل‌های کوهستانی.
             </div>
         </div>
 
-        <!-- منوی ویدیوها -->
-        <div class="section-header">🎥 ویدیوهای منتخب</div>
+        <!-- بخش ویدیوها -->
+        <h2>🎥 ویدیوها</h2>
         <div class="card">
-            <h3 style="margin:0; color:#2c3e50;">ویدیوی مناظر طبیعی</h3>
+            <h3>ویدیوی شماره ۱</h3>
             <video controls>
                 <source src="https://github.com/gp28240-arch/naturescenic2-cloudflare/releases/download/v1/video1.mp4" type="video/mp4">
             </video>
-            <div class="description-box">
-                <strong>توضیحات:</strong> مناظر و چشم‌اندازهای سرسبز منطقه.
+            <div class="description">
+                <strong>توضیحات:</strong> مناظر فوق‌العاده طبیعت بکر و چشم‌اندازهای سرسبز.
             </div>
         </div>
 
-        <!-- منوی تصاویر -->
-        <div class="section-header">🖼️ گالری تصاویر</div>
+        <!-- بخش عکس‌ها -->
+        <h2>🖼️ تصاویر</h2>
         <div class="card">
-            <h3 style="margin:0; color:#2c3e50;">تصویر طبیعت</h3>
-            <img src="https://github.com/gp28240-arch/naturescenic2-cloudflare/releases/download/v1/image1.jpg" alt="طبیعت naturescenic2" class="content-img">
-            <div class="description-box">
-                <strong>توضیحات:</strong> نمای زیبای پاییزی و پوشش گیاهی منطقه.
+            <h3>تصویر شماره ۱</h3>
+            <img src="https://github.com/gp28240-arch/naturescenic2-cloudflare/releases/download/v1/image1.jpg" alt="تصویر طبیعت">
+            <div class="description">
+                <strong>توضیحات:</strong> نمای زیبای پاییزی و درختان منطقه.
             </div>
         </div>
-
     </div>
 
 </body>
