@@ -88,9 +88,12 @@
 
         .btn-danger {
             background-color: var(--danger);
-            padding: 4px 8px;
-            font-size: 0.75rem;
-            border-radius: 4px;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
         }
 
         .btn-danger:hover {
@@ -155,7 +158,6 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            position: relative;
         }
 
         .card img, .card video {
@@ -178,7 +180,7 @@
 
         .card-title {
             font-weight: bold;
-            font-size: 1rem;
+            font-size: 0.95rem;
             margin: 0;
             color: var(--text-light);
             word-break: break-word;
@@ -334,7 +336,75 @@
     <script>
         let currentLang = 'fa';
 
-        // تعویض زبانه (Tabs)
+        const translations = {
+            fa: {
+                langBtn: 'EN',
+                appTitle: 'naturescenic2 - هاب جامع طبیعت',
+                appSub: 'طبیعت دیلگون و زاگرس / Dilgon Nature Hub',
+                tab1: '🤖 چت و هوش مصنوعی',
+                tab2: '🖼️ والپیپر و عکس‌ها',
+                tab3: '🎬 ویدیوهای طبیعت',
+                tab4: '🎵 آهنگ‌های آرامش‌بخش',
+                tab5: '📤 آپلود رسانه (آفلاین / آنلاین)',
+                btnApkText: 'دانلود اپلیکیشن',
+                dropText: '📂 برای آپلود عکس، ویدیو یا فایل صوتی اینجا کلیک کنید',
+                vidTitle: 'مستندها و کلیپ‌های ویدئویی طبیعت',
+                audioTitle: 'آهنگ‌ها و صداهای آرامش‌بخش طبیعت',
+                wallTitle: 'گالری والپیپرهای باکیفیت دیلگون و زاگرس',
+                uploadTitle: 'آپلود عکس، ویدیو و صدا (رایگان / آفلاین و آنلاین)',
+                welcomeMsg: 'سلام! به دستیار هوشمند naturescenic2 خوش آمدید. چگونه می‌توانم کمکتان کنم؟',
+                userInputPlaceholder: 'پیام خود را بنویسید...',
+                sendBtn: 'ارسال',
+                deleteBtn: 'حذف'
+            },
+            en: {
+                langBtn: 'FA',
+                appTitle: 'naturescenic2 - Nature Hub',
+                appSub: 'Dilgon & Zagros Nature Hub',
+                tab1: '🤖 Chat & AI',
+                tab2: '🖼️ Wallpapers',
+                tab3: '🎬 Nature Videos',
+                tab4: '🎵 Relaxing Audio',
+                tab5: '📤 Upload Media',
+                btnApkText: 'Download App',
+                dropText: '📂 Click here to upload photos, videos, or audio files',
+                vidTitle: 'Nature Documentaries & Video Clips',
+                audioTitle: 'Relaxing Nature Sounds & Music',
+                wallTitle: 'Dilgon & Zagros High-Quality Wallpapers',
+                uploadTitle: 'Upload Media (Free / Offline & Online)',
+                welcomeMsg: 'Hello! Welcome to naturescenic2 assistant. How can I help you?',
+                userInputPlaceholder: 'Type your message...',
+                sendBtn: 'Send',
+                deleteBtn: 'Delete'
+            }
+        };
+
+        function updateUI() {
+            const t = translations[currentLang];
+            const html = document.getElementById('htmlTag');
+            html.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
+
+            document.getElementById('langText').innerText = t.langBtn;
+            document.getElementById('appTitle').innerText = t.appTitle;
+            document.getElementById('appSub').innerText = t.appSub;
+            document.getElementById('tab1').innerText = t.tab1;
+            document.getElementById('tab2').innerText = t.tab2;
+            document.getElementById('tab3').innerText = t.tab3;
+            document.getElementById('tab4').innerText = t.tab4;
+            document.getElementById('tab5').innerText = t.tab5;
+            document.getElementById('btnApkText').innerText = t.btnApkText;
+            document.getElementById('dropText').innerText = t.dropText;
+            document.getElementById('vidTitle').innerText = t.vidTitle;
+            document.getElementById('audioTitle').innerText = t.audioTitle;
+            document.getElementById('wallTitle').innerText = t.wallTitle;
+            document.getElementById('uploadTitle').innerText = t.uploadTitle;
+            document.getElementById('welcomeMsg').innerText = t.welcomeMsg;
+            document.getElementById('userInput').placeholder = t.userInputPlaceholder;
+            document.getElementById('sendBtn').innerText = t.sendBtn;
+
+            renderStoredMedia();
+        }
+
         function switchTab(tabId, btn) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -342,54 +412,11 @@
             btn.classList.add('active');
         }
 
-        // تغییر زبان برنامه (فارسی / انگلیسی)
         function toggleLanguage() {
-            const html = document.getElementById('htmlTag');
-            if (currentLang === 'fa') {
-                currentLang = 'en';
-                html.dir = 'ltr';
-                document.getElementById('langText').innerText = 'FA';
-                document.getElementById('appTitle').innerText = 'naturescenic2 - Nature Hub';
-                document.getElementById('appSub').innerText = 'Dilgon & Zagros Nature Hub';
-                document.getElementById('tab1').innerText = '🤖 Chat & AI';
-                document.getElementById('tab2').innerText = '🖼️ Wallpapers';
-                document.getElementById('tab3').innerText = '🎬 Nature Videos';
-                document.getElementById('tab4').innerText = '🎵 Relaxing Audio';
-                document.getElementById('tab5').innerText = '📤 Upload Media';
-                document.getElementById('btnApkText').innerText = 'Download App';
-                document.getElementById('dropText').innerText = '📂 Click here to upload photos, videos, or audio files';
-                document.getElementById('vidTitle').innerText = 'Nature Documentaries & Video Clips';
-                document.getElementById('audioTitle').innerText = 'Relaxing Nature Sounds & Music';
-                document.getElementById('wallTitle').innerText = 'Dilgon & Zagros High-Quality Wallpapers';
-                document.getElementById('uploadTitle').innerText = 'Upload Media (Free / Offline & Online)';
-                document.getElementById('welcomeMsg').innerText = 'Hello! Welcome to naturescenic2 assistant. How can I help you?';
-                document.getElementById('userInput').placeholder = 'Type your message...';
-                document.getElementById('sendBtn').innerText = 'Send';
-            } else {
-                currentLang = 'fa';
-                html.dir = 'rtl';
-                document.getElementById('langText').innerText = 'EN';
-                document.getElementById('appTitle').innerText = 'naturescenic2 - هاب جامع طبیعت';
-                document.getElementById('appSub').innerText = 'طبیعت دیلگون و زاگرس / Dilgon Nature Hub';
-                document.getElementById('tab1').innerText = '🤖 چت و هوش مصنوعی';
-                document.getElementById('tab2').innerText = '🖼️ والپیپر و عکس‌ها';
-                document.getElementById('tab3').innerText = '🎬 ویدیوهای طبیعت';
-                document.getElementById('tab4').innerText = '🎵 آهنگ‌های آرامش‌بخش';
-                document.getElementById('tab5').innerText = '📤 آپلود رسانه (آفلاین / آنلاین)';
-                document.getElementById('btnApkText').innerText = 'دانلود اپلیکیشن';
-                document.getElementById('dropText').innerText = '📂 برای آپلود عکس، ویدیو یا فایل صوتی اینجا کلیک کنید';
-                document.getElementById('vidTitle').innerText = 'مستندها و کلیپ‌های ویدئویی طبیعت';
-                document.getElementById('audioTitle').innerText = 'آهنگ‌ها و صداهای آرامش‌بخش طبیعت';
-                document.getElementById('wallTitle').innerText = 'گالری والپیپرهای باکیفیت دیلگون و زاگرس';
-                document.getElementById('uploadTitle').innerText = 'آپلود عکس، ویدیو و صدا (رایگان / آفلاین و آنلاین)';
-                document.getElementById('welcomeMsg').innerText = 'سلام! به دستیار هوشمند naturescenic2 خوش آمدید. چگونه می‌توانم کمکتان کنم؟';
-                document.getElementById('userInput').placeholder = 'پیام خود را بنویسید...';
-                document.getElementById('sendBtn').innerText = 'ارسال';
-            }
-            renderStoredMedia();
+            currentLang = currentLang === 'fa' ? 'en' : 'fa';
+            updateUI();
         }
 
-        // بخش چت
         function sendMessage() {
             const input = document.getElementById('userInput');
             const msg = input.value.trim();
@@ -397,7 +424,6 @@
 
             const chatMessages = document.getElementById('chatMessages');
             
-            // پیام کاربر
             const userDiv = document.createElement('div');
             userDiv.className = 'message user';
             userDiv.innerText = msg;
@@ -405,7 +431,6 @@
 
             input.value = '';
 
-            // پاسخ خودکار سیستم
             setTimeout(() => {
                 const botDiv = document.createElement('div');
                 botDiv.className = 'message bot';
@@ -419,7 +444,7 @@
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-        // مدیریت فایل‌های آپلودی با IndexedDB (ذخیره‌سازی ماندگار ویدیو، صدا و تصویر)
+        // IndexedDB برای ذخیره‌سازی رسانه‌ها
         let db;
         const request = indexedDB.open("NatureAppDB", 1);
 
@@ -489,8 +514,8 @@
                     title.innerText = item.name;
 
                     const delBtn = document.createElement('button');
-                    delBtn.className = 'btn btn-danger';
-                    delBtn.innerText = currentLang === 'fa' ? 'حذف' : 'Delete';
+                    delBtn.className = 'btn-danger';
+                    delBtn.innerText = translations[currentLang].deleteBtn;
                     delBtn.onclick = function() { deleteMedia(id); };
 
                     cardHeader.appendChild(title);
