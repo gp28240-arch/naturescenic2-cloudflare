@@ -1,32 +1,73 @@
-export default {
-  async fetch(request, env) {
-    // تنظیم قوانین CORS برای اجازه دادن به وب‌سایت شما
-    const corsHeaders = {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "PUT, POST, GET, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type, X-Custom-Auth-Header",
-    };
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دستیار طبیعت و گردشگری | Nature & Scenic</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f0f4f8; direction: rtl; padding: 20px; text-align: center; color: #333; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .card { background: white; padding: 20px; margin: 15px 0; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); text-align: right; }
+        audio, video { width: 100%; margin-top: 10px; border-radius: 8px; }
+        img { max-width: 100%; height: auto; border-radius: 8px; display: block; margin: 10px 0; }
+        h3 { color: #1e3a8a; margin-top: 0; margin-bottom: 8px; }
+        .description { background-color: #f8fafc; padding: 10px 15px; border-right: 4px solid #3b82f6; border-radius: 4px; font-size: 0.95em; line-height: 1.6; color: #475569; margin-top: 10px; }
+        #google_translate_element { margin-bottom: 20px; text-align: left; }
+    </style>
+    <!-- ابزار ترجمه خودکار گوگل -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'fa', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</head>
+<body>
 
-    if (request.method === "OPTIONS") {
-      return new Response(null, { headers: corsHeaders });
-    }
+    <div class="container">
+        <!-- منوی تغییر زبان برای کاربران جهانی -->
+        <div id="google_translate_element"></div>
 
-    if (request.method === "PUT") {
-      const url = new URL(request.url);
-      const filename = url.pathname.slice(1);
+        <h1>دستیار طبیعت و گردشگری (Nature & Scenic)</h1>
 
-      if (!filename) {
-        return new Response("نام فایل مشخص نشده است", { status: 400, headers: corsHeaders });
-      }
+        <!-- بخش فایل‌های صوتی -->
+        <h2>🎵 فایل‌های صوتی</h2>
+        
+        <div class="card">
+            <h3>صدای طبیعت (بلبل و گنجشک)</h3>
+            <audio controls>
+                <source src="https://github.com/gp28240-arch/naturescenic2-cloudflare/releases/download/v1/default.m4a" type="audio/mp4">
+            </audio>
+            <!-- کادر توضیحات فارسی که اتوماتیک برای جهانیان ترجمه می‌شود -->
+            <div class="description">
+                <strong>توضیحات:</strong> ضبط‌شده در طبیعت دل‌انگیز دشت چرام و دیلگون. صدای دلنشین پرندگان و بلبل‌های کوهستانی.
+            </div>
+        </div>
 
-      // ذخیره فایل در Cloudflare R2
-      await env.MY_BUCKET.put(filename, request.body);
+        <!-- بخش ویدیوها -->
+        <h2>🎥 ویدیوها</h2>
 
-      return new Response(JSON.stringify({ success: true, filename }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" }
-      });
-    }
+        <div class="card">
+            <h3>ویدیوی شماره ۱</h3>
+            <video controls>
+                <source src="https://github.com/gp28240-arch/naturescenic2-cloudflare/releases/download/v1/video1.mp4" type="video/mp4">
+            </video>
+            <div class="description">
+                <strong>توضیحات:</strong> مناظر فوق‌العاده طبیعت بکر و چشم‌اندازهای سرسبز.
+            </div>
+        </div>
 
-    return new Response("متد پشتیبانی نمی‌شود", { status: 405, headers: corsHeaders });
-  }
-};
+        <!-- بخش عکس‌ها -->
+        <h2>🖼️ تصاویر</h2>
+
+        <div class="card">
+            <h3>تصویر شماره ۱</h3>
+            <img src="https://github.com/gp28240-arch/naturescenic2-cloudflare/releases/download/v1/image1.jpg" alt="تصویر طبیعت">
+            <div class="description">
+                <strong>توضیحات:</strong> نمای زیبای پاییزی و درختان منطقه.
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
