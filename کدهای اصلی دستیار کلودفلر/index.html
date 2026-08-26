@@ -3,18 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>دستیار طبیعت و گردشگری | Nature & Scenic</title>
+    <title>Nature & Scenic | طبیعت و گردشگری</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f0f4f8; direction: rtl; padding: 20px; text-align: center; color: #333; }
-        .container { max-width: 800px; margin: 0 auto; }
-        .card { background: white; padding: 20px; margin: 15px 0; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); text-align: right; }
-        audio, video { width: 100%; margin-top: 10px; border-radius: 8px; }
-        img { max-width: 100%; height: auto; border-radius: 8px; display: block; margin: 10px 0; }
-        h3 { color: #1e3a8a; margin-top: 0; margin-bottom: 8px; }
-        .description { background-color: #f8fafc; padding: 10px 15px; border-right: 4px solid #3b82f6; border-radius: 4px; font-size: 0.95em; line-height: 1.6; color: #475569; margin-top: 10px; }
-        #google_translate_element { margin-bottom: 20px; text-align: left; }
+        :root { --primary-color: #2e7d32; --secondary-color: #1b5e20; --bg-color: #f4f7f6; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg-color); margin: 0; padding: 0; direction: rtl; color: #333; }
+        
+        /* هدر و لوگوی سایت */
+        header { background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; padding: 25px 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+        .logo-title { font-size: 26px; font-weight: bold; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .yt-btn { display: inline-block; background-color: #ff0000; color: white; text-decoration: none; padding: 8px 16px; border-radius: 20px; font-weight: bold; font-size: 14px; margin-top: 10px; transition: 0.3s; }
+        .yt-btn:hover { background-color: #cc0000; }
+
+        /* ابزار ترجمه */
+        #google_translate_element { text-align: left; padding: 10px 20px; background: #fff; border-bottom: 1px solid #ddd; }
+
+        /* چیدمان کارت‌ها */
+        .container { max-width: 850px; margin: 20px auto; padding: 0 15px; }
+        .section-title { color: var(--secondary-color); border-right: 5px solid var(--primary-color); padding-right: 10px; margin-top: 30px; }
+        .card { background: white; border-radius: 12px; padding: 18px; margin-bottom: 20px; box-shadow: 0 3px 8px rgba(0,0,0,0.06); }
+        
+        audio, video { width: 100%; border-radius: 8px; margin-top: 10px; outline: none; }
+        img { max-width: 100%; height: auto; border-radius: 8px; display: block; margin-top: 10px; }
+        
+        .desc { background-color: #eef7ee; padding: 12px; border-radius: 6px; font-size: 14px; margin-top: 10px; line-height: 1.6; color: #2e4d2e; }
     </style>
-    <!-- ابزار ترجمه خودکار گوگل -->
     <script type="text/javascript">
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({pageLanguage: 'fa', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
@@ -24,48 +36,57 @@
 </head>
 <body>
 
-    <div class="container">
-        <!-- منوی تغییر زبان برای کاربران جهانی -->
-        <div id="google_translate_element"></div>
+    <!-- منوی ترجمه -->
+    <div id="google_translate_element"></div>
 
-        <h1>دستیار طبیعت و گردشگری (Nature & Scenic)</h1>
+    <!-- بخش هدر و لوگوی کانال -->
+    <header>
+        <div class="logo-title">
+            🌿 Nature & Scenic | کانال طبیعت
+        </div>
+        <p style="margin: 5px 0;">مجموعه تصاویر، ویدیوها و صدای طبیعت بکر</p>
+        <a href="https://www.youtube.com/@naturescenic2" target="_blank" class="yt-btn">▶ عضویت در کانال یوتیوب Nature & Scenic</a>
+    </header>
+
+    <div class="container">
 
         <!-- بخش فایل‌های صوتی -->
-        <h2>🎵 فایل‌های صوتی</h2>
+        <h2 class="section-title">🎵 فایل‌های صوتی طبیعت</h2>
         
         <div class="card">
-            <h3>صدای طبیعت (بلبل و گنجشک)</h3>
-            <audio controls>
+            <h3>صدای پرندگان و بلبل‌های کوهستانی</h3>
+            <audio controls preload="metadata">
                 <source src="https://github.com/gp28240-arch/naturescenic2-cloudflare/releases/download/v1/default.m4a" type="audio/mp4">
             </audio>
-            <div class="description">
-                <strong>توضیحات:</strong> ضبط‌شده در طبیعت دل‌انگیز دشت چرام و دیلگون. صدای دلنشین پرندگان و بلبل‌های کوهستانی.
+            <div class="desc">
+                <strong>توضیحات:</strong> صدای پرندگان در دشت چرام و مناطق کوهستانی.
             </div>
         </div>
 
         <!-- بخش ویدیوها -->
-        <h2>🎥 ویدیوها</h2>
+        <h2 class="section-title">🎥 ویدیوهای منتخب</h2>
 
         <div class="card">
-            <h3>ویدیوی شماره ۱</h3>
-            <video controls>
+            <h3>ویدیوی شماره ۱ - طبیعت بکر</h3>
+            <video controls poster="">
                 <source src="https://github.com/gp28240-arch/naturescenic2-cloudflare/releases/download/v1/video1.mp4" type="video/mp4">
             </video>
-            <div class="description">
-                <strong>توضیحات:</strong> مناظر فوق‌العاده طبیعت بکر و چشم‌اندازهای سرسبز.
+            <div class="desc">
+                <strong>توضیحات:</strong> مناظر سرسبز و چشمه‌های طبیعی.
             </div>
         </div>
 
-        <!-- بخش عکس‌ها -->
-        <h2>🖼️ تصاویر</h2>
+        <!-- بخش تصاویر -->
+        <h2 class="section-title">🖼️ گالری تصاویر</h2>
 
         <div class="card">
             <h3>تصویر شماره ۱</h3>
-            <img src="https://github.com/gp28240-arch/naturescenic2-cloudflare/releases/download/v1/image1.jpg" alt="تصویر طبیعت">
-            <div class="description">
-                <strong>توضیحات:</strong> نمای زیبای پاییزی و درختان منطقه.
+            <img src="https://github.com/gp28240-arch/naturescenic2-cloudflare/releases/download/v1/image1.jpg" alt="طبیعت">
+            <div class="desc">
+                <strong>توضیحات:</strong> نماهای پاییزی و سرسبز منطقه.
             </div>
         </div>
+
     </div>
 
 </body>
