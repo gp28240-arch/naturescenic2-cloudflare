@@ -5,27 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nature & Scenic | طبیعت و گردشگری</title>
     <style>
-        :root { --primary-color: #2e7d32; --secondary-color: #1b5e20; --bg-color: #f4f7f6; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg-color); margin: 0; padding: 0; direction: rtl; color: #333; }
+        :root { --primary: #2e7d32; --bg: #f4f7f6; }
+        body { font-family: Tahoma, sans-serif; background-color: var(--bg); margin: 0; padding: 0; direction: rtl; color: #333; }
         
-        /* هدر و لوگوی سایت */
-        header { background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; padding: 25px 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
-        .logo-title { font-size: 26px; font-weight: bold; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .yt-btn { display: inline-block; background-color: #ff0000; color: white; text-decoration: none; padding: 8px 16px; border-radius: 20px; font-weight: bold; font-size: 14px; margin-top: 10px; transition: 0.3s; }
-        .yt-btn:hover { background-color: #cc0000; }
+        header { background: linear-gradient(135deg, #2e7d32, #1b5e20); color: white; padding: 25px 20px; text-align: center; }
+        .logo { font-size: 24px; font-weight: bold; margin-bottom: 8px; }
+        .yt-btn { display: inline-block; background-color: #ff0000; color: white; text-decoration: none; padding: 8px 16px; border-radius: 20px; font-size: 14px; margin-top: 10px; font-weight: bold; }
 
-        /* ابزار ترجمه */
-        #google_translate_element { text-align: left; padding: 10px 20px; background: #fff; border-bottom: 1px solid #ddd; }
-
-        /* چیدمان کارت‌ها */
-        .container { max-width: 850px; margin: 20px auto; padding: 0 15px; }
-        .section-title { color: var(--secondary-color); border-right: 5px solid var(--primary-color); padding-right: 10px; margin-top: 30px; }
-        .card { background: white; border-radius: 12px; padding: 18px; margin-bottom: 20px; box-shadow: 0 3px 8px rgba(0,0,0,0.06); }
+        .container { max-width: 800px; margin: 20px auto; padding: 0 15px; }
+        .card { background: white; border-radius: 10px; padding: 15px; margin-bottom: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); text-align: right; }
         
-        audio, video { width: 100%; border-radius: 8px; margin-top: 10px; outline: none; }
-        img { max-width: 100%; height: auto; border-radius: 8px; display: block; margin-top: 10px; }
+        audio, video { width: 100%; border-radius: 6px; margin-top: 10px; }
+        img { max-width: 100%; height: auto; border-radius: 6px; display: block; margin-top: 10px; }
+        .desc { background: #eef7ee; padding: 10px; border-radius: 5px; font-size: 13px; margin-top: 10px; color: #2e4d2e; line-height: 1.6; }
         
-        .desc { background-color: #eef7ee; padding: 12px; border-radius: 6px; font-size: 14px; margin-top: 10px; line-height: 1.6; color: #2e4d2e; }
+        #google_translate_element { text-align: left; padding: 8px; background: #fff; }
     </style>
     <script type="text/javascript">
         function googleTranslateElementInit() {
@@ -36,55 +30,38 @@
 </head>
 <body>
 
-    <!-- منوی ترجمه -->
     <div id="google_translate_element"></div>
 
-    <!-- بخش هدر و لوگوی کانال -->
     <header>
-        <div class="logo-title">
-            🌿 Nature & Scenic | کانال طبیعت
-        </div>
-        <p style="margin: 5px 0;">مجموعه تصاویر، ویدیوها و صدای طبیعت بکر</p>
-        <a href="https://www.youtube.com/@naturescenic2" target="_blank" class="yt-btn">▶ عضویت در کانال یوتیوب Nature & Scenic</a>
+        <div class="logo">🌿 Nature & Scenic | کانال طبیعت</div>
+        <a href="https://www.youtube.com/@naturescenic2" target="_blank" class="yt-btn">▶ عضویت در کانال یوتیوب</a>
     </header>
 
     <div class="container">
 
-        <!-- بخش فایل‌های صوتی -->
-        <h2 class="section-title">🎵 فایل‌های صوتی طبیعت</h2>
-        
+        <h2>🎵 فایل‌های صوتی</h2>
         <div class="card">
             <h3>صدای پرندگان و بلبل‌های کوهستانی</h3>
             <audio controls preload="metadata">
                 <source src="https://github.com/gp28240-arch/naturescenic2-cloudflare/releases/download/v1/default.m4a" type="audio/mp4">
             </audio>
-            <div class="desc">
-                <strong>توضیحات:</strong> صدای پرندگان در دشت چرام و مناطق کوهستانی.
-            </div>
+            <div class="desc"><strong>توضیحات:</strong> ضبط‌شده در طبیعت دل‌انگیز دشت چرام و دیلگون.</div>
         </div>
 
-        <!-- بخش ویدیوها -->
-        <h2 class="section-title">🎥 ویدیوهای منتخب</h2>
-
+        <h2>🎥 ویدیوها</h2>
         <div class="card">
-            <h3>ویدیوی شماره ۱ - طبیعت بکر</h3>
-            <video controls poster="">
+            <h3>ویدیوی طبیعت</h3>
+            <video controls>
                 <source src="https://github.com/gp28240-arch/naturescenic2-cloudflare/releases/download/v1/video1.mp4" type="video/mp4">
             </video>
-            <div class="desc">
-                <strong>توضیحات:</strong> مناظر سرسبز و چشمه‌های طبیعی.
-            </div>
+            <div class="desc"><strong>توضیحات:</strong> مناظر فوق‌العاده طبیعت بکر.</div>
         </div>
 
-        <!-- بخش تصاویر -->
-        <h2 class="section-title">🖼️ گالری تصاویر</h2>
-
+        <h2>🖼️ تصاویر</h2>
         <div class="card">
-            <h3>تصویر شماره ۱</h3>
+            <h3>تصویر طبیعت</h3>
             <img src="https://github.com/gp28240-arch/naturescenic2-cloudflare/releases/download/v1/image1.jpg" alt="طبیعت">
-            <div class="desc">
-                <strong>توضیحات:</strong> نماهای پاییزی و سرسبز منطقه.
-            </div>
+            <div class="desc"><strong>توضیحات:</strong> نمای زیبای منطقه.</div>
         </div>
 
     </div>
