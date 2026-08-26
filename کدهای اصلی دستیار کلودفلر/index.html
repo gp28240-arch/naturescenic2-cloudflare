@@ -10,6 +10,7 @@
             --panel-bg: #1e293b;
             --accent-green: #10b981;
             --accent-blue: #38bdf8;
+            --accent-red: #ef4444;
             --text-main: #f8fafc;
             --text-sub: #94a3b8;
         }
@@ -29,7 +30,6 @@
             min-height: 100vh;
         }
 
-        /* Header Navigation */
         header {
             background-color: var(--panel-bg);
             padding: 12px 20px;
@@ -92,8 +92,8 @@
         .btn-yt { background-color: #ff0000; color: white; }
         .btn-apk { background-color: #8b5cf6; color: white; }
         .btn-lang { background-color: #334155; color: var(--accent-blue); border: 1px solid var(--accent-blue); }
+        .btn-danger { background-color: var(--accent-red); color: white; }
 
-        /* Navigation Tabs */
         nav {
             background-color: #1a2332;
             display: flex;
@@ -121,7 +121,6 @@
             background-color: #0f172a;
         }
 
-        /* Layout Container */
         .container {
             flex: 1;
             padding: 20px;
@@ -130,15 +129,9 @@
             width: 100%;
         }
 
-        .tab-content {
-            display: none;
-        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
 
-        .tab-content.active {
-            display: block;
-        }
-
-        /* Cards & Grid Styles */
         .grid-cards {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -154,6 +147,7 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
+            position: relative;
             transition: transform 0.2s;
         }
 
@@ -168,7 +162,6 @@
 
         .card p { font-size: 0.85rem; text-align: center; color: var(--text-main); }
 
-        /* AI Section */
         .ai-layout {
             display: grid;
             grid-template-columns: 280px 1fr;
@@ -232,7 +225,6 @@
             outline: none;
         }
 
-        /* Audio Player Styles */
         .audio-item {
             background-color: var(--panel-bg);
             padding: 15px;
@@ -246,7 +238,6 @@
             border-left: 4px solid var(--accent-green);
         }
 
-        /* Upload Zone */
         .upload-zone {
             border: 2px dashed var(--accent-blue);
             border-radius: 10px;
@@ -258,11 +249,11 @@
         }
 
         .upload-zone input { display: none; }
+        .action-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
     <header>
         <div class="brand">
             <img src="https://lh3.googleusercontent.com/d/1ghOOM8hRETGrDVP26BbgjFIVl89hNQf-" class="logo-img" alt="Logo">
@@ -274,23 +265,21 @@
         <div class="top-btns">
             <button class="btn btn-lang" onclick="toggleLanguage()">🌐 <span id="langText">EN</span></button>
             <a href="https://www.youtube.com/@naturescenic2" target="_blank" class="btn btn-yt">▶ YouTube</a>
-            <a href="https://raw.githubusercontent.com/naturescenic2/app/main/naturescenic2.apk" download class="btn btn-apk">📲 <span id="btnApkText">دانلود اپلیکیشن</span></a>
+            <a href="naturescenic2.apk" download="naturescenic2.apk" class="btn btn-apk">📲 <span id="btnApkText">دانلود اپلیکیشن</span></a>
         </div>
     </header>
 
-    <!-- Menu Tabs -->
     <nav>
         <button class="active" onclick="switchTab('aiTab', this)" id="tab1">🤖 چت و هوش مصنوعی</button>
         <button onclick="switchTab('wallpapersTab', this)" id="tab2">🖼️ والپیپر و عکس‌ها</button>
         <button onclick="switchTab('videosTab', this)" id="tab3">🎬 ویدیوهای طبیعت</button>
         <button onclick="switchTab('audioTab', this)" id="tab4">🎵 آهنگ‌های آرامش‌بخش</button>
-        <button onclick="switchTab('uploadTab', this)" id="tab5">📤 آپلود رسانه</button>
+        <button onclick="switchTab('uploadTab', this)" id="tab5">📤 آپلود رسانه (آفلاین / آنلاین)</button>
     </nav>
 
-    <!-- Main Content Container -->
     <div class="container">
 
-        <!-- Tab 1: AI Chat & Image Generation -->
+        <!-- Tab 1: AI Chat -->
         <div id="aiTab" class="tab-content active">
             <div class="ai-layout">
                 <div class="sidebar-ref">
@@ -321,32 +310,36 @@
             </div>
         </div>
 
-        <!-- Tab 2: Wallpapers & Photos -->
+        <!-- Tab 2: Wallpapers -->
         <div id="wallpapersTab" class="tab-content">
             <h2 id="wallTitle" style="margin-bottom:15px; color:var(--accent-blue);">گالری والپیپرهای باکیفیت دیلگون و زاگرس</h2>
             <div class="grid-cards">
                 <div class="card">
                     <img src="https://lh3.googleusercontent.com/d/162c6fzZnSo-wAWq2eWnfhcFOWLBnpb8B">
                     <p>کوهستان‌های مرتفع دیلگون</p>
-                    <a href="https://lh3.googleusercontent.com/d/162c6fzZnSo-wAWq2eWnfhcFOWLBnpb8B" target="_blank" class="btn" style="background:#0284c7; color:white; text-align:center;">📥 دانلود کیفیت 4K</a>
+                    <button onclick="downloadImage('https://lh3.googleusercontent.com/d/162c6fzZnSo-wAWq2eWnfhcFOWLBnpb8B', 'dilgon-mountain.jpg')" class="btn" style="background:#0284c7; color:white; justify-content:center;" id="dlBtn1">📥 دانلود کیفیت 4K</button>
                 </div>
                 <div class="card">
                     <img src="https://lh3.googleusercontent.com/d/1bjsxDfpR9fxxaeWsMUZ-XATMAzM9mGhB">
                     <p>چشم‌انداز طبیعی زاگرس</p>
-                    <a href="https://lh3.googleusercontent.com/d/1bjsxDfpR9fxxaeWsMUZ-XATMAzM9mGhB" target="_blank" class="btn" style="background:#0284c7; color:white; text-align:center;">📥 دانلود کیفیت 4K</a>
+                    <button onclick="downloadImage('https://lh3.googleusercontent.com/d/1bjsxDfpR9fxxaeWsMUZ-XATMAzM9mGhB', 'zagros-scenery.jpg')" class="btn" style="background:#0284c7; color:white; justify-content:center;" id="dlBtn2">📥 دانلود کیفیت 4K</button>
                 </div>
                 <div class="card">
                     <img src="https://lh3.googleusercontent.com/d/1H3Tz6fm6QpHxJHDg8lpmraD14oNEhvlh">
                     <p>دامنه‌های سرسبز دیلگون</p>
-                    <a href="https://lh3.googleusercontent.com/d/1H3Tz6fm6QpHxJHDg8lpmraD14oNEhvlh" target="_blank" class="btn" style="background:#0284c7; color:white; text-align:center;">📥 دانلود کیفیت 4K</a>
+                    <button onclick="downloadImage('https://lh3.googleusercontent.com/d/1H3Tz6fm6QpHxJHDg8lpmraD14oNEhvlh', 'dilgon-greenery.jpg')" class="btn" style="background:#0284c7; color:white; justify-content:center;" id="dlBtn3">📥 دانلود کیفیت 4K</button>
                 </div>
             </div>
         </div>
 
         <!-- Tab 3: Nature Videos -->
         <div id="videosTab" class="tab-content">
-            <h2 id="vidTitle" style="margin-bottom:15px; color:var(--accent-blue);">مستندها و کلیپ‌های ویدئویی طبیعت</h2>
-            <div class="grid-cards">
+            <div class="action-bar">
+                <h2 id="vidTitle" style="color:var(--accent-blue);">مستندها و کلیپ‌های ویدئویی طبیعت</h2>
+                <button class="btn" style="background:var(--accent-green); color:white;" onclick="document.getElementById('videoInput').click()" id="uploadVidBtn">🎥 آپلود ویدیو</button>
+                <input type="file" id="videoInput" accept="video/*" style="display:none;" onchange="handleDirectUpload(event, 'video')">
+            </div>
+            <div class="grid-cards" id="videoGrid">
                 <div class="card">
                     <iframe width="100%" height="160" src="https://www.youtube.com/embed/videoseries?list=UU" frameborder="0" allowfullscreen style="border-radius:8px;"></iframe>
                     <p>جدیدترین مستند طبیعت کانال @naturescenic2</p>
@@ -356,32 +349,37 @@
 
         <!-- Tab 4: Relaxing Audio -->
         <div id="audioTab" class="tab-content">
-            <h2 id="audioTitle" style="margin-bottom:15px; color:var(--accent-blue);">آهنگ‌ها و صداهای آرامش‌بخش طبیعت (Nature Relaxing Sounds)</h2>
-            
-            <div class="audio-item">
-                <div>
-                    <h4 style="color:var(--accent-green);">🌲 صدای باد و درختان بلوط زاگرس</h4>
-                    <p style="font-size:0.8rem; color:var(--text-sub);">صدای طبیعی اختصاصی ضبط شده در دیلگون</p>
-                </div>
-                <audio controls src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+            <div class="action-bar">
+                <h2 id="audioTitle" style="color:var(--accent-blue);">آهنگ‌ها و صداهای آرامش‌بخش طبیعت</h2>
+                <button class="btn" style="background:var(--accent-green); color:white;" onclick="document.getElementById('audioInput').click()" id="uploadAudioBtn">🎵 آپلود صدا</button>
+                <input type="file" id="audioInput" accept="audio/*" style="display:none;" onchange="handleDirectUpload(event, 'audio')">
             </div>
 
-            <div class="audio-item">
-                <div>
-                    <h4 style="color:var(--accent-green);">💧 صدای چشمه و جریان آب</h4>
-                    <p style="font-size:0.8rem; color:var(--text-sub);">مناسب برای خواب و مطالعه</p>
+            <div id="audioList">
+                <div class="audio-item">
+                    <div>
+                        <h4 style="color:var(--accent-green);">🌲 صدای باد و درختان بلوط زاگرس</h4>
+                        <p style="font-size:0.8rem; color:var(--text-sub);">صدای طبیعی اختصاصی ضبط شده در دیلگون</p>
+                    </div>
+                    <audio controls src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
                 </div>
-                <audio controls src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"></audio>
+                <div class="audio-item">
+                    <div>
+                        <h4 style="color:var(--accent-green);">💧 صدای چشمه و جریان آب</h4>
+                        <p style="font-size:0.8rem; color:var(--text-sub);">مناسب برای خواب و مطالعه</p>
+                    </div>
+                    <audio controls src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"></audio>
+                </div>
             </div>
         </div>
 
-        <!-- Tab 5: Free Upload -->
+        <!-- Tab 5: Media Upload -->
         <div id="uploadTab" class="tab-content">
-            <h2 id="uploadTitle" style="margin-bottom:15px; color:var(--accent-blue);">آپلود عکس و ویدیو (رایگان)</h2>
+            <h2 id="uploadTitle" style="margin-bottom:15px; color:var(--accent-blue);">آپلود عکس، ویدیو و صدا (رایگان / آفلاین و آنلاین)</h2>
             
             <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
-                <p id="dropText">📂 برای آپلود عکس یا ویدیو اینجا کلیک کنید</p>
-                <input type="file" id="fileInput" accept="image/*,video/*" onchange="handleFileUpload(event)">
+                <p id="dropText">📂 برای آپلود عکس، ویدیو یا فایل صوتی اینجا کلیک کنید</p>
+                <input type="file" id="fileInput" accept="image/*,video/*,audio/*" onchange="handleFileUpload(event)">
             </div>
 
             <div id="uploadedPreview" class="grid-cards"></div>
@@ -391,7 +389,18 @@
 
     <script>
         let currentLang = 'fa';
-        let selectedRefStyle = '';
+        let db;
+
+        // Initialize IndexedDB for Permanent Local Storage (Prevents F5 deletion)
+        const request = indexedDB.open("NatureScenicDB", 1);
+        request.onupgradeneeded = (e) => {
+            db = e.target.result;
+            db.createObjectStore("media", { keyPath: "id", autoIncrement: true });
+        };
+        request.onsuccess = (e) => {
+            db = e.target.result;
+            loadStoredMedia();
+        };
 
         function switchTab(tabId, btn) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -400,9 +409,102 @@
             btn.classList.add('active');
         }
 
-        function selectRef(title, style) {
-            selectedRefStyle = style;
-            alert(`مرجع انتخاب شد: ${title}`);
+        function downloadImage(url, filename) {
+            fetch(url)
+                .then(res => res.blob())
+                .then(blob => {
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(blob);
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                })
+                .catch(() => window.open(url, '_blank'));
+        }
+
+        function saveMediaToDB(fileData) {
+            const tx = db.transaction("media", "readwrite");
+            const store = tx.objectStore("media");
+            store.add(fileData);
+            tx.oncomplete = () => loadStoredMedia();
+        }
+
+        function deleteMediaFromDB(id) {
+            const tx = db.transaction("media", "readwrite");
+            const store = tx.objectStore("media");
+            store.delete(id);
+            tx.oncomplete = () => loadStoredMedia();
+        }
+
+        function loadStoredMedia() {
+            if (!db) return;
+            const tx = db.transaction("media", "readonly");
+            const store = tx.objectStore("media");
+            const request = store.getAll();
+
+            request.onsuccess = () => {
+                const items = request.result;
+                const uploadPreview = document.getElementById('uploadedPreview');
+                const videoGrid = document.getElementById('videoGrid');
+                const audioList = document.getElementById('audioList');
+
+                uploadPreview.innerHTML = '';
+                
+                // Clear user uploaded items from specific tabs before reloading
+                document.querySelectorAll('.user-uploaded-vid').forEach(e => e.remove());
+                document.querySelectorAll('.user-uploaded-aud').forEach(e => e.remove());
+
+                items.forEach(item => {
+                    const url = URL.createObjectURL(item.file);
+                    
+                    // Upload Tab Card
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    let content = '';
+                    if (item.type.startsWith('image/')) {
+                        content = `<img src="${url}"><p>${item.name}</p>`;
+                    } else if (item.type.startsWith('video/')) {
+                        content = `<video src="${url}" controls></video><p>${item.name}</p>`;
+                    } else if (item.type.startsWith('audio/')) {
+                        content = `<audio controls src="${url}" style="width:100%; margin-top:20px;"></audio><p>${item.name}</p>`;
+                    }
+                    content += `<button class="btn btn-danger" onclick="deleteMediaFromDB(${item.id})">🗑️ ${currentLang==='fa'?'حذف':'Delete'}</button>`;
+                    card.innerHTML = content;
+                    uploadPreview.appendChild(card);
+
+                    // Add to specific Video Tab
+                    if (item.type.startsWith('video/')) {
+                        const vCard = document.createElement('div');
+                        vCard.className = 'card user-uploaded-vid';
+                        vCard.innerHTML = `<video src="${url}" controls></video><p>${item.name}</p>
+                        <button class="btn btn-danger" onclick="deleteMediaFromDB(${item.id})">🗑️ ${currentLang==='fa'?'حذف':'Delete'}</button>`;
+                        videoGrid.appendChild(vCard);
+                    }
+
+                    // Add to specific Audio Tab
+                    if (item.type.startsWith('audio/')) {
+                        const aItem = document.createElement('div');
+                        aItem.className = 'audio-item user-uploaded-aud';
+                        aItem.innerHTML = `<div><h4 style="color:var(--accent-green);">🎵 ${item.name}</h4></div>
+                        <audio controls src="${url}"></audio>
+                        <button class="btn btn-danger" onclick="deleteMediaFromDB(${item.id})">🗑️ ${currentLang==='fa'?'حذف':'Delete'}</button>`;
+                        audioList.appendChild(aItem);
+                    }
+                });
+            };
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            saveMediaToDB({ file: file, name: file.name, type: file.type });
+        }
+
+        function handleDirectUpload(event, category) {
+            const file = event.target.files[0];
+            if (!file) return;
+            saveMediaToDB({ file: file, name: file.name, type: file.type });
         }
 
         async function handleSend() {
@@ -411,64 +513,46 @@
             const text = input.value.trim();
             if (!text) return;
 
-            // User Message
             const uDiv = document.createElement('div');
             uDiv.className = 'msg msg-user';
             uDiv.innerText = text;
             msgs.appendChild(uDiv);
             input.value = '';
 
-            const isImg = text.includes('عکس') || text.includes('تصویر') || text.includes('کشیدن') || text.includes('image') || text.includes('draw');
+            const isImg = text.includes('عکس') || text.includes('تصویر') || text.includes('image') || text.includes('draw');
 
             if (isImg) {
                 const loading = document.createElement('div');
                 loading.className = 'msg msg-ai';
-                loading.innerText = 'در حال ساخت تصویر... 🎨';
+                loading.innerText = currentLang === 'fa' ? 'در حال ساخت تصویر... 🎨' : 'Generating image... 🎨';
                 msgs.appendChild(loading);
 
                 let prompt = text.replace(/عکس|تصویر|بکش|بساز/g, '');
                 if (prompt.includes('کبگ') || prompt.includes('کبک')) prompt = 'Chukar partridge bird on rock';
-                
+
                 const seed = Math.floor(Math.random() * 99999);
                 const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt + ' photorealistic 8k')}?seed=${seed}&nologo=true`;
 
                 const img = new Image();
                 img.src = url;
                 img.onload = () => {
-                    loading.innerHTML = `تصویر آماده شد:<br><img src="${url}" style="max-width:100%; border-radius:8px; margin-top:5px;">`;
+                    loading.innerHTML = `${currentLang==='fa'?'تصویر آماده شد:':'Image Ready:'}<br><img src="${url}" style="max-width:100%; border-radius:8px; margin-top:5px;">`;
                 };
             } else {
                 const loading = document.createElement('div');
                 loading.className = 'msg msg-ai';
-                loading.innerText = 'در حال پاسخ... 🧠';
+                loading.innerText = currentLang === 'fa' ? 'در حال پاسخ... 🧠' : 'Thinking... 🧠';
                 msgs.appendChild(loading);
 
                 try {
-                    const res = await fetch(`https://text.pollinations.ai/${encodeURIComponent("پاسخ کوتاه فارسی بده: " + text)}`);
+                    const res = await fetch(`https://text.pollinations.ai/${encodeURIComponent((currentLang==='fa'?"پاسخ کوتاه فارسی بده: ":"Answer concisely: ") + text)}`);
                     const reply = await res.text();
                     loading.innerText = reply;
                 } catch (e) {
-                    loading.innerText = 'خطا در شبکه.';
+                    loading.innerText = currentLang === 'fa' ? 'خطا در شبکه.' : 'Network Error.';
                 }
             }
             msgs.scrollTop = msgs.scrollHeight;
-        }
-
-        function handleFileUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const preview = document.getElementById('uploadedPreview');
-            const card = document.createElement('div');
-            card.className = 'card';
-
-            const url = URL.createObjectURL(file);
-            if (file.type.startsWith('image/')) {
-                card.innerHTML = `<img src="${url}"><p>${file.name}</p>`;
-            } else if (file.type.startsWith('video/')) {
-                card.innerHTML = `<video src="${url}" controls></video><p>${file.name}</p>`;
-            }
-            preview.appendChild(card);
         }
 
         function toggleLanguage() {
@@ -477,25 +561,40 @@
                 currentLang = 'en';
                 html.dir = 'ltr';
                 document.getElementById('langText').innerText = 'FA';
+                document.getElementById('appTitle').innerText = 'naturescenic2 - Nature Hub';
+                document.getElementById('appSub').innerText = 'Dilgon & Zagros Nature';
                 document.getElementById('tab1').innerText = '🤖 Chat & AI';
                 document.getElementById('tab2').innerText = '🖼️ Wallpapers';
                 document.getElementById('tab3').innerText = '🎬 Nature Videos';
                 document.getElementById('tab4').innerText = '🎵 Relaxing Audio';
-                document.getElementById('tab5').innerText = '📤 Upload';
+                document.getElementById('tab5').innerText = '📤 Upload Media (Offline/Online)';
                 document.getElementById('btnApkText').innerText = 'Download App';
-                document.getElementById('welcomeMsg').innerText = 'Welcome! You can chat or ask to generate any nature image.';
+                document.getElementById('dropText').innerText = '📂 Click here to upload photos, videos, or audio files';
+                document.getElementById('uploadVidBtn').innerText = '🎥 Upload Video';
+                document.getElementById('uploadAudioBtn').innerText = '🎵 Upload Audio';
+                document.getElementById('dlBtn1').innerText = '📥 Download 4K';
+                document.getElementById('dlBtn2').innerText = '📥 Download 4K';
+                document.getElementById('dlBtn3').innerText = '📥 Download 4K';
             } else {
                 currentLang = 'fa';
                 html.dir = 'rtl';
                 document.getElementById('langText').innerText = 'EN';
+                document.getElementById('appTitle').innerText = 'naturescenic2 - هاب جامع طبیعت';
+                document.getElementById('appSub').innerText = 'طبیعت دیلگون و زاگرس / Dilgon Nature Hub';
                 document.getElementById('tab1').innerText = '🤖 چت و هوش مصنوعی';
                 document.getElementById('tab2').innerText = '🖼️ والپیپر و عکس‌ها';
                 document.getElementById('tab3').innerText = '🎬 ویدیوهای طبیعت';
                 document.getElementById('tab4').innerText = '🎵 آهنگ‌های آرامش‌بخش';
-                document.getElementById('tab5').innerText = '📤 آپلود رسانه';
+                document.getElementById('tab5').innerText = '📤 آپلود رسانه (آفلاین / آنلاین)';
                 document.getElementById('btnApkText').innerText = 'دانلود اپلیکیشن';
-                document.getElementById('welcomeMsg').innerText = 'سلام! خوش آمدید. می‌توانید چت کنید یا بگویید عکس چه چیزی را برایتان بسازم.';
+                document.getElementById('dropText').innerText = '📂 برای آپلود عکس، ویدیو یا فایل صوتی اینجا کلیک کنید';
+                document.getElementById('uploadVidBtn').innerText = '🎥 آپلود ویدیو';
+                document.getElementById('uploadAudioBtn').innerText = '🎵 آپلود صدا';
+                document.getElementById('dlBtn1').innerText = '📥 دانلود کیفیت 4K';
+                document.getElementById('dlBtn2').innerText = '📥 دانلود کیفیت 4K';
+                document.getElementById('dlBtn3').innerText = '📥 دانلود کیفیت 4K';
             }
+            loadStoredMedia();
         }
     </script>
 </body>
