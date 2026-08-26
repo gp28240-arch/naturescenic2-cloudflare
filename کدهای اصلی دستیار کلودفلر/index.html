@@ -17,6 +17,7 @@
             display: flex;
             flex-direction: column;
             height: 100vh;
+            overflow: hidden;
         }
         header {
             background-color: #1e293b;
@@ -77,10 +78,11 @@
             padding: 15px;
             border-left: 1px solid #334155;
             overflow-y: auto;
+            flex-shrink: 0;
         }
         .sidebar h2 {
             font-size: 0.95rem;
-            margin-bottom: 2px;
+            margin-bottom: 4px;
             color: #4ade80;
         }
         .sidebar .sub-head {
@@ -126,6 +128,7 @@
             display: flex;
             flex-direction: column;
             background-color: #0f172a;
+            height: 100%;
         }
         .messages-box {
             flex: 1;
@@ -211,7 +214,7 @@
             }
             .sidebar {
                 width: 100%;
-                height: 220px;
+                height: 200px;
                 border-left: none;
                 border-bottom: 1px solid #334155;
             }
@@ -226,7 +229,7 @@
             <div class="header-titles">
                 <h1>naturescenic2-ai</h1>
                 <p>طبیعت دیلگون، کهگیلویه و بویراحمد (کوهستان زاگرس) / Dilgon Zagros Mountains</p>
-            }
+            </div>
         </div>
         <a href="https://www.youtube.com/@naturescenic2" target="_blank" rel="noopener noreferrer" class="youtube-btn">
             ▶ کانال یوتیوب / YouTube: @naturescenic2
@@ -244,64 +247,63 @@
                 <img src="https://lh3.googleusercontent.com/d/162c6fzZnSo-wAWq2eWnfhcFOWLBnpb8B" alt="دیلگون، ایران 1">
                 <p>کوهستان‌های دیلگون در کهگیلویه و بویراحمد، ایران</p>
                 <span>Dilgon Mountains, Kohgiluyeh and Boyer-Ahmad, Iran</span>
-            }
+            </div>
 
             <!-- CARD 2 -->
             <div class="reference-card" onclick="useReference('چشم‌انداز طبیعی دیلگون، ایران', 'scenic landscape of dilgon region, kohgiluyeh and boyer-ahmad, southwest iran, zagros foothills, early spring nature')">
                 <img src="https://lh3.googleusercontent.com/d/1bjsxDfpR9fxxaeWsMUZ-XATMAzM9mGhB" alt="دیلگون، ایران 2">
                 <p>چشم‌انداز طبیعی دیلگون، ایران</p>
                 <span>Scenic Landscape of Dilgon, Iran</span>
-            }
+            </div>
 
             <!-- CARD 3 -->
             <div class="reference-card" onclick="useReference('طبیعت کوهستانی زاگرس جنوبی، ایران', 'south zagros mountain range landscape, lush vegetation, dilgon village outskirts, iran, high detailed photo')">
                 <img src="https://lh3.googleusercontent.com/d/1H3Tz6fm6QpHxJHDg8lpmraD14oNEhvlh" alt="دیلگون، ایران 3">
                 <p>طبیعت کوهستانی زاگرس جنوبی، ایران</p>
                 <span>Zagros Mountain Nature, South Iran</span>
-            }
+            </div>
 
             <!-- CARD 4 -->
             <div class="reference-card" onclick="useReference('دره و دامنه‌های دیلگون، ایران', 'deep valley and green slopes of dilgon area, kohgiluyeh, zagros mountains, drone shot style')">
                 <img src="https://lh3.googleusercontent.com/d/19NAqOBVYqS3FScZNYJB86ukeppKVI0a4" alt="دیلگون، ایران 4">
                 <p>دره و دامنه‌های دیلگون، ایران</p>
                 <span>Dilgon Valley and Slopes, Iran</span>
-            }
+            </div>
 
             <!-- CARD 5 -->
             <div class="reference-card" onclick="useReference('ارتفاعات زاگرس در منطقه دیلگون، ایران', 'high altitude zagros peak, rocky landscape, snow remnants, dilgon cold region, iran')">
                 <img src="https://lh3.googleusercontent.com/d/14iWVL-PMQ0Y3fbGXFUxFfweg0FiUo6Hj" alt="دیلگون، ایران 5">
                 <p>ارتفاعات زاگرس در منطقه دیلگون، ایران</p>
                 <span>Zagros Heights, Dilgon Region, Iran</span>
-            }
+            </div>
 
             <!-- CARD 6 -->
             <div class="reference-card" onclick="useReference('طبیعت بکر و کوهستانی دیلگون، ایران', 'pristine and wild nature of dilgon cold mountain area, southwestern iran, atmospheric landscape')">
                 <img src="https://lh3.googleusercontent.com/d/1qWBuNrFv7Ax2tJYCgFmvz5yBOiF4xcsW" alt="دیلگون، ایران 6">
                 <p>طبیعت بکر و کوهستانی دیلگون، ایران</p>
                 <span>Pristine Nature of Dilgon, Iran</span>
-            }
+            </div>
 
             <!-- CARD 7 -->
             <div class="reference-card" onclick="useReference('پوشش گیاهی دامنه‌های دیلگون، ایران', 'diverse mountain vegetation on zagros slopes, dilgon village, kohgiluyeh, iran')">
                 <img src="https://lh3.googleusercontent.com/d/1JbrFH3-jjydWIeWnLVstVm3VS38pXfph" alt="دیلگون، ایران 7">
                 <p>پوشش گیاهی دامنه‌های دیلگون، ایران</p>
                 <span>Slopes Vegetation in Dilgon, Iran</span>
-            }
+            </div>
 
             <!-- CARD 8 -->
             <div class="reference-card" onclick="useReference('افق کوهستانی دیلگون در کهگیلویه و بویراحمد، ایران', 'panoramic view of dilgon cold mountain horizon, southwest zagros range, kohgiluyeh iran, stunning view')">
                 <img src="https://lh3.googleusercontent.com/d/1wKZAIPJRgGMEMrcGULV-9x9reqUBDGJg" alt="دیلگون، ایران 8">
                 <p>افق کوهستانی دیلگون در کهگیلویه و بویراحمد، ایران</p>
                 <span>Dilgon Mountain Horizon, Iran</span>
-            }
+            </div>
 
             <!-- CARD 9 -->
             <div class="reference-card" onclick="useReference('زیبایی‌های طبیعی منطقه دیلگون، ایران', 'natural beauty of dilgon valley and mountains, kohgiluyeh and boyer-ahmad province, zagros chain iran')">
                 <img src="https://lh3.googleusercontent.com/d/1gS6EubUtQuHZMwBfYrhOYVfmG4RPctsN" alt="دیلگون، ایران 9">
                 <p>زیبایی‌های طبیعی منطقه دیلگون، ایران</p>
                 <span>Natural Beauty of Dilgon, Iran</span>
-            }
-
+            </div>
         </div>
 
         <div class="chat-container">
@@ -348,10 +350,10 @@
             return text;
         }
 
-        // ارسال چت متنی به تابع نتلیفای
+        // ارسال چت متنی به Cloudflare Functions
         async function fetchAIChatResponse(userText) {
             try {
-                const response = await fetch('/.netlify/functions/chat', {
+                const response = await fetch('/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ text: userText })
