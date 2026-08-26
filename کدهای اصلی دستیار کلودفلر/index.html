@@ -3,299 +3,428 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>دستیار هوشمند طبیعت</title>
+    <title>naturescenic2-ai | دیلگون کهگیلویه و بویراحمد</title>
     <style>
-        :root {
-            --primary: #2e7d32;
-            --primary-dark: #1b5e20;
-            --bg-color: #f4f6f8;
-            --card-bg: #ffffff;
-            --text-main: #333333;
-        }
-
-        body {
-            font-family: Tahoma, 'Segoe UI', Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
+        * {
+            box-sizing: border-box;
             margin: 0;
-            padding: 20px;
-            direction: rtl;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: var(--card-bg);
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            text-align: center;
-            color: var(--primary);
-            margin-bottom: 25px;
-            font-size: 24px;
-        }
-
-        .tabs {
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
             display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+        header {
+            background-color: #1e293b;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid #334155;
+            flex-wrap: wrap;
             gap: 10px;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #e0e0e0;
-            padding-bottom: 10px;
         }
-
-        .tab-btn {
-            padding: 10px 20px;
-            border: none;
-            background: #e0e0e0;
-            color: #333;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 15px;
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .logo-img {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #38bdf8;
+        }
+        .header-titles h1 {
+            font-size: 1.2rem;
+            color: #38bdf8;
+        }
+        .header-titles p {
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+        .youtube-btn {
+            background-color: #ff0000;
+            color: #ffffff;
+            padding: 8px 14px;
+            border-radius: 8px;
+            text-decoration: none;
             font-weight: bold;
-            transition: 0.3s;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
-
-        .tab-btn.active {
-            background: var(--primary);
-            color: #fff;
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
         }
-
-        .tab-content {
-            display: none;
+        .sidebar {
+            width: 320px;
+            background-color: #1e293b;
+            padding: 15px;
+            border-left: 1px solid #334155;
+            overflow-y: auto;
+            flex-shrink: 0;
         }
-
-        .tab-content.active {
+        .sidebar h2 {
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+            color: #4ade80;
+        }
+        .sidebar .sub-head {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-bottom: 12px;
+        }
+        .reference-card {
+            background-color: #334155;
+            border-radius: 8px;
+            padding: 8px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+        .reference-card:hover {
+            border-color: #38bdf8;
+            transform: translateY(-2px);
+        }
+        .reference-card.selected {
+            border-color: #4ade80;
+            background-color: #1e293b;
+        }
+        .reference-card img {
+            width: 100%;
+            height: 130px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+        .reference-card p {
+            font-size: 0.8rem;
+            margin-top: 6px;
+            text-align: center;
+            color: #f1f5f9;
+        }
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #0f172a;
+        }
+        .messages-box {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+        .user-message {
+            background-color: #0284c7;
+            align-self: flex-start;
+            border-bottom-right-radius: 2px;
+        }
+        .ai-message {
+            background-color: #334155;
+            align-self: flex-end;
+            border-bottom-left-radius: 2px;
+        }
+        .generated-img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-top: 10px;
+            border: 1px solid #475569;
             display: block;
         }
-
-        /* بخش چت */
-        .chat-box {
-            height: 380px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+        .img-link-btn {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 6px 12px;
+            background-color: #38bdf8;
+            color: #0f172a;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.8rem;
+            border-radius: 6px;
+        }
+        .selected-badge {
+            display: none;
+            background-color: #059669;
+            color: white;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            border-radius: 6px;
+            margin: 10px 15px 0 15px;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .selected-badge button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .input-area {
             padding: 15px;
-            overflow-y: auto;
-            background: #fafafa;
-            margin-bottom: 15px;
-        }
-
-        .message {
-            margin-bottom: 12px;
-            padding: 10px 14px;
-            border-radius: 8px;
-            max-width: 80%;
-            line-height: 1.6;
-        }
-
-        .user-message {
-            background: #e3f2fd;
-            color: #0d47a1;
-            margin-right: auto;
-            text-align: right;
-        }
-
-        .bot-message {
-            background: #e8f5e9;
-            color: #1b5e20;
-            margin-left: auto;
-            text-align: right;
-        }
-
-        .input-group {
+            background-color: #1e293b;
             display: flex;
             gap: 10px;
+            border-top: 1px solid #334155;
         }
-
         input[type="text"] {
             flex: 1;
             padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 14px;
-            outline: none;
-        }
-
-        button.send-btn {
-            padding: 12px 25px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 15px;
-            font-weight: bold;
-        }
-
-        button.send-btn:hover {
-            background: var(--primary-dark);
-        }
-
-        /* بخش عکس */
-        .image-result {
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .image-result img {
-            max-width: 100%;
             border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-            display: none;
+            border: 1px solid #475569;
+            background-color: #0f172a;
+            color: #fff;
+            outline: none;
+            font-size: 0.95rem;
         }
-
-        .loading {
-            display: none;
-            color: #666;
-            font-style: italic;
-            margin-top: 10px;
+        .send-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            background-color: #10b981;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .send-btn:hover {
+            background-color: #059669;
+        }
+        @media (max-width: 768px) {
+            .main-container { flex-direction: column; }
+            .sidebar { width: 100%; height: 180px; }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>دستیار هوشمند naturescenic2</h1>
+    <header>
+        <div class="header-brand">
+            <img src="https://lh3.googleusercontent.com/d/1ghOOM8hRETGrDVP26BbgjFIVl89hNQf-" alt="logo" class="logo-img">
+            <div class="header-titles">
+                <h1>naturescenic2-ai</h1>
+                <p>طبیعت دیلگون، کهگیلویه و بویراحمد / Dilgon AI</p>
+            </div>
+        </div>
+        <a href="https://www.youtube.com/@naturescenic2" target="_blank" rel="noopener noreferrer" class="youtube-btn">
+            ▶ یوتیوب: @naturescenic2
+        </a>
+    </header>
 
-    <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('chat')">💬 گفتگوی متنی</button>
-        <button class="tab-btn" onclick="switchTab('image')">🎨 ساخت تصویر</button>
+    <div class="main-container">
+        <!-- پنل عکس‌های مرجع -->
+        <div class="sidebar">
+            <h2>🏔️ تصاویر مرجع دیلگون</h2>
+            <p class="sub-head">یک کارت انتخاب کنید تا تصویر طبق محیط آن ساخته شود:</p>
+
+            <div class="reference-card" onclick="selectReference(this, 'کوهستان‌های دیلگون', 'high zagros mountain range, dilgon area, kohgiluyeh iran, scenic nature')">
+                <img src="https://lh3.googleusercontent.com/d/162c6fzZnSo-wAWq2eWnfhcFOWLBnpb8B" alt="دیلگون 1">
+                <p>کوهستان‌های دیلگون</p>
+            </div>
+
+            <div class="reference-card" onclick="selectReference(this, 'چشم‌انداز طبیعی دیلگون', 'scenic landscape of dilgon region, kohgiluyeh, zagros foothills')">
+                <img src="https://lh3.googleusercontent.com/d/1bjsxDfpR9fxxaeWsMUZ-XATMAzM9mGhB" alt="دیلگون 2">
+                <p>چشم‌انداز طبیعی دیلگون</p>
+            </div>
+
+            <div class="reference-card" onclick="selectReference(this, 'طبیعت کوهستانی زاگرس', 'south zagros mountain range landscape, lush vegetation, dilgon iran')">
+                <img src="https://lh3.googleusercontent.com/d/1H3Tz6fm6QpHxJHDg8lpmraD14oNEhvlh" alt="دیلگون 3">
+                <p>طبیعت کوهستانی زاگرس</p>
+            </div>
+
+            <div class="reference-card" onclick="selectReference(this, 'دره و دامنه‌های دیلگون', 'deep valley and green slopes of dilgon area, kohgiluyeh')">
+                <img src="https://lh3.googleusercontent.com/d/19NAqOBVYqS3FScZNYJB86ukeppKVI0a4" alt="دیلگون 4">
+                <p>دره و دامنه‌های دیلگون</p>
+            </div>
+        </div>
+
+        <!-- بخش چت و ساخت تصویر -->
+        <div class="chat-container">
+            <div class="messages-box" id="chatBox">
+                <div class="message ai-message">
+                    سلام! به دستیار هوشمند <b>naturescenic2-ai</b> خوش آمدید.<br>
+                    می‌توانید سوال بپرسید یا برای ساخت تصویر توصیف خود را بنویسید (مثلاً: <i>یک کبگ روی صخره</i>).
+                </div>
+            </div>
+
+            <div id="selectedBadge" class="selected-badge">
+                <span id="badgeText">مرجع انتخاب شده: کوهستان‌های دیلگون</span>
+                <button onclick="clearReference()">✖ لغو انتخاب</button>
+            </div>
+
+            <div class="input-area">
+                <input type="text" id="userInput" placeholder="پیام یا توصیف تصویر را بنویسید...">
+                <button class="send-btn" onclick="handleSend()">ارسال / ساخت</button>
+            </div>
+        </div>
     </div>
 
-    <!-- تب گفتگو -->
-    <div id="chat-tab" class="tab-content active">
-        <div class="chat-box" id="chatBox">
-            <div class="message bot-message">سلام! من دستیار هوشمند شما هستم. چطور می‌توانم کمکتان کنم؟</div>
-        </div>
-        <div class="input-group">
-            <input type="text" id="userInput" placeholder="پیام خود را بنویسید..." onkeypress="handleKeyPress(event, 'chat')">
-            <button class="send-btn" onclick="sendMessage()">ارسال</button>
-        </div>
-    </div>
+    <script>
+        let currentRefStyle = "";
+        let currentRefTitle = "";
 
-    <!-- تب ساخت تصویر -->
-    <div id="image-tab" class="tab-content">
-        <div class="input-group">
-            <input type="text" id="imagePrompt" placeholder="توصیف تصویر (مثلاً: یک کبگ روی صخره‌های کوهستانی...)" onkeypress="handleKeyPress(event, 'image')">
-            <button class="send-btn" onclick="generateImage()">ساخت تصویر</button>
-        </div>
-        <div class="loading" id="imageLoading">در حال طراحی تصویر، لطفاً چند ثانیه شکیبا باشید...</div>
-        <div class="image-result">
-            <img id="generatedImg" src="" alt="تصویر تولید شده">
-        </div>
-    </div>
-</div>
+        function selectReference(element, title, stylePrompt) {
+            document.querySelectorAll('.reference-card').forEach(card => card.classList.remove('selected'));
+            element.classList.add('selected');
+            currentRefStyle = stylePrompt;
+            currentRefTitle = title;
 
-<script>
-    function switchTab(tabName) {
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-
-        if (tabName === 'chat') {
-            document.querySelectorAll('.tab-btn')[0].classList.add('active');
-            document.getElementById('chat-tab').classList.add('active');
-        } else {
-            document.querySelectorAll('.tab-btn')[1].classList.add('active');
-            document.getElementById('image-tab').classList.add('active');
+            const badge = document.getElementById('selectedBadge');
+            const badgeText = document.getElementById('badgeText');
+            badgeText.innerText = `مرجع انتخاب شده برای تصویر: ${title}`;
+            badge.style.display = 'flex';
         }
-    }
 
-    function handleKeyPress(e, type) {
-        if (e.key === 'Enter') {
-            if (type === 'chat') sendMessage();
-            if (type === 'image') generateImage();
+        function clearReference() {
+            document.querySelectorAll('.reference-card').forEach(card => card.classList.remove('selected'));
+            currentRefStyle = "";
+            currentRefTitle = "";
+            document.getElementById('selectedBadge').style.display = 'none';
         }
-    }
 
-    // ارسال پیام متنی
-    async function sendMessage() {
-        const input = document.getElementById('userInput');
-        const text = input.value.trim();
-        if (!text) return;
+        async function translateText(text) {
+            let translated = text
+                .replace(/کبگ/g, 'chukar partridge bird')
+                .replace(/خرگوش/g, 'rabbit')
+                .replace(/کوه/g, 'mountain')
+                .replace(/درخت/g, 'tree')
+                .replace(/چشمه/g, 'spring water stream')
+                .replace(/پرنده/g, 'bird')
+                .replace(/گل/g, 'wild flower')
+                .replace(/برف/g, 'snow')
+                .replace(/عکس/g, '')
+                .replace(/تصویر/g, '')
+                .replace(/بساز/g, '')
+                .replace(/بکش/g, '');
 
-        const chatBox = document.getElementById('chatBox');
-        
-        // نمایش پیام کاربر
-        const userDiv = document.createElement('div');
-        userDiv.className = 'message user-message';
-        userDiv.textContent = text;
-        chatBox.appendChild(userDiv);
-        input.value = '';
-        chatBox.scrollTop = chatBox.scrollHeight;
+            const hasPersian = /[\u0600-\u06FF]/.test(translated);
+            if (!hasPersian) return translated;
 
-        // پیام در حال پاسخ
-        const botDiv = document.createElement('div');
-        botDiv.className = 'message bot-message';
-        botDiv.textContent = 'در حال پاسخگویی...';
-        chatBox.appendChild(botDiv);
-        chatBox.scrollTop = chatBox.scrollHeight;
-
-        try {
-            // فراخوانی فانکشن مستقیم کلادفلر
-            const response = await fetch('/functions/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text: text })
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                botDiv.textContent = data.reply || "پاسخی دریافت نشد.";
-            } else {
-                // اگر مستقیم پاسخ نداد، فراخوانی مستقیم هوش مصنوعی
-                const altRes = await fetch(`https://text.pollinations.ai/${encodeURIComponent(text)}`);
-                if (altRes.ok) {
-                    botDiv.textContent = await altRes.text();
-                } else {
-                    botDiv.textContent = 'در حال حاضر ارتباط برقرار نشد. لطفاً مجدداً پیام بفرستید.';
+            try {
+                const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(translated)}&langpair=fa|en`);
+                const data = await res.json();
+                if (data && data.responseData && data.responseData.translatedText) {
+                    return data.responseData.translatedText;
                 }
-            }
-        } catch (err) {
-            botDiv.textContent = 'خطا در برقراری ارتباط با سرور.';
+            } catch (err) {}
+            return translated;
         }
-        chatBox.scrollTop = chatBox.scrollHeight;
-    }
 
-    // تولید تصویر با ترجمه خودکار به انگلیسی برای دقت بالا
-    async function generateImage() {
-        const promptInput = document.getElementById('imagePrompt');
-        const prompt = promptInput.value.trim();
-        if (!prompt) return;
+        async function fetchAIChatResponse(userText) {
+            try {
+                // ارسال به API هوش مصنوعی
+                const response = await fetch(`https://text.pollinations.ai/${encodeURIComponent("پاسخ کوتاهی به فارسی بده: " + userText)}`);
+                if (response.ok) {
+                    const reply = await response.text();
+                    return reply || "پاسخی دریافت نشد.";
+                }
+            } catch (err) {}
+            return "در حال حاضر ارتباط برقرار نشد. لطفاً مجدداً پیام بفرستید.";
+        }
 
-        const imgElement = document.getElementById('generatedImg');
-        const loading = document.getElementById('imageLoading');
+        async function handleSend() {
+            const input = document.getElementById('userInput');
+            const chatBox = document.getElementById('chatBox');
+            const text = input.value.trim();
 
-        imgElement.style.display = 'none';
-        loading.style.display = 'block';
+            if (!text) return;
 
-        // دیکشنری ساده برای واژه‌های کلیدی جهت دقت در تصویرسازی
-        let translatedPrompt = prompt
-            .replace(/کبگ/g, 'chukar partridge')
-            .replace(/خرگوش/g, 'rabbit')
-            .replace(/کوه/g, 'mountain')
-            .replace(/طبیعت/g, 'nature')
-            .replace(/پرنده/g, 'bird')
-            .replace(/نقاشی کن/g, '')
-            .replace(/بکش/g, '');
+            appendMessage(text, 'user-message');
+            input.value = '';
 
-        const seed = Math.floor(Math.random() * 999999);
-        const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(translatedPrompt)}?seed=${seed}&width=1024&height=1024&nologo=true`;
+            const lowerText = text.toLowerCase();
+            const isImageReq = text.includes('عکس') || text.includes('تصویر') || 
+                               text.includes('بساز') || text.includes('بکش') ||
+                               text.includes('کبگ') || text.includes('پرنده') ||
+                               lowerText.includes('make') || lowerText.includes('image') || 
+                               currentRefStyle !== "";
 
-        imgElement.onload = function() {
-            loading.style.display = 'none';
-            imgElement.style.display = 'inline-block';
-        };
+            if (isImageReq) {
+                const loadingId = 'loading-' + Date.now();
+                appendMessage("در حال ساخت تصویر طبق توصیف شما... 🎨", 'ai-message', loadingId);
 
-        imgElement.onerror = function() {
-            loading.style.display = 'none';
-            alert('خطا در دریافت تصویر. لطفاً دوباره تلاش کنید.');
-        };
+                let englishPrompt = await translateText(text);
+                let finalPromptText = currentRefStyle 
+                    ? `${englishPrompt}, inside ${currentRefStyle}, 8k resolution photorealistic nature photography`
+                    : `${englishPrompt}, zagros mountains nature style, high quality photorealistic`;
 
-        imgElement.src = imageUrl;
-    }
-</script>
+                const randomSeed = Math.floor(Math.random() * 999999);
+                const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPromptText)}?width=1024&height=768&seed=${randomSeed}&nologo=true`;
 
+                const img = new Image();
+                img.src = imageUrl;
+                img.onload = () => {
+                    removeMessage(loadingId);
+                    const imgMsg = document.createElement('div');
+                    imgMsg.className = 'message ai-message';
+                    imgMsg.innerHTML = `
+                        تصویر آماده شد:
+                        <br>
+                        <a href="${imageUrl}" target="_blank">
+                            <img src="${imageUrl}" class="generated-img" alt="Nature AI Image">
+                        </a>
+                        <a href="${imageUrl}" target="_blank" class="img-link-btn">
+                            🔗 باز کردن/دانلود تصویر با کیفیت اصلی
+                        </a>
+                    `;
+                    chatBox.appendChild(imgMsg);
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                };
+
+                img.onerror = () => {
+                    removeMessage(loadingId);
+                    appendMessage("خطا در ساخت تصویر. لطفاً دوباره امتحان کنید.", 'ai-message');
+                };
+
+            } else {
+                const loadingId = 'loading-' + Date.now();
+                appendMessage("در حال نوشتن پاسخ... 🧠", 'ai-message', loadingId);
+
+                const aiResponse = await fetchAIChatResponse(text);
+                removeMessage(loadingId);
+                appendMessage(aiResponse, 'ai-message');
+            }
+        }
+
+        function appendMessage(text, className, id = null) {
+            const chatBox = document.getElementById('chatBox');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message ${className}`;
+            if (id) msgDiv.id = id;
+            msgDiv.innerText = text;
+            chatBox.appendChild(msgDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function removeMessage(id) {
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        }
+
+        document.getElementById('userInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') handleSend();
+        });
+    </script>
 </body>
 </html>
