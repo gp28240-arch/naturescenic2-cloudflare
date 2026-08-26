@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>naturescenic2-ai | دیلگون کهگیلویه و بویراحمد</title>
+    <title>naturescenic2 - چت هوشمند و ساخت تصویر</title>
     <style>
         * {
             box-sizing: border-box;
@@ -233,29 +233,29 @@
     </header>
 
     <div class="main-container">
-        <!-- پنل عکس‌های مرجع -->
+        <!-- پنل عکس‌های مرجع با لینک‌های دقیق گوگل درایو شما -->
         <div class="sidebar">
             <h2>🏔️ تصاویر مرجع دیلگون</h2>
             <p class="sub-head">یک کارت انتخاب کنید تا تصویر طبق محیط آن ساخته شود:</p>
 
-            <div class="reference-card" onclick="selectReference(this, 'کوهستان‌های دیلگون', 'high zagros mountain range, dilgon area, kohgiluyeh iran, scenic nature')">
+            <div class="reference-card" onclick="selectReference(this, 'کوهستان‌های دیلگون', 'high mountain landscape dilgon region zagros iran')">
                 <img src="https://lh3.googleusercontent.com/d/162c6fzZnSo-wAWq2eWnfhcFOWLBnpb8B" alt="دیلگون 1">
-                <p>کوهستان‌های دیلگون</p>
+                <p>کوهستان‌های دیلگون در کهگیلویه و بویراحمد، ایران با</p>
             </div>
 
-            <div class="reference-card" onclick="selectReference(this, 'چشم‌انداز طبیعی دیلگون', 'scenic landscape of dilgon region, kohgiluyeh, zagros foothills')">
+            <div class="reference-card" onclick="selectReference(this, 'چشم‌انداز طبیعی دیلگون', 'scenic nature dilgon area kohgiluyeh iran')">
                 <img src="https://lh3.googleusercontent.com/d/1bjsxDfpR9fxxaeWsMUZ-XATMAzM9mGhB" alt="دیلگون 2">
-                <p>چشم‌انداز طبیعی دیلگون</p>
+                <p>چشم‌انداز طبیعی دیلگون در کهگیلویه و بویراحمد، ایران با</p>
             </div>
 
-            <div class="reference-card" onclick="selectReference(this, 'طبیعت کوهستانی زاگرس', 'south zagros mountain range landscape, lush vegetation, dilgon iran')">
+            <div class="reference-card" onclick="selectReference(this, 'طبیعت کوهستانی زاگرس', 'mountain slope nature dilgon zagros iran')">
                 <img src="https://lh3.googleusercontent.com/d/1H3Tz6fm6QpHxJHDg8lpmraD14oNEhvlh" alt="دیلگون 3">
-                <p>طبیعت کوهستانی زاگرس</p>
+                <p>طبیعت کوهستانی دیلگون در کهگیلویه و بویراحمد، ایران با</p>
             </div>
 
-            <div class="reference-card" onclick="selectReference(this, 'دره و دامنه‌های دیلگون', 'deep valley and green slopes of dilgon area, kohgiluyeh')">
+            <div class="reference-card" onclick="selectReference(this, 'دره و دامنه‌های دیلگون', 'deep valley dilgon kohgiluyeh iran')">
                 <img src="https://lh3.googleusercontent.com/d/19NAqOBVYqS3FScZNYJB86ukeppKVI0a4" alt="دیلگون 4">
-                <p>دره و دامنه‌های دیلگون</p>
+                <p>دره و دامنه‌های دیلگون در کهگیلویه و بویراحمد، ایران با</p>
             </div>
         </div>
 
@@ -284,6 +284,7 @@
         let currentRefStyle = "";
         let currentRefTitle = "";
 
+        // انتخاب کارت مرجع بدون کپی متن در کادر ورودی
         function selectReference(element, title, stylePrompt) {
             document.querySelectorAll('.reference-card').forEach(card => card.classList.remove('selected'));
             element.classList.add('selected');
@@ -303,44 +304,17 @@
             document.getElementById('selectedBadge').style.display = 'none';
         }
 
-        async function translateText(text) {
-            let translated = text
-                .replace(/کبگ/g, 'chukar partridge bird')
-                .replace(/خرگوش/g, 'rabbit')
-                .replace(/کوه/g, 'mountain')
-                .replace(/درخت/g, 'tree')
-                .replace(/چشمه/g, 'spring water stream')
-                .replace(/پرنده/g, 'bird')
-                .replace(/گل/g, 'wild flower')
-                .replace(/برف/g, 'snow')
-                .replace(/عکس/g, '')
-                .replace(/تصویر/g, '')
-                .replace(/بساز/g, '')
-                .replace(/بکش/g, '');
-
-            const hasPersian = /[\u0600-\u06FF]/.test(translated);
-            if (!hasPersian) return translated;
-
-            try {
-                const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(translated)}&langpair=fa|en`);
-                const data = await res.json();
-                if (data && data.responseData && data.responseData.translatedText) {
-                    return data.responseData.translatedText;
-                }
-            } catch (err) {}
-            return translated;
-        }
-
-        async function fetchAIChatResponse(userText) {
-            try {
-                // ارسال به API هوش مصنوعی
-                const response = await fetch(`https://text.pollinations.ai/${encodeURIComponent("پاسخ کوتاهی به فارسی بده: " + userText)}`);
-                if (response.ok) {
-                    const reply = await response.text();
-                    return reply || "پاسخی دریافت نشد.";
-                }
-            } catch (err) {}
-            return "در حال حاضر ارتباط برقرار نشد. لطفاً مجدداً پیام بفرستید.";
+        // ترجمه ساده واژه‌ها برای هوش مصنوعی
+        function preparePrompt(text) {
+            let prompt = text;
+            prompt = prompt.replace(/کبگ/g, 'chukar partridge bird');
+            prompt = prompt.replace(/خرگوش/g, 'rabbit');
+            prompt = prompt.replace(/کوه/g, 'mountain');
+            prompt = prompt.replace(/درخت/g, 'tree');
+            prompt = prompt.replace(/چشمه/g, 'water spring');
+            prompt = prompt.replace(/پرنده/g, 'bird');
+            prompt = prompt.replace(/عکس/g, '').replace(/تصویر/g, '').replace(/بساز/g, '').replace(/بکش/g, '');
+            return prompt;
         }
 
         async function handleSend() {
@@ -356,21 +330,21 @@
             const lowerText = text.toLowerCase();
             const isImageReq = text.includes('عکس') || text.includes('تصویر') || 
                                text.includes('بساز') || text.includes('بکش') ||
-                               text.includes('کبگ') || text.includes('پرنده') ||
+                               text.includes('کبگ') || text.includes('خرگوش') ||
                                lowerText.includes('make') || lowerText.includes('image') || 
                                currentRefStyle !== "";
 
             if (isImageReq) {
                 const loadingId = 'loading-' + Date.now();
-                appendMessage("در حال ساخت تصویر طبق توصیف شما... 🎨", 'ai-message', loadingId);
+                appendMessage("در حال طراحی تصویر، لطفاً چند ثانیه شکیبا باشید... 🎨", 'ai-message', loadingId);
 
-                let englishPrompt = await translateText(text);
-                let finalPromptText = currentRefStyle 
-                    ? `${englishPrompt}, inside ${currentRefStyle}, 8k resolution photorealistic nature photography`
-                    : `${englishPrompt}, zagros mountains nature style, high quality photorealistic`;
+                let translated = preparePrompt(text);
+                let finalPrompt = currentRefStyle 
+                    ? `${translated}, background ${currentRefStyle}, realistic photorealistic nature photography`
+                    : `${translated}, zagros mountains nature style, high quality photorealistic`;
 
-                const randomSeed = Math.floor(Math.random() * 999999);
-                const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPromptText)}?width=1024&height=768&seed=${randomSeed}&nologo=true`;
+                const seed = Math.floor(Math.random() * 999999);
+                const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?width=1024&height=768&seed=${seed}&nologo=true`;
 
                 const img = new Image();
                 img.src = imageUrl;
@@ -394,16 +368,28 @@
 
                 img.onerror = () => {
                     removeMessage(loadingId);
-                    appendMessage("خطا در ساخت تصویر. لطفاً دوباره امتحان کنید.", 'ai-message');
+                    appendMessage("خطا در دریافت تصویر. لطفاً دوباره تلاش کنید.", 'ai-message');
                 };
 
             } else {
+                // ارسال چت متنی
                 const loadingId = 'loading-' + Date.now();
-                appendMessage("در حال نوشتن پاسخ... 🧠", 'ai-message', loadingId);
+                appendMessage("در حال پاسخگویی... 🧠", 'ai-message', loadingId);
 
-                const aiResponse = await fetchAIChatResponse(text);
-                removeMessage(loadingId);
-                appendMessage(aiResponse, 'ai-message');
+                try {
+                    const response = await fetch(`https://text.pollinations.ai/${encodeURIComponent("به عنوان دستیارnaturescenic2 پاسخ فارسی روان و کوتاه بده: " + text)}`);
+                    removeMessage(loadingId);
+
+                    if (response.ok) {
+                        const reply = await response.text();
+                        appendMessage(reply || "پاسخی دریافت نشد.", 'ai-message');
+                    } else {
+                        appendMessage("در حال حاضر ارتباط متنی برقرار نشد. دوباره امتحان کنید.", 'ai-message');
+                    }
+                } catch (err) {
+                    removeMessage(loadingId);
+                    appendMessage("خطا در برقراری ارتباط با سرور چت.", 'ai-message');
+                }
             }
         }
 
