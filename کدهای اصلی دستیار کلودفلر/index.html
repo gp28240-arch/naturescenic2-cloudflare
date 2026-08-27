@@ -19,7 +19,6 @@
       direction: rtl;
     }
 
-    /* سربرگ */
     .main-header {
       display: flex;
       justify-content: space-between;
@@ -45,55 +44,11 @@
       box-shadow: 0 4px 10px rgba(204, 0, 0, 0.4);
       transition: 0.3s;
     }
-    .yt-btn:hover {
-      background-color: #ff0000;
-    }
-    .yt-logo {
-      height: 28px;
-      width: auto;
-      border-radius: 4px;
-    }
-    .header-titles {
-      text-align: right;
-    }
-    .header-titles h2 {
-      color: #38bdf8;
-      font-size: 1.4rem;
-    }
-    .header-titles p {
-      font-size: 0.9rem;
-      color: #94a3b8;
-    }
+    .yt-btn:hover { background-color: #ff0000; }
+    .yt-logo { height: 28px; width: auto; border-radius: 4px; }
+    .header-titles h2 { color: #38bdf8; font-size: 1.4rem; }
+    .header-titles p { font-size: 0.9rem; color: #94a3b8; }
 
-    /* مترجم گوگل */
-    .translate-section {
-      background: #1e293b;
-      padding: 12px 20px;
-      border-radius: 10px;
-      border: 2px solid #22c55e;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
-    }
-    .translate-title {
-      font-weight: bold;
-      color: #4ade80;
-    }
-    .goog-te-gadget-simple {
-      background-color: #0f172a !important;
-      border: 1px solid #334155 !important;
-      padding: 6px 12px !important;
-      border-radius: 6px !important;
-      font-size: 14px !important;
-    }
-    .goog-te-gadget-simple span, .goog-te-menu-value span {
-      color: #ffffff !important;
-      font-weight: bold !important;
-    }
-
-    /* پنل دکمه‌ها */
     .control-panel {
       display: flex;
       flex-wrap: wrap;
@@ -107,44 +62,16 @@
       padding: 12px 20px;
       border-radius: 8px;
       border: 2px solid #38bdf8;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
       cursor: pointer;
-      transition: all 0.2s;
       display: inline-flex;
       align-items: center;
       gap: 8px;
       text-decoration: none;
     }
-    .btn:hover {
-      background-color: #38bdf8;
-      color: #0f172a;
-    }
-    .btn-lang {
-      border-color: #f59e0b;
-      color: #fbbf24;
-    }
-    .btn-lang:hover {
-      background-color: #f59e0b;
-      color: #0f172a;
-    }
-    .btn-ai {
-      background-color: #a855f7;
-      color: #ffffff;
-      border-color: #a855f7;
-    }
-    .btn-ai:hover {
-      background-color: #9333ea;
-    }
-    .btn-download {
-      border-color: #22c55e;
-      color: #4ade80;
-    }
-    .btn-download:hover {
-      background-color: #22c55e;
-      color: #0f172a;
-    }
+    .btn:hover { background-color: #38bdf8; color: #0f172a; }
+    .btn-ai { background-color: #a855f7; color: #ffffff; border-color: #a855f7; }
+    .btn-ai:hover { background-color: #9333ea; }
 
-    /* بخش ساخت عکس مستقیم (جایگزین پاپ‌آپ) */
     .ai-inline-box {
       background: #1e293b;
       border: 2px solid #a855f7;
@@ -164,7 +91,6 @@
       border: 1px solid #475569;
       background: #0f172a;
       color: #fff;
-      font-size: 0.95rem;
     }
     .ai-status-text {
       width: 100%;
@@ -173,32 +99,6 @@
       display: none;
     }
 
-    /* منوی فیلتر رسانه‌ها (عکس، فیلم، صدا) */
-    .filter-menu {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-      background: #1e293b;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #334155;
-    }
-    .filter-btn {
-      background: #0f172a;
-      color: #94a3b8;
-      border: 1px solid #475569;
-      padding: 8px 16px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .filter-btn.active {
-      background: #38bdf8;
-      color: #0f172a;
-      border-color: #38bdf8;
-    }
-
-    /* کارت‌ها */
     .media-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -212,64 +112,11 @@
       display: flex;
       flex-direction: column;
     }
-    .media-card img, .media-card video {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-    }
-    .media-card audio {
-      width: 90%;
-      margin: 20px auto;
-    }
-    .card-body {
-      padding: 15px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      flex-grow: 1;
-    }
-    .card-title-fa {
-      font-weight: bold;
-      color: #f8fafc;
-    }
-    .card-title-en {
-      font-size: 0.85rem;
-      color: #94a3b8;
-      direction: ltr;
-      text-align: right;
-    }
-    .rename-box {
-      display: flex;
-      gap: 5px;
-      margin-top: auto;
-    }
-    .rename-input {
-      flex: 1;
-      padding: 6px 10px;
-      border-radius: 6px;
-      border: 1px solid #475569;
-      background: #0f172a;
-      color: #fff;
-      font-size: 0.85rem;
-    }
-    .btn-action {
-      padding: 6px 12px;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 0.85rem;
-    }
-    .btn-rename {
-      background-color: #0284c7;
-      color: white;
-    }
-    .btn-delete {
-      background-color: #dc2626;
-      color: white;
-      width: 100%;
-      margin-top: 5px;
-    }
+    .media-card img, .media-card video { width: 100%; height: 180px; object-fit: cover; }
+    .media-card audio { width: 90%; margin: 20px auto; }
+    .card-body { padding: 15px; display: flex; flex-direction: column; gap: 10px; flex-grow: 1; }
+    .card-title-fa { font-weight: bold; color: #f8fafc; }
+    .btn-delete { background-color: #dc2626; color: white; border: none; padding: 6px; border-radius: 6px; cursor: pointer; }
   </style>
 </head>
 <body>
@@ -277,166 +124,61 @@
   <header class="main-header">
     <a href="https://youtube.com/@naturescenic2" target="_blank" class="yt-btn">
       <img src="https://drive.google.com/thumbnail?id=1EZf35v8476qtDC_rTS_h-6-_zIq0RNTh&sz=w200" alt="Logo" class="yt-logo">
-      <span>کانال یوتیوب / YouTube: @naturescenic2</span>
+      <span>YouTube: @naturescenic2</span>
     </a>
-
     <div class="header-titles">
       <h2>naturescenic2-ai</h2>
-      <p>طبیعت دیلگون، کهگیلویه و بویراحمد (کوهستان زاگرس)</p>
-      <p>Dilgon Zagros Mountains / Nature Regional Assistant</p>
+      <p>طبیعت دیلگون، کهگیلویه و بویراحمد</p>
     </div>
   </header>
 
-  <div class="translate-section">
-    <span class="translate-title">🌐 مترجم سریع صفحه / Quick Translator:</span>
-    <div id="google_translate_element"></div>
-  </div>
-
   <div class="control-panel">
-    <button class="btn btn-lang" id="toggle-lang-btn" onclick="toggleLanguage()">🌐 Switch to English / تغییر زبان</button>
-    <button class="btn btn-download" onclick="downloadApp()">📥 دانلود اپلیکیشن / Download App</button>
-
     <label class="btn">
-      📷 آپلود عکس / Wallpaper
+      📷 آپلود عکس
       <input type="file" id="upload-image" accept="image/*" hidden onchange="handleFileUpload(event, 'image')">
     </label>
-    
     <label class="btn">
-      🎥 آپلود ویدیو / Video
+      🎥 آپلود ویدیو
       <input type="file" id="upload-video" accept="video/*" hidden onchange="handleFileUpload(event, 'video')">
     </label>
-
     <label class="btn">
-      🎵 آپلود صدا / Audio
+      🎵 آپلود صدا
       <input type="file" id="upload-audio" accept="audio/*" hidden onchange="handleFileUpload(event, 'audio')">
     </label>
   </div>
 
   <div class="ai-inline-box">
     <span style="font-weight:bold; color:#c084fc;">✨ ساخت تصویر هوش مصنوعی:</span>
-    <input type="text" id="ai-prompt-input" class="ai-inline-input" placeholder="توصیف تصویر را بنویسید (مثال: کوهستان زاگرس برفی)..." onkeypress="handlePromptKeyPress(event)">
+    <input type="text" id="ai-prompt-input" class="ai-inline-input" placeholder="توصیف تصویر...">
     <button class="btn btn-ai" id="btn-submit-ai" onclick="submitAIGeneration()">ساخت عکس</button>
-    <div class="ai-status-text" id="ai-loading-status">⏳ در حال ارسال درخواست و دریافت تصویر از سرور...</div>
+    <div class="ai-status-text" id="ai-loading-status">⏳ در حال دریافت تصویر از سرور کلودفلر...</div>
   </div>
 
-  <div class="filter-menu">
-    <button class="filter-btn active" onclick="filterMedia('all', this)">همه / All</button>
-    <button class="filter-btn" onclick="filterMedia('image', this)">🖼️ فقط عکس‌ها / Images Only</button>
-    <button class="filter-btn" onclick="filterMedia('video', this)">🎥 فقط ویدیوها / Videos Only</button>
-    <button class="filter-btn" onclick="filterMedia('audio', this)">🎵 فقط صداها / Audio Only</button>
-  </div>
-
-  <div class="media-grid" id="media-grid">
-    
-    <div class="media-card" data-type="image" id="card-1">
-      <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b" alt="کوهستان">
-      <div class="card-body">
-        <div class="card-title-fa" id="title-fa-1">پرستو</div>
-        <div class="card-title-en" id="title-en-1">Swallow</div>
-        <div class="rename-box">
-          <input type="text" class="rename-input" id="input-1" placeholder="نام جدید به فارسی...">
-          <button class="btn-action btn-rename" onclick="renameItem('1')">تغییر نام</button>
-        </div>
-        <button class="btn-action btn-delete" onclick="deleteItem('card-1')">🗑️ حذف فایل (Delete)</button>
-      </div>
-    </div>
-
-    <div class="media-card" data-type="audio" id="card-2">
-      <audio controls src="#"></audio>
-      <div class="card-body">
-        <div class="card-title-fa" id="title-fa-2">بلبل</div>
-        <div class="card-title-en" id="title-en-2">Nightingale</div>
-        <div class="rename-box">
-          <input type="text" class="rename-input" id="input-2" placeholder="نام جدید به فارسی...">
-          <button class="btn-action btn-rename" onclick="renameItem('2')">تغییر نام</button>
-        </div>
-        <button class="btn-action btn-delete" onclick="deleteItem('card-2')">🗑️ حذف فایل (Delete)</button>
-      </div>
-    </div>
-
-  </div>
-
-  <script type="text/javascript">
-    function googleTranslateElementInit() {
-      new google.translate.TranslateElement({
-        pageLanguage: 'fa',
-        includedLanguages: 'en,fa,ar,fr,de,es',
-        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-      }, 'google_translate_element');
-    }
-  </script>
-  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  <div class="media-grid" id="media-grid"></div>
 
   <script>
     const WORKER_URL = 'https://naturescenic2-cloudflare.gp28240.workers.dev';
-    let currentLang = 'fa';
 
-    // سوئیچ زبان
-    function toggleLanguage() {
-      const body = document.body;
-      const langBtn = document.getElementById('toggle-lang-btn');
-      
-      if (currentLang === 'fa') {
-        body.style.direction = 'ltr';
-        langBtn.innerText = '🌐 تغییر به فارسی / Switch to Persian';
-        currentLang = 'en';
-      } else {
-        body.style.direction = 'rtl';
-        langBtn.innerText = '🌐 Switch to English / تغییر زبان';
-        currentLang = 'fa';
-      }
-    }
+    window.addEventListener('DOMContentLoaded', loadSavedFiles);
 
-    // تغییر نام همراه با ترجمه واقعی اتوماتیک API
-    async function renameItem(id) {
-      const inputVal = document.getElementById(`input-${id}`).value.trim();
-      if (!inputVal) {
-        alert("لطفاً نام جدید را وارد کنید");
-        return;
-      }
-      
-      document.getElementById(`title-fa-${id}`).innerText = inputVal;
-      document.getElementById(`title-en-${id}`).innerText = "در حال ترجمه...";
-
+    async function loadSavedFiles() {
       try {
-        const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(inputVal)}&langpair=fa|en`);
-        const data = await response.json();
-        if (data.responseData && data.responseData.translatedText) {
-          document.getElementById(`title-en-${id}`).innerText = data.responseData.translatedText;
-        } else {
-          document.getElementById(`title-en-${id}`).innerText = inputVal;
+        const res = await fetch(`${WORKER_URL}/list-files`);
+        if (res.ok) {
+          const files = await res.json();
+          files.forEach(file => {
+            const ext = file.name.split('.').pop().toLowerCase();
+            let type = 'image';
+            if (['mp4', 'webm', 'ogg'].includes(ext)) type = 'video';
+            if (['mp3', 'wav', 'ogg'].includes(ext)) type = 'audio';
+            createMediaCard(file.url, type, file.name);
+          });
         }
       } catch (e) {
-        document.getElementById(`title-en-${id}`).innerText = inputVal;
-      }
-      
-      document.getElementById(`input-${id}`).value = '';
-    }
-
-    // حذف فایل
-    function deleteItem(cardId) {
-      if (confirm("آیا از حذف این فایل مطمئن هستید؟")) {
-        const element = document.getElementById(cardId);
-        if (element) element.remove();
+        console.error("خطا در دریافت لیست فایل‌ها از سرور:", e);
       }
     }
 
-    // تفکیک و فیلتر (فقط عکس / فقط ویدیو / فقط صدا)
-    function filterMedia(type, btn) {
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      const cards = document.querySelectorAll('.media-card');
-      cards.forEach(card => {
-        if (type === 'all' || card.getAttribute('data-type') === type) {
-          card.style.display = 'flex';
-        } else {
-          card.style.display = 'none';
-        }
-      });
-    }
-
-    // آپلود فایل
     async function handleFileUpload(event, type) {
       const file = event.target.files[0];
       if (!file) return;
@@ -445,8 +187,6 @@
       formData.append("file", file);
       formData.append("type", type);
 
-      const localUrl = URL.createObjectURL(file);
-
       try {
         const response = await fetch(`${WORKER_URL}/upload`, {
           method: 'POST',
@@ -454,55 +194,16 @@
         });
 
         if (response.ok) {
-          const resData = await response.json().catch(() => ({}));
-          const fileUrl = resData.url || localUrl;
-          createMediaCard(fileUrl, type, file.name);
+          const resData = await response.json();
+          createMediaCard(resData.url || URL.createObjectURL(file), type, file.name);
         } else {
-          createMediaCard(localUrl, type, file.name);
+          alert("خطا در آپلود روی سرور کلودفلر.");
         }
       } catch (e) {
-        createMediaCard(localUrl, type, file.name);
+        alert("خطا در برقراری ارتباط با سرور کلودفلر.");
       }
     }
 
-    // ایجاد کارت رسانه در صفحه
-    function createMediaCard(fileUrl, type, name) {
-      const grid = document.getElementById('media-grid');
-      const newId = Date.now();
-      const card = document.createElement('div');
-      card.className = 'media-card';
-      card.setAttribute('data-type', type);
-      card.id = `card-${newId}`;
-
-      let mediaTag = `<img src="${fileUrl}" alt="${name}">`;
-      if (type === 'video') {
-        mediaTag = `<video src="${fileUrl}" controls></video>`;
-      } else if (type === 'audio') {
-        mediaTag = `<audio src="${fileUrl}" controls></audio>`;
-      }
-
-      card.innerHTML = `
-        ${mediaTag}
-        <div class="card-body">
-          <div class="card-title-fa" id="title-fa-${newId}">${name}</div>
-          <div class="card-title-en" id="title-en-${newId}">File Uploaded</div>
-          <div class="rename-box">
-            <input type="text" class="rename-input" id="input-${newId}" placeholder="نام جدید...">
-            <button class="btn-action btn-rename" onclick="renameItem('${newId}')">تغییر نام</button>
-          </div>
-          <button class="btn-action btn-delete" onclick="deleteItem('card-${newId}')">🗑️ حذف فایل (Delete)</button>
-        </div>
-      `;
-      grid.prepend(card);
-    }
-
-    function handlePromptKeyPress(event) {
-      if (event.key === 'Enter') {
-        submitAIGeneration();
-      }
-    }
-
-    // ساخت تصویر هوش مصنوعی
     async function submitAIGeneration() {
       const promptInput = document.getElementById('ai-prompt-input');
       const promptText = promptInput.value.trim();
@@ -513,7 +214,7 @@
         alert("لطفاً توصیف تصویر را بنویسید.");
         return;
       }
-      
+
       loadingStatus.style.display = 'block';
       btnSubmit.disabled = true;
 
@@ -525,45 +226,40 @@
         });
 
         if (response.ok) {
-          let imageUrl = '';
-          const contentType = response.headers.get("content-type") || "";
-          
-          if (contentType.includes("application/json")) {
-            const data = await response.json();
-            imageUrl = data.url || data.image;
-          } else {
-            const blob = await response.blob();
-            imageUrl = URL.createObjectURL(blob);
-          }
-
-          if (imageUrl) {
-            createMediaCard(imageUrl, 'image', `هوش مصنوعی: ${promptText}`);
-            promptInput.value = '';
-          } else {
-            alert("پاسخ تصویر دریافت نشد.");
-          }
+          const blob = await response.blob();
+          const imageUrl = URL.createObjectURL(blob);
+          createMediaCard(imageUrl, 'image', `هوش مصنوعی: ${promptText}`);
+          promptInput.value = '';
         } else {
-          alert("خطا در پاسخ‌دهی از ورکر کلودفلر.");
+          alert("خطا در تولید تصویر از سمت سرور.");
         }
       } catch (e) {
-        alert("ارتباط با ورکر کلودفلر برقرار نشد. لطفاً تنظیمات CORS یا آدرس ورکر را بررسی کنید.");
+        alert("خطای ارتباط با سرور کلودفلر هنگام ساخت تصویر.");
       } finally {
         loadingStatus.style.display = 'none';
         btnSubmit.disabled = false;
       }
     }
 
-    // دانلود اپلیکیشن استاندارد
-    function downloadApp() {
-      const blob = new Blob(["naturescenic2 Assistant Web App"], { type: "text/plain" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "naturescenic2-app.txt";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+    function createMediaCard(fileUrl, type, name) {
+      const grid = document.getElementById('media-grid');
+      const newId = Date.now();
+      const card = document.createElement('div');
+      card.className = 'media-card';
+      card.id = `card-${newId}`;
+
+      let mediaTag = `<img src="${fileUrl}" alt="${name}">`;
+      if (type === 'video') mediaTag = `<video src="${fileUrl}" controls></video>`;
+      if (type === 'audio') mediaTag = `<audio src="${fileUrl}" controls></audio>`;
+
+      card.innerHTML = `
+        ${mediaTag}
+        <div class="card-body">
+          <div class="card-title-fa">${name}</div>
+          <button class="btn-delete" onclick="document.getElementById('card-${newId}').remove()">🗑️ حذف</button>
+        </div>
+      `;
+      grid.prepend(card);
     }
   </script>
 </body>
