@@ -25,18 +25,24 @@
 
     /* شبکه‌بندی رسانه‌ها */
     .media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-    .media-card { background: #1e293b; border-radius: 12px; overflow: hidden; border: 1px solid #334155; display: flex; flex-direction: column; }
-    .media-card img, .media-card video { width: 100%; height: 180px; object-fit: cover; }
+    .media-card { background: #1e293b; border-radius: 12px; overflow: hidden; border: 1px solid #334155; display: flex; flex-direction: column; position: relative; }
+    .media-card img, .media-card video { width: 100%; height: 200px; object-fit: cover; }
     .media-card audio { width: 90%; margin: 20px auto; }
     .card-body { padding: 15px; display: flex; flex-direction: column; gap: 10px; flex-grow: 1; }
+    
+    .card-actions { display: flex; justify-content: space-between; gap: 8px; margin-top: auto; padding-top: 10px; border-top: 1px solid #334155; }
+    .btn-card-action { padding: 6px 12px; border-radius: 6px; border: none; font-size: 0.85rem; font-weight: bold; cursor: pointer; }
+    .btn-delete { background: #ef4444; color: white; }
+    .btn-translate { background: #0ea5e9; color: white; }
 
-    /* بخش ساخت عکس هوش مصنوعی (طراحی بزرگ و کامل) */
+    /* بخش ساخت عکس هوش مصنوعی */
     .ai-section { display: none; background: #1e293b; border: 2px solid #a855f7; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
     .ai-section.active { display: block; }
     .ai-input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; margin: 10px 0; }
     .ai-actions { display: flex; gap: 10px; justify-content: flex-end; }
     .btn-submit { background: #a855f7; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; }
     .btn-cancel { background: #475569; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
+    .loading-spinner { display: none; color: #c084fc; margin-top: 10px; font-weight: bold; }
   </style>
 </head>
 <body>
@@ -53,8 +59,8 @@
   </header>
 
   <div class="control-panel">
-    <!-- لینک مستقیم فایل نصب برنامه (آدرس APK خود را دقیقاً جایگزین این لینک کنید) -->
-    <a href="https://naturescenic2-cloudflare.gp28240.workers.dev/download-app.apk" class="btn btn-download" download>📥 دانلود اپلیکیشن (مستقیم)</a>
+    <!-- دانلود اپلیکیشن با کنترل خطای عدم وجود فایل -->
+    <a href="https://naturescenic2-cloudflare.gp28240.workers.dev/download-app.apk" class="btn btn-download" onclick="checkDownload(event)">📥 دانلود اپلیکیشن (مستقیم)</a>
 
     <label class="btn">
       📷 آپلود عکس
@@ -74,19 +80,20 @@
     <button class="btn btn-ai" onclick="toggleAISection()">✨ ساخت عکس هوش مصنوعی</button>
   </div>
 
-  <!-- کادر ساخت عکس هوش مصنوعی (کامل و غیر شناور) -->
+  <!-- کادر ساخت عکس هوش مصنوعی -->
   <div class="ai-section" id="ai-section">
     <h3>✨ ساخت تصویر با هوش مصنوعی (Cloudflare)</h3>
     <p style="font-size: 0.9rem; color: #94a3b8; margin-top: 5px;">توصیف کامل تصویر مورد نظرتان را وارد کنید:</p>
     <input type="text" class="ai-input" id="ai-prompt" placeholder="مثلاً: منظر طبیعی زاگرس، آفتابی، کیفیت بالا...">
-    <div class="ai-actions">
+    <div class="loading-spinner" id="ai-loading">⏳ در حال تولید تصویر... لطفاً شکیبا باشید.</div>
+    <div class="ai-actions" style="margin-top: 10px;">
       <button class="btn-cancel" onclick="toggleAISection()">بستن</button>
       <button class="btn-submit" onclick="generateAIImage()">تأیید و ساخت تصویر</button>
     </div>
   </div>
 
   <div class="media-grid" id="media-grid">
-    <!-- فایل‌ها پس از آپلود در سرور در این قسمت بارگیری می‌شوند -->
+    <!-- فایل‌ها در این بخش رندر می‌شوند -->
   </div>
 
   <script>
@@ -97,7 +104,23 @@
       section.classList.toggle('active');
     }
 
-    // ارسال فایل به ورکر Cloudflare جهت ذخیره دائمی
+    // تست وجود داشتن فایل دانلود
+    async function checkDownload(event) {
+      event.preventDefault();
+      const url = event.currentTarget.href;
+      try {
+        const res = await fetch(url, { method: 'HEAD' });
+        if (res.ok) {
+          window.location.href = url;
+        } else {
+          alert("فایل اپلیکیشن هنوز در سرور آپلود نشده یا در دسترس نیست.");
+        }
+      } catch (e) {
+        alert("خطا در ارتباط با سرور برای دانلود فایل.");
+      }
+    }
+
+    // ارسال فایل به ورکر جهت ذخیره
     async function uploadToServer(event, type) {
       const file = event.target.files[0];
       if (!file) return;
@@ -106,42 +129,120 @@
       formData.append('file', file);
       formData.append('type', type);
 
-      // ارسال فایل به سرور واقعی
       try {
         const response = await fetch(`${WORKER_URL}/upload`, {
           method: 'POST',
           body: formData
         });
         if (response.ok) {
-          loadGlobalMedia(); // دریافت مجدد لیست فایل‌ها از سرور
+          loadGlobalMedia();
+        } else {
+          // ایجاد پیش‌نمایش محلی در صورت عدم اتصال سرور
+          renderLocalPreview(file, type);
         }
       } catch (e) {
-        console.log("جهت ذخیره دائمی نیازمند تنظیم Cloudflare R2 در Worker هستید.");
+        renderLocalPreview(file, type);
       }
     }
 
-    // دریافت فایل‌های ذخیره شده در سرور (نمایش به تمام کاربران دنیا)
+    function renderLocalPreview(file, type) {
+      const url = URL.createObjectURL(file);
+      addMediaToGrid(url, type, file.name);
+    }
+
+    // ساخت تصویر با هوش مصنوعی
+    async function generateAIImage() {
+      const promptInput = document.getElementById('ai-prompt');
+      const prompt = promptInput.value;
+      const loading = document.getElementById('ai-loading');
+      
+      if (!prompt) {
+        alert("لطفاً متنی برای توصیف تصویر بنویسید.");
+        return;
+      }
+
+      loading.style.display = 'block';
+
+      try {
+        const response = await fetch(`${WORKER_URL}/generate-image`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt: prompt })
+        });
+
+        if (response.ok) {
+          const blob = await response.blob();
+          const imageUrl = URL.createObjectURL(blob);
+          addMediaToGrid(imageUrl, 'image', `تصویر هوش مصنوعی: ${prompt}`);
+          promptInput.value = '';
+        } else {
+          alert("خطا در ساخت تصویر توسط سرور Cloudflare.");
+        }
+      } catch (e) {
+        alert("ارتباط با هوش مصنوعی برقرار نشد.");
+      } finally {
+        loading.style.display = 'none';
+      }
+    }
+
+    // افزودن کارت به گرید با دکمه‌های حذف و ترجمه
+    function addMediaToGrid(src, type, title) {
+      const grid = document.getElementById('media-grid');
+      const card = document.createElement('div');
+      card.className = 'media-card';
+
+      let mediaHTML = '';
+      if (type === 'image') {
+        mediaHTML = `<img src="${src}" alt="media">`;
+      } else if (type === 'video') {
+        mediaHTML = `<video src="${src}" controls></video>`;
+      } else if (type === 'audio') {
+        mediaHTML = `<audio src="${src}" controls></audio>`;
+      }
+
+      card.innerHTML = `
+        ${mediaHTML}
+        <div class="card-body">
+          <p class="card-title">${title}</p>
+          <div class="card-actions">
+            <button class="btn-card-action btn-translate" onclick="translateText(this)">🌐 ترجمه</button>
+            <button class="btn-card-action btn-delete" onclick="deleteCard(this)">🗑️ حذف</button>
+          </div>
+        </div>
+      `;
+
+      grid.prepend(card);
+    }
+
+    // دکمه حذف
+    function deleteCard(button) {
+      if (confirm("آیا از حذف این ایتم اطمینان دارید؟")) {
+        const card = button.closest('.media-card');
+        card.remove();
+      }
+    }
+
+    // دکمه ترجمه
+    function translateText(button) {
+      const titleElem = button.closest('.card-body').querySelector('.card-title');
+      const text = titleElem.innerText;
+      
+      // نمونه ترجمه تعاملی
+      alert(`متن جهت ترجمه:\n${text}`);
+    }
+
+    // بارگیری مجدد از سرور
     async function loadGlobalMedia() {
       try {
         const res = await fetch(`${WORKER_URL}/list-media`);
         const data = await res.json();
-        // رندر کردن فایل‌های جهانی...
+        if (Array.isArray(data)) {
+          document.getElementById('media-grid').innerHTML = '';
+          data.forEach(item => addMediaToGrid(item.url, item.type, item.title));
+        }
       } catch (e) {}
     }
 
-    async function generateAIImage() {
-      const prompt = document.getElementById('ai-prompt').value;
-      if (!prompt) return;
-
-      await fetch(`${WORKER_URL}/generate-image`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: prompt })
-      });
-      toggleAISection();
-    }
-
-    // بارگیری اولیه فایل‌های سرور هنگام باز شدن سایت
     window.onload = loadGlobalMedia;
   </script>
 </body>
