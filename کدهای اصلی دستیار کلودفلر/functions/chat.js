@@ -28,7 +28,7 @@ export default {
         });
       }
 
-      // آپلود عکس، ویدیو و صدا
+      // آپلود فایل (ویدیو، صدا، عکس) به گیت‌هاب
       if (url.pathname === "/upload" && request.method === "POST") {
         const formData = await request.formData();
         const file = formData.get("file");
@@ -84,7 +84,7 @@ export default {
         }
       }
 
-      // دریافت لیست فایل‌های آپلود شده
+      // دریافت لیست تمام فایل‌ها
       if (url.pathname === "/list-files" && request.method === "GET") {
         const ghUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/uploads`;
         const ghResponse = await fetch(ghUrl, {
@@ -98,7 +98,9 @@ export default {
           const items = await ghResponse.json();
           const files = items.map(item => ({
             url: item.download_url,
-            name: item.name.replace(/^\d+-/, '')
+            name: item.name.replace(/^\d+-/, ''),
+            type: item.name.match(/\.(mp4|webm|mkv)$/i) ? 'video' : 
+                  item.name.match(/\.(mp3|wav|ogg)$/i) ? 'audio' : 'image'
           }));
           return new Response(JSON.stringify(files), {
             headers: { ...corsHeaders, "Content-Type": "application/json" }
