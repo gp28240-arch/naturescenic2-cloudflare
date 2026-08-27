@@ -128,12 +128,12 @@
       color: #0f172a;
     }
     .btn-ai {
-      border-color: #a855f7;
-      color: #c084fc;
-    }
-    .btn-ai:hover {
       background-color: #a855f7;
       color: #ffffff;
+      border-color: #a855f7;
+    }
+    .btn-ai:hover {
+      background-color: #9333ea;
     }
     .btn-download {
       border-color: #22c55e;
@@ -142,6 +142,35 @@
     .btn-download:hover {
       background-color: #22c55e;
       color: #0f172a;
+    }
+
+    /* بخش ساخت عکس مستقیم (جایگزین پاپ‌آپ) */
+    .ai-inline-box {
+      background: #1e293b;
+      border: 2px solid #a855f7;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+    .ai-inline-input {
+      flex: 1;
+      min-width: 250px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid #475569;
+      background: #0f172a;
+      color: #fff;
+      font-size: 0.95rem;
+    }
+    .ai-status-text {
+      width: 100%;
+      color: #c084fc;
+      font-size: 0.85rem;
+      display: none;
     }
 
     /* منوی فیلتر رسانه‌ها (عکس، فیلم، صدا) */
@@ -241,54 +270,10 @@
       width: 100%;
       margin-top: 5px;
     }
-
-    /* مدال هوش مصنوعی (اصلاح ابعاد و اندازه استاندارد) */
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.8);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      padding: 15px;
-    }
-    .modal-content {
-      background: #1e293b;
-      padding: 25px;
-      border-radius: 16px;
-      border: 2px solid #a855f7;
-      width: 100%;
-      max-width: 600px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      box-shadow: 0 10px 25px rgba(168, 85, 247, 0.3);
-    }
-    .modal-content input {
-      padding: 14px;
-      border-radius: 8px;
-      border: 1px solid #475569;
-      background: #0f172a;
-      color: white;
-      font-size: 1rem;
-      width: 100%;
-    }
-    .ai-loading-status {
-      display: none;
-      color: #c084fc;
-      font-size: 0.95rem;
-      font-weight: bold;
-      text-align: center;
-      padding: 8px;
-      background: rgba(168, 85, 247, 0.1);
-      border-radius: 8px;
-    }
   </style>
 </head>
 <body>
 
-  <!-- سربرگ -->
   <header class="main-header">
     <a href="https://youtube.com/@naturescenic2" target="_blank" class="yt-btn">
       <img src="https://drive.google.com/thumbnail?id=1EZf35v8476qtDC_rTS_h-6-_zIq0RNTh&sz=w200" alt="Logo" class="yt-logo">
@@ -302,17 +287,13 @@
     </div>
   </header>
 
-  <!-- منوی ترجمه گوگل -->
   <div class="translate-section">
     <span class="translate-title">🌐 مترجم سریع صفحه / Quick Translator:</span>
     <div id="google_translate_element"></div>
   </div>
 
-  <!-- پنل کنترلی اصلی -->
   <div class="control-panel">
     <button class="btn btn-lang" id="toggle-lang-btn" onclick="toggleLanguage()">🌐 Switch to English / تغییر زبان</button>
-    
-    <!-- دکمه دانلود اپلیکیشن -->
     <button class="btn btn-download" onclick="downloadApp()">📥 دانلود اپلیکیشن / Download App</button>
 
     <label class="btn">
@@ -329,11 +310,15 @@
       🎵 آپلود صدا / Audio
       <input type="file" id="upload-audio" accept="audio/*" hidden onchange="handleFileUpload(event, 'audio')">
     </label>
-
-    <button class="btn btn-ai" onclick="openAIModal()">✨ ساخت عکس هوش مصنوعی (Cloudflare)</button>
   </div>
 
-  <!-- منوی فیلتر و جداکننده بخش‌های عکس، ویدیو و صدا -->
+  <div class="ai-inline-box">
+    <span style="font-weight:bold; color:#c084fc;">✨ ساخت تصویر هوش مصنوعی:</span>
+    <input type="text" id="ai-prompt-input" class="ai-inline-input" placeholder="توصیف تصویر را بنویسید (مثال: کوهستان زاگرس برفی)..." onkeypress="handlePromptKeyPress(event)">
+    <button class="btn btn-ai" id="btn-submit-ai" onclick="submitAIGeneration()">ساخت عکس</button>
+    <div class="ai-status-text" id="ai-loading-status">⏳ در حال ارسال درخواست و دریافت تصویر از سرور...</div>
+  </div>
+
   <div class="filter-menu">
     <button class="filter-btn active" onclick="filterMedia('all', this)">همه / All</button>
     <button class="filter-btn" onclick="filterMedia('image', this)">🖼️ فقط عکس‌ها / Images Only</button>
@@ -341,10 +326,8 @@
     <button class="filter-btn" onclick="filterMedia('audio', this)">🎵 فقط صداها / Audio Only</button>
   </div>
 
-  <!-- شبکه کارت‌ها -->
   <div class="media-grid" id="media-grid">
     
-    <!-- کارت نمونه عکس -->
     <div class="media-card" data-type="image" id="card-1">
       <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b" alt="کوهستان">
       <div class="card-body">
@@ -358,7 +341,6 @@
       </div>
     </div>
 
-    <!-- کارت نمونه صدا -->
     <div class="media-card" data-type="audio" id="card-2">
       <audio controls src="#"></audio>
       <div class="card-body">
@@ -374,21 +356,6 @@
 
   </div>
 
-  <!-- پنجره هوش مصنوعی داخلسازی‌شده (مدال) -->
-  <div class="modal-overlay" id="ai-modal">
-    <div class="modal-content">
-      <h3 style="color:#c084fc; font-size:1.2rem;">✨ ساخت عکس با هوش مصنوعی</h3>
-      <p style="font-size:0.9rem; color:#94a3b8;">توصیف کامل تصویر مورد نظر را بنویسید:</p>
-      <input type="text" id="ai-prompt-input" placeholder="مثلاً: کوهستان برفی زاگرس در غروب..." onkeypress="handlePromptKeyPress(event)">
-      <div class="ai-loading-status" id="ai-loading-status">⏳ در حال تولید تصویر... لطفاً شکیبا باشید.</div>
-      <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:5px;">
-        <button class="btn-action btn-delete" style="width:auto; margin:0; padding:10px 20px;" onclick="closeAIModal()">لغو</button>
-        <button class="btn-action btn-rename" id="btn-submit-ai" style="padding:10px 20px;" onclick="submitAIGeneration()">تأیید و ساخت</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- اسکریپت مترجم گوگل -->
   <script type="text/javascript">
     function googleTranslateElementInit() {
       new google.translate.TranslateElement({
@@ -469,7 +436,7 @@
       });
     }
 
-    // آپلود اینترنتی فایل بدون خطا
+    // آپلود فایل
     async function handleFileUpload(event, type) {
       const file = event.target.files[0];
       if (!file) return;
@@ -478,14 +445,12 @@
       formData.append("file", file);
       formData.append("type", type);
 
-      // لینک مستقیم فایل بر اساس داده مرورگر جهت اطمینان از نمایش فوری
       const localUrl = URL.createObjectURL(file);
 
       try {
         const response = await fetch(`${WORKER_URL}/upload`, {
           method: 'POST',
-          body: formData,
-          mode: 'cors'
+          body: formData
         });
 
         if (response.ok) {
@@ -493,11 +458,9 @@
           const fileUrl = resData.url || localUrl;
           createMediaCard(fileUrl, type, file.name);
         } else {
-          // در صورت بروز مشکلی در ورکر کلودفلر، کارت را نمایش می‌دهد تا وقفه ایجاد نشود
           createMediaCard(localUrl, type, file.name);
         }
       } catch (e) {
-        // ایجاد کارت بدون نمایش خطای سرور
         createMediaCard(localUrl, type, file.name);
       }
     }
@@ -533,25 +496,13 @@
       grid.prepend(card);
     }
 
-    // مدال هوش مصنوعی کلودفلر
-    function openAIModal() {
-      document.getElementById('ai-modal').style.display = 'flex';
-      document.getElementById('ai-prompt-input').focus();
-    }
-
-    function closeAIModal() {
-      document.getElementById('ai-modal').style.display = 'none';
-      document.getElementById('ai-loading-status').style.display = 'none';
-      document.getElementById('btn-submit-ai').disabled = false;
-    }
-
     function handlePromptKeyPress(event) {
       if (event.key === 'Enter') {
         submitAIGeneration();
       }
     }
 
-    // ثبت درخواست ساخت تصویر
+    // ساخت تصویر هوش مصنوعی
     async function submitAIGeneration() {
       const promptInput = document.getElementById('ai-prompt-input');
       const promptText = promptInput.value.trim();
@@ -570,15 +521,14 @@
         const response = await fetch(`${WORKER_URL}/generate-image`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prompt: promptText }),
-          mode: 'cors'
+          body: JSON.stringify({ prompt: promptText })
         });
 
         if (response.ok) {
           let imageUrl = '';
-          const contentType = response.headers.get("content-type");
+          const contentType = response.headers.get("content-type") || "";
           
-          if (contentType && contentType.includes("application/json")) {
+          if (contentType.includes("application/json")) {
             const data = await response.json();
             imageUrl = data.url || data.image;
           } else {
@@ -589,15 +539,14 @@
           if (imageUrl) {
             createMediaCard(imageUrl, 'image', `هوش مصنوعی: ${promptText}`);
             promptInput.value = '';
-            closeAIModal();
           } else {
-            alert("پاسخ تصویر نامعتبر بود.");
+            alert("پاسخ تصویر دریافت نشد.");
           }
         } else {
-          alert("خطا در پاسخ‌دهی ورکر کلودفلر.");
+          alert("خطا در پاسخ‌دهی از ورکر کلودفلر.");
         }
       } catch (e) {
-        alert("خطا در برقراری ارتباط با سرویس هوش مصنوعی.");
+        alert("ارتباط با ورکر کلودفلر برقرار نشد. لطفاً تنظیمات CORS یا آدرس ورکر را بررسی کنید.");
       } finally {
         loadingStatus.style.display = 'none';
         btnSubmit.disabled = false;
