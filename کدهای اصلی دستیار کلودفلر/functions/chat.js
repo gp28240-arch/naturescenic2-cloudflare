@@ -12,6 +12,10 @@ export default {
 
     const url = new URL(request.url);
 
+    const GITHUB_TOKEN = env.GITHUB_TOKEN;
+    const GITHUB_USERNAME = "gp28240-arch";
+    const GITHUB_REPO = "naturescenic2-cloudflare";
+
     try {
       if (url.pathname === "/generate-image" && request.method === "POST") {
         const { prompt } = await request.json();
@@ -20,10 +24,7 @@ export default {
         });
 
         return new Response(aiResponse, {
-          headers: {
-            ...corsHeaders,
-            "Content-Type": "image/png"
-          }
+          headers: { ...corsHeaders, "Content-Type": "image/png" }
         });
       }
 
@@ -39,29 +40,63 @@ export default {
           });
         }
 
-        const fileName = `${Date.now()}-${file.name}`;
-        if (env.MY_BUCKET) {
-          await env.MY_BUCKET.put(fileName, file.stream(), {
-            httpMetadata: { contentType: file.type }
+        const arrayBuffer = await file.arrayBuffer();
+        const bytes = new Uint8Array(arrayBuffer);
+        let binary = '';
+        for (let i = 0; i < bytes.byteLength; i++) {
+          binary += String.fromCharCode(bytes[i]);
+        }
+        const base64Content = btoa(binary);
+
+        const fileName = `uploads/${Date.now()}-${file.name}`;
+        const ghUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/${fileName}`;
+
+        const ghResponse = await fetch(ghUrl, {
+          method: "PUT",
+          headers: {
+            "Authorization": `Bearer ${GITHUB_TOKEN}`,
+            "User-Agent": "Cloudflare-Worker",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            message: `Upload ${file.name}`,
+            content: base64Content
+          })
+        });
+
+        if (ghResponse.ok) {
+          const ghData = await ghResponse.json();
+          return new Response(JSON.stringify({ 
+            success: true, 
+            url: ghData.content.download_url,
+            name: file.name,
+            type: type
+          }), {
+            headers: { ...corsHeaders, "Content-Type": "application/json" }
+          });
+        } else {
+          const errData = await ghResponse.json();
+          return new Response(JSON.stringify({ error: "خطا در آپلود به گیت‌هاب", details: errData }), {
+            status: 500,
+            headers: { ...corsHeaders, "Content-Type": "application/json" }
           });
         }
-
-        return new Response(JSON.stringify({ 
-          success: true, 
-          url: `${url.origin}/files/${fileName}`,
-          name: file.name,
-          type: type
-        }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" }
-        });
       }
 
       if (url.pathname === "/list-files" && request.method === "GET") {
-        if (env.MY_BUCKET) {
-          const objects = await env.MY_BUCKET.list();
-          const files = objects.objects.map(obj => ({
-            url: `${url.origin}/files/${obj.key}`,
-            name: obj.key
+        const ghUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/uploads`;
+        const ghResponse = await fetch(ghUrl, {
+          headers: {
+            "Authorization": `Bearer ${GITHUB_TOKEN}`,
+            "User-Agent": "Cloudflare-Worker"
+          }
+        });
+
+        if (ghResponse.ok) {
+          const items = await ghResponse.json();
+          const files = items.map(item => ({
+            url: item.download_url,
+            name: item.name.replace(/^\d+-/, '')
           }));
           return new Response(JSON.stringify(files), {
             headers: { ...corsHeaders, "Content-Type": "application/json" }
@@ -70,21 +105,6 @@ export default {
         return new Response(JSON.stringify([]), {
           headers: { ...corsHeaders, "Content-Type": "application/json" }
         });
-      }
-
-      if (url.pathname.startsWith("/files/") && request.method === "GET") {
-        const key = url.pathname.replace("/files/", "");
-        if (env.MY_BUCKET) {
-          const object = await env.MY_BUCKET.get(key);
-          if (object) {
-            const headers = new Headers();
-            object.writeHttpMetadata(headers);
-            headers.set("etag", object.httpEtag);
-            Object.assign(headers, corsHeaders);
-            return new Response(object.body, { headers });
-          }
-        }
-        return new Response("فایل یافت نشد", { status: 404 });
       }
 
     } catch (err) {
