@@ -11,12 +11,12 @@ export default {
     }
 
     const url = new URL(request.url);
-
     const GITHUB_TOKEN = env.GITHUB_TOKEN;
     const GITHUB_USERNAME = "gp28240-arch";
     const GITHUB_REPO = "naturescenic2-cloudflare";
 
     try {
+      // ساخت تصویر با هوش مصنوعی
       if (url.pathname === "/generate-image" && request.method === "POST") {
         const { prompt } = await request.json();
         const aiResponse = await env.AI.run("@cf/bytedance/stable-diffusion-xl-lightning", {
@@ -28,10 +28,11 @@ export default {
         });
       }
 
+      // آپلود عکس، ویدیو و صدا
       if (url.pathname === "/upload" && request.method === "POST") {
         const formData = await request.formData();
         const file = formData.get("file");
-        const type = formData.get("type");
+        const type = formData.get("type") || "file";
 
         if (!file) {
           return new Response(JSON.stringify({ error: "فایلی دریافت نشد" }), {
@@ -76,13 +77,14 @@ export default {
           });
         } else {
           const errData = await ghResponse.json();
-          return new Response(JSON.stringify({ error: "خطا در آپلود به گیت‌هاب", details: errData }), {
+          return new Response(JSON.stringify({ error: "خطا در آپلود", details: errData }), {
             status: 500,
             headers: { ...corsHeaders, "Content-Type": "application/json" }
           });
         }
       }
 
+      // دریافت لیست فایل‌های آپلود شده
       if (url.pathname === "/list-files" && request.method === "GET") {
         const ghUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/uploads`;
         const ghResponse = await fetch(ghUrl, {
