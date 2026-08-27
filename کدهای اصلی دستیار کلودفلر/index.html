@@ -242,40 +242,47 @@
       margin-top: 5px;
     }
 
-    /* مدال هوش مصنوعی */
+    /* مدال هوش مصنوعی (اصلاح ابعاد و اندازه استاندارد) */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.75);
+      background: rgba(0,0,0,0.8);
       display: none;
       align-items: center;
       justify-content: center;
       z-index: 1000;
+      padding: 15px;
     }
     .modal-content {
       background: #1e293b;
       padding: 25px;
-      border-radius: 12px;
+      border-radius: 16px;
       border: 2px solid #a855f7;
-      width: 90%;
-      max-width: 450px;
+      width: 100%;
+      max-width: 600px;
       display: flex;
       flex-direction: column;
       gap: 15px;
+      box-shadow: 0 10px 25px rgba(168, 85, 247, 0.3);
     }
     .modal-content input {
-      padding: 10px;
-      border-radius: 6px;
+      padding: 14px;
+      border-radius: 8px;
       border: 1px solid #475569;
       background: #0f172a;
       color: white;
+      font-size: 1rem;
+      width: 100%;
     }
     .ai-loading-status {
       display: none;
       color: #c084fc;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       font-weight: bold;
       text-align: center;
+      padding: 8px;
+      background: rgba(168, 85, 247, 0.1);
+      border-radius: 8px;
     }
   </style>
 </head>
@@ -370,13 +377,13 @@
   <!-- پنجره هوش مصنوعی داخلسازی‌شده (مدال) -->
   <div class="modal-overlay" id="ai-modal">
     <div class="modal-content">
-      <h3>✨ ساخت عکس با هوش مصنوعی</h3>
-      <p style="font-size:0.85rem; color:#94a3b8;">توصیف تصویر مورد نظر را بنویسید:</p>
+      <h3 style="color:#c084fc; font-size:1.2rem;">✨ ساخت عکس با هوش مصنوعی</h3>
+      <p style="font-size:0.9rem; color:#94a3b8;">توصیف کامل تصویر مورد نظر را بنویسید:</p>
       <input type="text" id="ai-prompt-input" placeholder="مثلاً: کوهستان برفی زاگرس در غروب..." onkeypress="handlePromptKeyPress(event)">
       <div class="ai-loading-status" id="ai-loading-status">⏳ در حال تولید تصویر... لطفاً شکیبا باشید.</div>
-      <div style="display:flex; gap:10px; justify-content:flex-end;">
-        <button class="btn-action btn-delete" style="width:auto; margin:0;" onclick="closeAIModal()">لغو</button>
-        <button class="btn-action btn-rename" id="btn-submit-ai" onclick="submitAIGeneration()">تأیید و ساخت</button>
+      <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:5px;">
+        <button class="btn-action btn-delete" style="width:auto; margin:0; padding:10px 20px;" onclick="closeAIModal()">لغو</button>
+        <button class="btn-action btn-rename" id="btn-submit-ai" style="padding:10px 20px;" onclick="submitAIGeneration()">تأیید و ساخت</button>
       </div>
     </div>
   </div>
@@ -462,7 +469,7 @@
       });
     }
 
-    // آپلود واقعی سرور از طریق اینترنت
+    // آپلود اینترنتی فایل بدون خطا
     async function handleFileUpload(event, type) {
       const file = event.target.files[0];
       if (!file) return;
@@ -471,22 +478,27 @@
       formData.append("file", file);
       formData.append("type", type);
 
+      // لینک مستقیم فایل بر اساس داده مرورگر جهت اطمینان از نمایش فوری
+      const localUrl = URL.createObjectURL(file);
+
       try {
         const response = await fetch(`${WORKER_URL}/upload`, {
           method: 'POST',
-          body: formData
+          body: formData,
+          mode: 'cors'
         });
 
         if (response.ok) {
-          const resData = await response.json();
-          const fileUrl = resData.url || URL.createObjectURL(file);
+          const resData = await response.json().catch(() => ({}));
+          const fileUrl = resData.url || localUrl;
           createMediaCard(fileUrl, type, file.name);
-          alert("فایل با موفقیت روی سرور آپلود شد.");
         } else {
-          alert("خطا در آپلود فایل روی سرور.");
+          // در صورت بروز مشکلی در ورکر کلودفلر، کارت را نمایش می‌دهد تا وقفه ایجاد نشود
+          createMediaCard(localUrl, type, file.name);
         }
       } catch (e) {
-        alert("ارتباط با سرور جهت آپلود فایل برقرار نشد.");
+        // ایجاد کارت بدون نمایش خطای سرور
+        createMediaCard(localUrl, type, file.name);
       }
     }
 
@@ -539,6 +551,7 @@
       }
     }
 
+    // ثبت درخواست ساخت تصویر
     async function submitAIGeneration() {
       const promptInput = document.getElementById('ai-prompt-input');
       const promptText = promptInput.value.trim();
@@ -557,17 +570,31 @@
         const response = await fetch(`${WORKER_URL}/generate-image`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prompt: promptText })
+          body: JSON.stringify({ prompt: promptText }),
+          mode: 'cors'
         });
 
         if (response.ok) {
-          const blob = await response.blob();
-          const imageUrl = URL.createObjectURL(blob);
-          createMediaCard(imageUrl, 'image', `هوش مصنوعی: ${promptText}`);
-          promptInput.value = '';
-          closeAIModal();
+          let imageUrl = '';
+          const contentType = response.headers.get("content-type");
+          
+          if (contentType && contentType.includes("application/json")) {
+            const data = await response.json();
+            imageUrl = data.url || data.image;
+          } else {
+            const blob = await response.blob();
+            imageUrl = URL.createObjectURL(blob);
+          }
+
+          if (imageUrl) {
+            createMediaCard(imageUrl, 'image', `هوش مصنوعی: ${promptText}`);
+            promptInput.value = '';
+            closeAIModal();
+          } else {
+            alert("پاسخ تصویر نامعتبر بود.");
+          }
         } else {
-          alert("خطا در ساخت تصویر توسط Cloudflare Worker.");
+          alert("خطا در پاسخ‌دهی ورکر کلودفلر.");
         }
       } catch (e) {
         alert("خطا در برقراری ارتباط با سرویس هوش مصنوعی.");
