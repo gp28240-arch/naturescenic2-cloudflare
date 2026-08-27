@@ -3,57 +3,65 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>دستیار هوشمند naturescenic2</title>
+  <title>دستیار هوشمند Naturescenic</title>
   <style>
-    * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; margin: 0; padding: 0; }
-    body { background-color: #0f172a; color: #f8fafc; display: flex; flex-direction: column; height: 100vh; }
-    
-    /* هدر بالای دستیار */
-    header { background: #1e293b; padding: 15px; text-align: center; font-weight: bold; font-size: 1.1rem; border-bottom: 1px solid #334155; }
-    
-    /* منطقه چت */
-    #chat-box { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; }
-    .msg { max-width: 85%; padding: 12px 16px; border-radius: 16px; line-height: 1.6; font-size: 0.95rem; word-break: break-word; }
-    .user { background: #2563eb; align-self: flex-end; border-bottom-left-radius: 4px; color: #fff; }
-    .bot { background: #334155; align-self: flex-start; border-bottom-right-radius: 4px; color: #f1f5f9; }
-    
-    /* آلبوم چرخشی تصاویر (Carousel) */
-    .carousel-container { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; scroll-snap-type: x mandatory; }
-    .carousel-container img { width: 180px; height: 120px; object-fit: cover; border-radius: 10px; scroll-snap-align: start; flex-shrink: 0; border: 2px solid #475569; }
-    
-    /* رسانه‌ها (ویدیو و صدا) */
-    video, audio { width: 100%; max-width: 320px; border-radius: 10px; margin-top: 8px; display: block; }
+    :root {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --accent-color: #2563eb;
+      --text-main: #f8fafc;
+      --border-color: #334155;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+    body { background-color: var(--bg-primary); color: var(--text-main); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 
-    /* کادر پایین برای ارسال */
-    #input-bar { background: #1e293b; padding: 12px; display: flex; align-items: center; gap: 10px; border-top: 1px solid #334155; }
-    #text-input { flex: 1; background: #0f172a; border: 1px solid #475569; color: #fff; padding: 12px 16px; border-radius: 25px; outline: none; font-size: 0.95rem; }
-    #text-input:focus { border-color: #3b82f6; }
+    header { background: var(--bg-secondary); padding: 16px; text-align: center; font-weight: bold; font-size: 1.2rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
     
-    .icon-btn { background: #3b82f6; border: none; color: white; width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
-    .icon-btn:hover { background: #2563eb; }
-    .attach-btn { background: #475569; }
-    .attach-btn:hover { background: #64748b; }
+    .gallery-toggle { background: var(--accent-color); color: #fff; border: none; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; }
+
+    #chat-box { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+    .msg { max-width: 80%; padding: 14px 18px; border-radius: 18px; line-height: 1.6; font-size: 0.95rem; word-break: break-word; }
+    .user { background: var(--accent-color); align-self: flex-end; border-bottom-left-radius: 4px; color: #fff; }
+    .bot { background: var(--bg-secondary); align-self: flex-start; border-bottom-right-radius: 4px; color: var(--text-main); border: 1px solid var(--border-color); }
+
+    /* گالری چرخشی تصاویر (Carousel) */
+    .carousel-wrapper { width: 100%; margin-top: 10px; }
+    .carousel { display: flex; gap: 12px; overflow-x: auto; padding: 10px 0; scroll-snap-type: x mandatory; scrollbar-width: thin; }
+    .carousel-item { flex: 0 0 220px; height: 140px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); position: relative; scroll-snap-align: start; }
+    .carousel-item img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* پخش‌کننده‌های رسانه */
+    video, audio { width: 100%; max-width: 360px; border-radius: 10px; margin-top: 8px; display: block; }
+    
+    #input-bar { background: var(--bg-secondary); padding: 14px; display: flex; align-items: center; gap: 12px; border-top: 1px solid var(--border-color); }
+    #text-input { flex: 1; background: var(--bg-primary); border: 1px solid var(--border-color); color: #fff; padding: 12px 18px; border-radius: 25px; outline: none; font-size: 0.95rem; }
+    #text-input:focus { border-color: var(--accent-color); }
+
+    .btn { background: var(--accent-color); border: none; color: white; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; font-size: 1.1rem; }
+    .btn-attach { background: var(--border-color); }
     #file-upload { display: none; }
   </style>
 </head>
 <body>
 
-  <header>دستیار هوشمند Naturescenic</header>
+  <header>
+    <span>دستیار هوشمند Naturescenic</span>
+    <button class="gallery-toggle" onclick="loadGallery()">📁 آرشیو فایل‌ها</button>
+  </header>
 
   <div id="chat-box">
-    <div class="msg bot">سلام! من دستیار شما هستم. می‌تونید برام عکس، ویدیو یا صدای ضبط‌شده بفرستید یا متن بنویسید.</div>
+    <div class="msg bot">سلام! سیستم آماده است. می‌توانید فایل‌های عکس، ویدیو، صدا بفرستید یا دستور ساخت تصویر بدهید.</div>
   </div>
 
   <div id="input-bar">
-    <label for="file-upload" class="icon-btn attach-btn" title="ارسال فایل">📎</label>
-    <input type="file" id="file-upload" accept="image/*,video/*,audio/*" onchange="handleFileUpload()">
-    <input type="text" id="text-input" placeholder="پیامی بنویسید..." onkeypress="if(event.key==='Enter') sendTextMessage()">
-    <button class="icon-btn" onclick="sendTextMessage()">➔</button>
+    <label for="file-upload" class="btn btn-attach" title="ارسال فایل">📎</label>
+    <input type="file" id="file-upload" accept="image/*,video/*,audio/*" onchange="uploadFile()">
+    <input type="text" id="text-input" placeholder="پیامی بنویسید..." onkeypress="if(event.key==='Enter') sendMessage()">
+    <button class="btn" onclick="sendMessage()">➔</button>
   </div>
 
   <script>
-    // آدرس پروژه کلودفلر شما
-    const API_BASE = "https://naturescenic2-cloudflare.pages.dev";
+    const API_BASE = "https://naturescenic2-cloudflare.gp28240.workers.dev";
 
     function addMessage(sender, contentHTML) {
       const box = document.getElementById("chat-box");
@@ -64,13 +72,12 @@
       box.scrollTop = box.scrollHeight;
     }
 
-    // آپلود ویدیو، عکس و صدا
-    async function handleFileUpload() {
+    async function uploadFile() {
       const fileInput = document.getElementById("file-upload");
       const file = fileInput.files[0];
       if (!file) return;
 
-      addMessage("user", `در حال ارسال فایل: <b>${file.name}</b>...`);
+      addMessage("user", `در حال آپلود فایل: <b>${file.name}</b>...`);
 
       const formData = new FormData();
       formData.append("file", file);
@@ -83,27 +90,23 @@
         if (data.success || data.url) {
           let mediaHTML = "";
           if (file.type.startsWith("image/")) {
-            mediaHTML = `<img src="${data.url}" style="max-width:100%; border-radius:10px; margin-top:5px;">`;
+            mediaHTML = `<img src="${data.url}" style="max-width:100%; border-radius:12px; margin-top:8px;">`;
           } else if (file.type.startsWith("video/")) {
             mediaHTML = `<video controls><source src="${data.url}" type="${file.type}"></video>`;
           } else if (file.type.startsWith("audio/")) {
             mediaHTML = `<audio controls><source src="${data.url}" type="${file.type}"></audio>`;
-          } else {
-            mediaHTML = `<a href="${data.url}" target="_blank" style="color:#60a5fa;">📥 دانلود فایل ${file.name}</a>`;
           }
-          addMessage("bot", `فایل با موفقیت دریافت شد:<br>${mediaHTML}`);
+          addMessage("bot", `فایل با موفقیت ارسال شد:<br>${mediaHTML}`);
         } else {
-          addMessage("bot", "⚠️ خطا در ذخیره فایل روی سرور.");
+          addMessage("bot", "⚠️ خطا در پردازش فایل روی سرور.");
         }
       } catch (err) {
-        addMessage("bot", "⚠️ خطا در برقراری ارتباط با سرور.");
+        addMessage("bot", "⚠️ خطا در ارتباط با سرور.");
       }
-
       fileInput.value = "";
     }
 
-    // ارسال متن و ساخت عکس با هوش مصنوعی
-    async function sendTextMessage() {
+    async function sendMessage() {
       const input = document.getElementById("text-input");
       const text = input.value.trim();
       if (!text) return;
@@ -111,9 +114,8 @@
       addMessage("user", text);
       input.value = "";
 
-      // ساخت تصویر با هوش مصنوعی اگر کلمه "عکس" یا "تصویر" در پیام باشد
       if (text.startsWith("عکس ") || text.startsWith("تصویر ")) {
-        addMessage("bot", "🎨 در حال ساخت تصویر...");
+        addMessage("bot", "🎨 در حال تولید تصویر با هوش مصنوعی...");
         const prompt = text.replace(/^(عکس|تصویر)\s+/, "");
         
         try {
@@ -124,12 +126,36 @@
           });
           const blob = await res.blob();
           const imgUrl = URL.createObjectURL(blob);
-          addMessage("bot", `<img src="${imgUrl}" style="max-width:100%; border-radius:10px;">`);
+          addMessage("bot", `<img src="${imgUrl}" style="max-width:100%; border-radius:12px;">`);
         } catch (e) {
-          addMessage("bot", "⚠️ خطا در ساخت تصویر.");
+          addMessage("bot", "⚠️ خطا در تولید تصویر.");
         }
       } else {
-        addMessage("bot", "پیام شما دریافت شد.");
+        addMessage("bot", "پیام دریافت شد.");
+      }
+    }
+
+    async function loadGallery() {
+      addMessage("bot", "در حال دریافت آرشیو فایل‌ها...");
+      try {
+        const res = await fetch(`${API_BASE}/list-files`);
+        const files = await res.json();
+        
+        if (files.length === 0) {
+          addMessage("bot", "هیچ فایلی یافت نشد.");
+          return;
+        }
+
+        let carouselHTML = `<div class="carousel-wrapper"><b>فایل‌های آرشیو شده:</b><div class="carousel">`;
+        files.forEach(f => {
+          if (f.type === 'image') {
+            carouselHTML += `<div class="carousel-item"><img src="${f.url}" alt="${f.name}"></div>`;
+          }
+        });
+        carouselHTML += `</div></div>`;
+        addMessage("bot", carouselHTML);
+      } catch (e) {
+        addMessage("bot", "خطا در دریافت آرشیو.");
       }
     }
   </script>
