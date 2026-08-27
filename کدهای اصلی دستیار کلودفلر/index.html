@@ -49,9 +49,10 @@
       background-color: #ff0000;
     }
     .yt-logo {
-      height: 28px;
+      height: 32px;
       width: auto;
       border-radius: 4px;
+      object-fit: contain;
     }
     .header-titles {
       text-align: right;
@@ -274,10 +275,12 @@
 </head>
 <body>
 
-  <!-- سربرگ با اصلاح آدرس لوگوی یوتیوب -->
+  <!-- سربرگ با لینک مستقیم لوگوی گوگل درایو -->
   <header class="main-header">
     <a href="https://youtube.com/@naturescenic2" target="_blank" class="yt-btn">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" alt="YouTube Logo" class="yt-logo">
+      <img src="https://lh3.googleusercontent.com/d/1EZf35v8476qtDC_rTS_h-6-_zIq0RNTh" 
+           onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg';" 
+           alt="YouTube Logo" class="yt-logo">
       <span>کانال یوتیوب / YouTube: @naturescenic2</span>
     </a>
 
@@ -298,7 +301,6 @@
   <div class="control-panel">
     <button class="btn btn-lang" id="toggle-lang-btn" onclick="toggleLanguage()">🌐 Switch to English / تغییر زبان</button>
     
-    <!-- دکمه دانلود اپلیکیشن استاندارد Android APK -->
     <button class="btn btn-download" onclick="downloadApp()">📥 دانلود اپلیکیشن / Download App</button>
 
     <label class="btn">
@@ -319,7 +321,7 @@
     <button class="btn btn-ai" onclick="openAIModal()">✨ ساخت عکس هوش مصنوعی (Cloudflare)</button>
   </div>
 
-  <!-- منوی فیلتر و جداکننده بخش‌های عکس، ویدیو و صدا -->
+  <!-- منوی فیلتر رسانه‌ها -->
   <div class="filter-menu">
     <button class="filter-btn active" onclick="filterMedia('all', this)">همه / All</button>
     <button class="filter-btn" onclick="filterMedia('image', this)">🖼️ فقط عکس‌ها / Images Only</button>
@@ -360,7 +362,7 @@
 
   </div>
 
-  <!-- پنجره هوش مصنوعی داخلسازی‌شده (مدال) -->
+  <!-- پنجره مدال هوش مصنوعی -->
   <div class="modal-overlay" id="ai-modal">
     <div class="modal-content">
       <h3>✨ ساخت عکس با هوش مصنوعی</h3>
@@ -404,7 +406,7 @@
       }
     }
 
-    // تغییر نام همراه با ترجمه واقعی اتوماتیک API
+    // تغییر نام اتوماتیک و ترجمه واقعی
     async function renameItem(id) {
       const inputVal = document.getElementById(`input-${id}`).value.trim();
       if (!inputVal) return;
@@ -427,13 +429,13 @@
       document.getElementById(`input-${id}`).value = '';
     }
 
-    // حذف فایل بدون پاپ‌آپ
+    // حذف فایل
     function deleteItem(cardId) {
       const element = document.getElementById(cardId);
       if (element) element.remove();
     }
 
-    // فیلتر رسانه‌ها
+    // فیلتر دسته‌بندی فایل‌ها
     function filterMedia(type, btn) {
       document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
@@ -448,7 +450,7 @@
       });
     }
 
-    // آپلود واقعی و نمایش مستقیم تصویر، ویدیو یا صدا بدون پاپ‌آپ
+    // آپلود فایل
     function handleFileUpload(event, type) {
       const file = event.target.files[0];
       if (!file) return;
@@ -483,7 +485,7 @@
       grid.prepend(card);
     }
 
-    // مدال هوش مصنوعی بدون پاپ‌آپ مرورگر
+    // کنترل مدال هوش مصنوعی
     function openAIModal() {
       document.getElementById('ai-modal').style.display = 'flex';
     }
@@ -506,10 +508,10 @@
       }).catch(() => {});
     }
 
-    // دانلود واقعی اپلیکیشن اندروید (فرمت APK)
+    // دانلود برنامه
     function downloadApp() {
       const a = document.createElement("a");
-      a.href = "https://www.webintoapp.com/"; // آدرس سرویس ساخت اپلیکیشن یا آدرس مستقیم فایل APK شما
+      a.href = "https://www.webintoapp.com/";
       a.target = "_blank";
       document.body.appendChild(a);
       a.click();
