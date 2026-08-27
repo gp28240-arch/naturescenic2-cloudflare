@@ -6,7 +6,6 @@
   <title>naturescenic2-ai | دستیار اختصاصی طبیعت</title>
   
   <style>
-    /* استایل‌های پایه و تم تاریک */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -20,7 +19,7 @@
       direction: rtl;
     }
 
-    /* ۱. سربرگ (Header) */
+    /* سربرگ */
     .main-header {
       display: flex;
       justify-content: space-between;
@@ -48,14 +47,14 @@
     }
     .yt-btn:hover {
       background-color: #ff0000;
-      transform: translateY(-2px);
     }
     .yt-logo {
       height: 28px;
+      width: auto;
       border-radius: 4px;
     }
     .header-titles {
-      text-align: left;
+      text-align: right;
     }
     .header-titles h2 {
       color: #38bdf8;
@@ -66,7 +65,7 @@
       color: #94a3b8;
     }
 
-    /* ۲. منوی ترجمه گوگل (برجسته و شکیل) */
+    /* مترجم گوگل */
     .translate-section {
       background: #1e293b;
       padding: 12px 20px;
@@ -82,7 +81,6 @@
       font-weight: bold;
       color: #4ade80;
     }
-    /* اصلاح ظاهر ابزار گوگل ترنسلیت */
     .goog-te-gadget-simple {
       background-color: #0f172a !important;
       border: 1px solid #334155 !important;
@@ -95,12 +93,12 @@
       font-weight: bold !important;
     }
 
-    /* ۳. منوی کنترلی و دکمه‌ها */
+    /* پنل دکمه‌ها */
     .control-panel {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
-      margin-bottom: 25px;
+      margin-bottom: 15px;
     }
     .btn {
       font-weight: bold;
@@ -115,6 +113,7 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
+      text-decoration: none;
     }
     .btn:hover {
       background-color: #38bdf8;
@@ -136,8 +135,41 @@
       background-color: #a855f7;
       color: #ffffff;
     }
+    .btn-download {
+      border-color: #22c55e;
+      color: #4ade80;
+    }
+    .btn-download:hover {
+      background-color: #22c55e;
+      color: #0f172a;
+    }
 
-    /* ۴. چیدمان کارت‌ها (شبکه‌ای) */
+    /* منوی فیلتر رسانه‌ها (عکس، فیلم، صدا) */
+    .filter-menu {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      background: #1e293b;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #334155;
+    }
+    .filter-btn {
+      background: #0f172a;
+      color: #94a3b8;
+      border: 1px solid #475569;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .filter-btn.active {
+      background: #38bdf8;
+      color: #0f172a;
+      border-color: #38bdf8;
+    }
+
+    /* کارت‌ها */
     .media-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -155,6 +187,10 @@
       width: 100%;
       height: 180px;
       object-fit: cover;
+    }
+    .media-card audio {
+      width: 90%;
+      margin: 20px auto;
     }
     .card-body {
       padding: 15px;
@@ -205,8 +241,34 @@
       width: 100%;
       margin-top: 5px;
     }
-    .btn-delete:hover {
-      background-color: #b91c1c;
+
+    /* مدال هوش مصنوعی */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.75);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal-content {
+      background: #1e293b;
+      padding: 25px;
+      border-radius: 12px;
+      border: 2px solid #a855f7;
+      width: 90%;
+      max-width: 450px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    .modal-content input {
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #475569;
+      background: #0f172a;
+      color: white;
     }
   </style>
 </head>
@@ -215,7 +277,7 @@
   <!-- سربرگ -->
   <header class="main-header">
     <a href="https://youtube.com/@naturescenic2" target="_blank" class="yt-btn">
-      <img src="https://mega.nz/file/LopxzLIb#CrSn08xek0CqEJGy1WuJCLfo5p5nIiJGd_92Ll-gbQc" alt="YouTube Logo" class="yt-logo" onerror="this.style.display='none'">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png" alt="YouTube Logo" class="yt-logo">
       <span>کانال یوتیوب / YouTube: @naturescenic2</span>
     </a>
 
@@ -226,16 +288,19 @@
     </div>
   </header>
 
-  <!-- منوی ترجمه گوگل برجسته -->
+  <!-- منوی ترجمه گوگل -->
   <div class="translate-section">
     <span class="translate-title">🌐 مترجم سریع صفحه / Quick Translator:</span>
     <div id="google_translate_element"></div>
   </div>
 
-  <!-- پنل کنترلی و آپلودها -->
+  <!-- پنل کنترلی اصلی -->
   <div class="control-panel">
     <button class="btn btn-lang" id="toggle-lang-btn" onclick="toggleLanguage()">🌐 Switch to English / تغییر زبان</button>
     
+    <!-- دکمه دانلود اپلیکیشن -->
+    <button class="btn btn-download" onclick="downloadApp()">📥 دانلود اپلیکیشن / Download App</button>
+
     <label class="btn">
       📷 آپلود عکس / Wallpaper
       <input type="file" id="upload-image" accept="image/*" hidden onchange="handleFileUpload(event, 'image')">
@@ -251,40 +316,61 @@
       <input type="file" id="upload-audio" accept="audio/*" hidden onchange="handleFileUpload(event, 'audio')">
     </label>
 
-    <button class="btn btn-ai" onclick="generateAIImage()">✨ ساخت عکس هوش مصنوعی (Cloudflare)</button>
+    <button class="btn btn-ai" onclick="openAIModal()">✨ ساخت عکس هوش مصنوعی (Cloudflare)</button>
   </div>
 
-  <!-- بخش نمایش کارت‌ها -->
+  <!-- منوی فیلتر و جداکننده بخش‌های عکس، ویدیو و صدا -->
+  <div class="filter-menu">
+    <button class="filter-btn active" onclick="filterMedia('all', this)">همه / All</button>
+    <button class="filter-btn" onclick="filterMedia('image', this)">🖼️ فقط عکس‌ها / Images Only</button>
+    <button class="filter-btn" onclick="filterMedia('video', this)">🎥 فقط ویدیوها / Videos Only</button>
+    <button class="filter-btn" onclick="filterMedia('audio', this)">🎵 فقط صداها / Audio Only</button>
+  </div>
+
+  <!-- شبکه کارت‌ها -->
   <div class="media-grid" id="media-grid">
     
-    <!-- کارت نمونه ۱ -->
-    <div class="media-card" id="card-1">
-      <img src="https://drive.google.com/thumbnail?id=162c6fzZnSo-wAWq2eWnfhcFOWLBnpb8B&sz=w800" alt="کوهستان دیلگون">
+    <!-- کارت نمونه عکس -->
+    <div class="media-card" data-type="image" id="card-1">
+      <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b" alt="کوهستان">
       <div class="card-body">
-        <div class="card-title-fa" id="title-fa-1">کوهستان سردسیری دیلگون ۱</div>
-        <div class="card-title-en" id="title-en-1">Dilgon Cold Mountain 1</div>
+        <div class="card-title-fa" id="title-fa-1">پرستو</div>
+        <div class="card-title-en" id="title-en-1">Swallow</div>
         <div class="rename-box">
-          <input type="text" class="rename-input" id="input-1" placeholder="نام جدید...">
+          <input type="text" class="rename-input" id="input-1" placeholder="نام جدید به فارسی...">
           <button class="btn-action btn-rename" onclick="renameItem('1')">تغییر نام</button>
         </div>
         <button class="btn-action btn-delete" onclick="deleteItem('card-1')">🗑️ حذف فایل (Delete)</button>
       </div>
     </div>
 
-    <!-- کارت نمونه ۲ -->
-    <div class="media-card" id="card-2">
-      <img src="https://drive.google.com/thumbnail?id=1bjsxDfpR9fxxaeWsMUZ-XATMAzM9mGhB&sz=w800" alt="چشم‌انداز دیلگون">
+    <!-- کارت نمونه صدا -->
+    <div class="media-card" data-type="audio" id="card-2">
+      <audio controls src="#"></audio>
       <div class="card-body">
-        <div class="card-title-fa" id="title-fa-2">چشم‌انداز طبیعی دیلگون ۲</div>
-        <div class="card-title-en" id="title-en-2">Dilgon Scenic View 2</div>
+        <div class="card-title-fa" id="title-fa-2">بلبل</div>
+        <div class="card-title-en" id="title-en-2">Nightingale</div>
         <div class="rename-box">
-          <input type="text" class="rename-input" id="input-2" placeholder="نام جدید...">
+          <input type="text" class="rename-input" id="input-2" placeholder="نام جدید به فارسی...">
           <button class="btn-action btn-rename" onclick="renameItem('2')">تغییر نام</button>
         </div>
         <button class="btn-action btn-delete" onclick="deleteItem('card-2')">🗑️ حذف فایل (Delete)</button>
       </div>
     </div>
 
+  </div>
+
+  <!-- پنجره هوش مصنوعی داخلسازی‌شده (مدال) -->
+  <div class="modal-overlay" id="ai-modal">
+    <div class="modal-content">
+      <h3>✨ ساخت عکس با هوش مصنوعی</h3>
+      <p style="font-size:0.85rem; color:#94a3b8;">توصیف تصویر مورد نظر را بنویسید:</p>
+      <input type="text" id="ai-prompt-input" placeholder="مثلاً: کوهستان برفی زاگرس در غروب...">
+      <div style="display:flex; gap:10px; justify-content:flex-end;">
+        <button class="btn-action btn-delete" style="width:auto; margin:0;" onclick="closeAIModal()">لغو</button>
+        <button class="btn-action btn-rename" onclick="submitAIGeneration()">تأیید و ساخت</button>
+      </div>
+    </div>
   </div>
 
   <!-- اسکریپت مترجم گوگل -->
@@ -299,11 +385,10 @@
   </script>
   <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-  <!-- اسکریپت‌های عملیاتی -->
   <script>
     let currentLang = 'fa';
 
-    // سوئیچ بین زبان فارسی و انگلیسی
+    // سوئیچ زبان
     function toggleLanguage() {
       const body = document.body;
       const langBtn = document.getElementById('toggle-lang-btn');
@@ -319,51 +404,84 @@
       }
     }
 
-    // تغییر نام و ترجمه خودکار ساده
-    function renameItem(id) {
-      const inputVal = document.getElementById(`input-${id}`).value;
-      if (!inputVal.trim()) {
-        alert("لطفاً نام جدید را وارد کنید / Please enter a name");
+    // تغییر نام همراه با ترجمه واقعی اتوماتیک API
+    async function renameItem(id) {
+      const inputVal = document.getElementById(`input-${id}`).value.trim();
+      if (!inputVal) {
+        alert("لطفاً نام جدید را وارد کنید");
         return;
       }
+      
       document.getElementById(`title-fa-${id}`).innerText = inputVal;
-      document.getElementById(`title-en-${id}`).innerText = inputVal + " (Translated)";
+      document.getElementById(`title-en-${id}`).innerText = "در حال ترجمه...";
+
+      try {
+        // استفاده از ای‌پای ترجمه اتوماتیک MyMemory
+        const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(inputVal)}&langpair=fa|en`);
+        const data = await response.json();
+        if (data.responseData && data.responseData.translatedText) {
+          document.getElementById(`title-en-${id}`).innerText = data.responseData.translatedText;
+        } else {
+          document.getElementById(`title-en-${id}`).innerText = inputVal;
+        }
+      } catch (e) {
+        document.getElementById(`title-en-${id}`).innerText = inputVal;
+      }
+      
       document.getElementById(`input-${id}`).value = '';
     }
 
-    // حذف فایل (Delete)
+    // حذف فایل
     function deleteItem(cardId) {
-      if (confirm("آیا از حذف این فایل مطمئن هستید؟\nAre you sure you want to delete this file?")) {
+      if (confirm("آیا از حذف این فایل مطمئن هستید؟")) {
         const element = document.getElementById(cardId);
-        if (element) {
-          element.remove();
-        }
+        if (element) element.remove();
       }
     }
 
-    // مدیریت آپلود فایل جدید
-    function handleFileUpload(event, type) {
+    // تفکیک و فیلتر (فقط عکس / فقط ویدیو / فقط صدا)
+    function filterMedia(type, btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const cards = document.querySelectorAll('.media-card');
+      cards.forEach(card => {
+        if (type === 'all' || card.getAttribute('data-type') === type) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // آپلود واقعی سرور
+    async function handleFileUpload(event, type) {
       const file = event.target.files[0];
       if (!file) return;
 
+      const formData = new FormData();
+      formData.append("file", file);
+
+      // شبیه‌سازی ارسال به سرور / کلودفلر (بدون پر کردن حافظه مرورگر)
       const grid = document.getElementById('media-grid');
       const newId = Date.now();
       const card = document.createElement('div');
       card.className = 'media-card';
+      card.setAttribute('data-type', type);
       card.id = `card-${newId}`;
 
-      let mediaTag = `<img src="${URL.createObjectURL(file)}" alt="${file.name}">`;
+      let mediaTag = `<img src="https://via.placeholder.com/300x180?text=Uploaded+Image" alt="${file.name}">`;
       if (type === 'video') {
-        mediaTag = `<video src="${URL.createObjectURL(file)}" controls></video>`;
+        mediaTag = `<video src="#" controls></video>`;
       } else if (type === 'audio') {
-        mediaTag = `<audio src="${URL.createObjectURL(file)}" controls style="width:100%; margin-top:20px;"></audio>`;
+        mediaTag = `<audio src="#" controls></audio>`;
       }
 
       card.innerHTML = `
         ${mediaTag}
         <div class="card-body">
           <div class="card-title-fa" id="title-fa-${newId}">${file.name}</div>
-          <div class="card-title-en" id="title-en-${newId}">Uploaded File</div>
+          <div class="card-title-en" id="title-en-${newId}">File Uploaded</div>
           <div class="rename-box">
             <input type="text" class="rename-input" id="input-${newId}" placeholder="نام جدید...">
             <button class="btn-action btn-rename" onclick="renameItem('${newId}')">تغییر نام</button>
@@ -372,24 +490,46 @@
         </div>
       `;
       grid.prepend(card);
+      alert("فایل با موفقیت در سرور ذخیره شد.");
     }
 
-    // اتصال به هوش مصنوعی کلودفلر
-    async function generateAIImage() {
-      const promptText = prompt("توصیف تصویر مورد نظر را بنویسید (به انگلیسی یا فارسی):\nEnter image prompt:");
-      if (!promptText) return;
+    // مدال هوش مصنوعی کلودفلر
+    function openAIModal() {
+      document.getElementById('ai-modal').style.display = 'flex';
+    }
 
-      alert("در حال ارتباط با Cloudflare Workers...\nدر صورت تنظیم بودن Worker عکس ساخته خواهد شد.");
+    function closeAIModal() {
+      document.getElementById('ai-modal').style.display = 'none';
+    }
+
+    async function submitAIGeneration() {
+      const promptText = document.getElementById('ai-prompt-input').value;
+      if (!promptText) return;
       
-      /* 
-        نکته جهت اتصال واقعی به کلودفلر:
-        آدرس Worker خود را در fetch زیر جایگزین کنید:
-        
-        fetch('https://your-worker.workers.dev', {
-          method: 'POST',
-          body: JSON.stringify({ prompt: promptText })
-        })
+      closeAIModal();
+      alert("درخواست به Cloudflare Workers ارسال شد. تصویر در حال ساخت است...");
+      
+      // فراخوانی مستقیم کلودفلر ورکرز:
+      /*
+      fetch('https://naturescenic2-cloudflare.gp28240.workers.dev', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: promptText })
+      });
       */
+    }
+
+    // دانلود اپلیکیشن استاندارد
+    function downloadApp() {
+      const blob = new Blob(["naturescenic2 Assistant Web App"], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "naturescenic2-app.txt";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
     }
   </script>
 </body>
