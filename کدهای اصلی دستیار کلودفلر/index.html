@@ -3,321 +3,117 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>naturescenic2-ai | دستیار اختصاصی طبیعت</title>
-  
+  <title>دستیار هوشمند naturescenic2</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    body {
-      background-color: #0f172a;
-      color: #f8fafc;
-      padding: 20px;
-      direction: rtl;
-    }
+    * { box-sizing: border-box; font-family: Tahoma, sans-serif; }
+    body { background: #121212; color: #fff; margin: 0; padding: 0; display: flex; flex-direction: column; height: 100vh; }
+    #chat-container { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+    .message { max-width: 80%; padding: 10px 14px; border-radius: 12px; line-height: 1.5; font-size: 14px; word-break: break-word; }
+    .user { background: #0084ff; align-self: flex-end; color: #fff; }
+    .bot { background: #262626; align-self: flex-start; color: #ddd; }
+    
+    /* گالری چرخشی عکس‌ها */
+    .carousel { display: flex; gap: 8px; overflow-x: auto; padding: 8px 0; scroll-snap-type: x mandatory; }
+    .carousel img { width: 200px; height: 150px; object-fit: cover; border-radius: 8px; scroll-snap-align: start; flex-shrink: 0; border: 1px solid #444; }
+    
+    /* رسانه‌ها */
+    video, audio { max-width: 100%; border-radius: 8px; margin-top: 5px; }
 
-    /* سربرگ */
-    .main-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #1e293b;
-      padding: 15px 25px;
-      border-radius: 12px;
-      border: 1px solid #334155;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-      gap: 15px;
-    }
-    .yt-btn {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background-color: #cc0000;
-      color: #ffffff;
-      padding: 10px 18px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: bold;
-      box-shadow: 0 4px 10px rgba(204, 0, 0, 0.4);
-      transition: 0.3s;
-    }
-    .yt-btn:hover { background-color: #ff0000; }
-    .yt-logo { height: 28px; width: auto; border-radius: 4px; }
-    .header-titles h2 { color: #38bdf8; font-size: 1.4rem; }
-    .header-titles p { font-size: 0.9rem; color: #94a3b8; }
-
-    /* پنل دکمه‌ها */
-    .control-panel {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 15px;
-    }
-    .btn {
-      font-weight: bold;
-      background-color: #1e293b;
-      color: #ffffff;
-      padding: 12px 20px;
-      border-radius: 8px;
-      border: 2px solid #38bdf8;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      text-decoration: none;
-    }
-    .btn:hover { background-color: #38bdf8; color: #0f172a; }
-    .btn-ai { background-color: #a855f7; color: #ffffff; border-color: #a855f7; }
-    .btn-ai:hover { background-color: #9333ea; }
-
-    /* باکس ساخت تصویر هوش مصنوعی */
-    .ai-inline-box {
-      background: #1e293b;
-      border: 2px solid #a855f7;
-      border-radius: 10px;
-      padding: 15px;
-      margin-bottom: 20px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-    }
-    .ai-inline-input {
-      flex: 1;
-      min-width: 250px;
-      padding: 10px 14px;
-      border-radius: 8px;
-      border: 1px solid #475569;
-      background: #0f172a;
-      color: #fff;
-    }
-
-    /* باکس وضعیت آپلود و لودر چرخنده */
-    .upload-status-box {
-      display: none;
-      background: #1e293b;
-      border: 1px solid #38bdf8;
-      border-radius: 10px;
-      padding: 12px 20px;
-      margin-bottom: 20px;
-      align-items: center;
-      gap: 15px;
-    }
-    .spinner {
-      width: 24px;
-      height: 24px;
-      border: 3px solid #334155;
-      border-top: 3px solid #38bdf8;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    .status-text {
-      font-size: 0.95rem;
-      font-weight: bold;
-    }
-
-    /* شبکه کارت‌ها */
-    .media-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
-    }
-    .media-card {
-      background: #1e293b;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid #334155;
-      display: flex;
-      flex-direction: column;
-    }
-    .media-card img, .media-card video { width: 100%; height: 180px; object-fit: cover; }
-    .media-card audio { width: 90%; margin: 20px auto; }
-    .card-body { padding: 15px; display: flex; flex-direction: column; gap: 10px; flex-grow: 1; }
-    .card-title-fa { font-weight: bold; color: #f8fafc; }
-    .btn-delete { background-color: #dc2626; color: white; border: none; padding: 6px; border-radius: 6px; cursor: pointer; }
+    /* کادر ارسال */
+    #input-area { display: flex; padding: 10px; background: #1e1e1e; border-top: 1px solid #333; gap: 8px; align-items: center; }
+    #message-input { flex: 1; padding: 10px; border-radius: 20px; border: 1px solid #444; background: #2a2a2a; color: #fff; outline: none; }
+    .btn { background: #0084ff; border: none; color: white; padding: 10px 14px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .file-btn { background: #333; }
+    #file-input { display: none; }
   </style>
 </head>
 <body>
 
-  <header class="main-header">
-    <a href="https://youtube.com/@naturescenic2" target="_blank" class="yt-btn">
-      <img src="https://drive.google.com/thumbnail?id=1EZf35v8476qtDC_rTS_h-6-_zIq0RNTh&sz=w200" alt="Logo" class="yt-logo">
-      <span>YouTube: @naturescenic2</span>
-    </a>
-    <div class="header-titles">
-      <h2>naturescenic2-ai</h2>
-      <p>طبیعت دیلگون، کهگیلویه و بویراحمد</p>
-    </div>
-  </header>
-
-  <div class="control-panel">
-    <label class="btn">
-      📷 آپلود عکس
-      <input type="file" id="upload-image" accept="image/*" hidden onchange="handleFileUpload(event, 'image')">
-    </label>
-    <label class="btn">
-      🎥 آپلود ویدیو
-      <input type="file" id="upload-video" accept="video/*" hidden onchange="handleFileUpload(event, 'video')">
-    </label>
-    <label class="btn">
-      🎵 آپلود صدا
-      <input type="file" id="upload-audio" accept="audio/*" hidden onchange="handleFileUpload(event, 'audio')">
-    </label>
+  <div id="chat-container">
+    <div class="message bot">سلام! دستیار شما آماده است. می‌توانید فایل ارسال کنید یا گفتگو را شروع کنید.</div>
   </div>
 
-  <!-- باکس وضعیت و نشانگر چرخنده (Spinner) -->
-  <div class="upload-status-box" id="status-box">
-    <div class="spinner" id="status-spinner"></div>
-    <div class="status-text" id="status-text">در حال ارسال به سرور...</div>
+  <div id="input-area">
+    <label for="file-input" class="btn file-btn">📎</label>
+    <input type="file" id="file-input" accept="image/*,video/*,audio/*" onchange="uploadFile()">
+    <input type="text" id="message-input" placeholder="پیام خود را بنویسید..." onkeypress="if(event.key==='Enter') sendMessage()">
+    <button class="btn" onclick="sendMessage()">➔</button>
   </div>
-
-  <div class="ai-inline-box">
-    <span style="font-weight:bold; color:#c084fc;">✨ ساخت تصویر هوش مصنوعی:</span>
-    <input type="text" id="ai-prompt-input" class="ai-inline-input" placeholder="توصیف تصویر را بنویسید...">
-    <button class="btn btn-ai" id="btn-submit-ai" onclick="submitAIGeneration()">ساخت عکس</button>
-  </div>
-
-  <div class="media-grid" id="media-grid"></div>
 
   <script>
-    const WORKER_URL = 'https://naturescenic2-cloudflare.gp28240.workers.dev';
+    const WORKER_URL = "https://naturescenic2-cloudflare.pages.dev"; // آدرس دامنه ورکر/پیج شما
 
-    // دریافت لیست فایل‌های اینترنتی پس از بارگذاری کامل صفحه
-    window.addEventListener('DOMContentLoaded', loadSavedFiles);
-
-    function showStatus(message, isError = false, isLoading = true) {
-      const box = document.getElementById('status-box');
-      const text = document.getElementById('status-text');
-      const spinner = document.getElementById('status-spinner');
-      
-      box.style.display = 'flex';
-      text.innerText = message;
-      text.style.color = isError ? '#f87171' : '#f8fafc';
-      spinner.style.display = isLoading ? 'block' : 'none';
+    function appendMessage(sender, content) {
+      const chat = document.getElementById("chat-container");
+      const msg = document.createElement("div");
+      msg.className = `message ${sender}`;
+      msg.innerHTML = content;
+      chat.appendChild(msg);
+      chat.scrollTop = chat.scrollHeight;
     }
 
-    function hideStatus(delay = 3000) {
-      setTimeout(() => {
-        document.getElementById('status-box').style.display = 'none';
-      }, delay);
-    }
-
-    async function loadSavedFiles() {
-      showStatus("در حال دریافت فایل‌های ذخیره‌شده از اینترنت...", false, true);
-      try {
-        const res = await fetch(`${WORKER_URL}/list-files`);
-        if (res.ok) {
-          const files = await res.json();
-          files.forEach(file => {
-            const ext = file.name.split('.').pop().toLowerCase();
-            let type = 'image';
-            if (['mp4', 'webm', 'ogg'].includes(ext)) type = 'video';
-            if (['mp3', 'wav', 'ogg'].includes(ext)) type = 'audio';
-            createMediaCard(file.url, type, file.name);
-          });
-          showStatus("فایل‌ها با موفقیت دریافت شدند ✅", false, false);
-          hideStatus(2000);
-        } else {
-          showStatus("خطا در دریافت لیست فایل‌ها از کلودفلر", true, false);
-        }
-      } catch (e) {
-        showStatus("ارتباط با سرور آنلاین برقرار نشد ❌", true, false);
-      }
-    }
-
-    async function handleFileUpload(event, type) {
-      const file = event.target.files[0];
+    async function uploadFile() {
+      const fileInput = document.getElementById("file-input");
+      const file = fileInput.files[0];
       if (!file) return;
 
-      showStatus(`در حال آپلود فایل "${file.name}" به سرور...`, false, true);
-
+      appendMessage("user", `در حال آپلود فایل: ${file.name}...`);
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("type", type);
+      formData.append("type", file.type.split('/')[0]);
 
       try {
-        const response = await fetch(`${WORKER_URL}/upload`, {
-          method: 'POST',
-          body: formData
-        });
+        const res = await fetch(`${WORKER_URL}/upload`, { method: "POST", body: formData });
+        const data = await res.json();
 
-        if (response.ok) {
-          const resData = await response.json();
-          createMediaCard(resData.url || URL.createObjectURL(file), type, file.name);
-          showStatus(`آپلود فایل "${file.name}" با موفقیت انجام شد ✅`, false, false);
-          hideStatus(3000);
+        if (data.success) {
+          let html = "";
+          if (file.type.startsWith("image/")) {
+            html = `<img src="${data.url}" style="max-width:100%; border-radius:8px;">`;
+          } else if (file.type.startsWith("video/")) {
+            html = `<video controls><source src="${data.url}" type="${file.type}"></video>`;
+          } else if (file.type.startsWith("audio/")) {
+            html = `<audio controls><source src="${data.url}" type="${file.type}"></audio>`;
+          } else {
+            html = `<a href="${data.url}" target="_blank" style="color:#66b3ff;">دانلود فایل: ${data.name}</a>`;
+          }
+          appendMessage("bot", `فایل با موفقیت آپلود شد:<br>${html}`);
         } else {
-          showStatus("خطا در آپلود فایل روی سرور کلودفلر ❌", true, false);
+          appendMessage("bot", "خطا در آپلود فایل.");
         }
       } catch (e) {
-        showStatus("اتصال اینترنت یا سرور قطع شد ❌", true, false);
+        appendMessage("bot", "خطا در برقراری ارتباط با سرور.");
       }
+      fileInput.value = "";
     }
 
-    async function submitAIGeneration() {
-      const promptInput = document.getElementById('ai-prompt-input');
-      const promptText = promptInput.value.trim();
-      const btnSubmit = document.getElementById('btn-submit-ai');
+    async function sendMessage() {
+      const input = document.getElementById("message-input");
+      const text = input.value.trim();
+      if (!text) return;
 
-      if (!promptText) {
-        alert("لطفاً توصیف تصویر را بنویسید.");
-        return;
-      }
+      appendMessage("user", text);
+      input.value = "";
 
-      showStatus("در حال ساخت تصویر با هوش مصنوعی... لطفاً شکیبا باشید ⏳", false, true);
-      btnSubmit.disabled = true;
-
-      try {
-        const response = await fetch(`${WORKER_URL}/generate-image`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prompt: promptText })
-        });
-
-        if (response.ok) {
-          const blob = await response.blob();
-          const imageUrl = URL.createObjectURL(blob);
-          createMediaCard(imageUrl, 'image', `هوش مصنوعی: ${promptText}`);
-          promptInput.value = '';
-          showStatus("تصویر با موفقیت ساخته شد ✅", false, false);
-          hideStatus(3000);
-        } else {
-          showStatus("خطا در تولید تصویر توسط کلودفلر ❌", true, false);
+      // اگر دستور ساخت تصویر باشد
+      if (text.startsWith("تصویر ") || text.startsWith("عکس ")) {
+        appendMessage("bot", "در حال ساخت تصویر با هوش مصنوعی...");
+        const prompt = text.replace(/^(تصویر|عکس)\s+/, "");
+        try {
+          const res = await fetch(`${WORKER_URL}/generate-image`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ prompt })
+          });
+          const blob = await res.blob();
+          const imgUrl = URL.createObjectURL(blob);
+          appendMessage("bot", `<img src="${imgUrl}" style="max-width:100%; border-radius:8px;">`);
+        } catch (e) {
+          appendMessage("bot", "خطا در ساخت تصویر.");
         }
-      } catch (e) {
-        showStatus("ارتباط با سرور تولید تصویر قطع شد ❌", true, false);
-      } finally {
-        btnSubmit.disabled = false;
+      } else {
+        appendMessage("bot", "پیام شما دریافت شد.");
       }
-    }
-
-    function createMediaCard(fileUrl, type, name) {
-      const grid = document.getElementById('media-grid');
-      const newId = Date.now();
-      const card = document.createElement('div');
-      card.className = 'media-card';
-      card.id = `card-${newId}`;
-
-      let mediaTag = `<img src="${fileUrl}" alt="${name}">`;
-      if (type === 'video') mediaTag = `<video src="${fileUrl}" controls></video>`;
-      if (type === 'audio') mediaTag = `<audio src="${fileUrl}" controls></audio>`;
-
-      card.innerHTML = `
-        ${mediaTag}
-        <div class="card-body">
-          <div class="card-title-fa">${name}</div>
-          <button class="btn-delete" onclick="document.getElementById('card-${newId}').remove()">🗑️ حذف</button>
-        </div>
-      `;
-      grid.prepend(card);
     }
   </script>
 </body>
