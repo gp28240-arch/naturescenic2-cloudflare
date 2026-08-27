@@ -11,24 +11,9 @@ export default {
     }
 
     const url = new URL(request.url);
-    const GITHUB_TOKEN = env.GITHUB_TOKEN;
-    const GITHUB_USERNAME = "gp28240-arch";
-    const GITHUB_REPO = "naturescenic2-cloudflare";
 
     try {
-      // ساخت تصویر با هوش مصنوعی
-      if (url.pathname === "/generate-image" && request.method === "POST") {
-        const { prompt } = await request.json();
-        const aiResponse = await env.AI.run("@cf/bytedance/stable-diffusion-xl-lightning", {
-          prompt: prompt
-        });
-
-        return new Response(aiResponse, {
-          headers: { ...corsHeaders, "Content-Type": "image/png" }
-        });
-      }
-
-      // آپلود فایل (ویدیو، صدا، عکس) به گیت‌هاب
+      // ۱. آپلود فایل (ویدیو، صدا، عکس) به Cloudflare R2
       if (url.pathname === "/upload" && request.method === "POST") {
         const formData = await request.formData();
         const file = formData.get("file");
@@ -41,73 +26,65 @@ export default {
           });
         }
 
-        const arrayBuffer = await file.arrayBuffer();
-        const bytes = new Uint8Array(arrayBuffer);
-        let binary = '';
-        for (let i = 0; i < bytes.byteLength; i++) {
-          binary += String.fromCharCode(bytes[i]);
-        }
-        const base64Content = btoa(binary);
-
-        const fileName = `uploads/${Date.now()}-${file.name}`;
-        const ghUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/${fileName}`;
-
-        const ghResponse = await fetch(ghUrl, {
-          method: "PUT",
-          headers: {
-            "Authorization": `Bearer ${GITHUB_TOKEN}`,
-            "User-Agent": "Cloudflare-Worker",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            message: `Upload ${file.name}`,
-            content: base64Content
-          })
+        const fileName = `${Date.now()}-${file.name}`;
+        
+        // ذخیره مستقیم در سطل R2
+        await env.MY_BUCKET.put(fileName, file.stream(), {
+          httpMetadata: { contentType: file.type }
         });
 
-        if (ghResponse.ok) {
-          const ghData = await ghResponse.json();
-          return new Response(JSON.stringify({ 
-            success: true, 
-            url: ghData.content.download_url,
-            name: file.name,
-            type: type
-          }), {
-            headers: { ...corsHeaders, "Content-Type": "application/json" }
-          });
-        } else {
-          const errData = await ghResponse.json();
-          return new Response(JSON.stringify({ error: "خطا در آپلود", details: errData }), {
-            status: 500,
-            headers: { ...corsHeaders, "Content-Type": "application/json" }
-          });
-        }
+        return new Response(JSON.stringify({ 
+          success: true, 
+          url: `${url.origin}/file/${fileName}`,
+          name: file.name,
+          type: type
+        }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" }
+        });
       }
 
-      // دریافت لیست تمام فایل‌ها
+      // ۲. پخش/دانلود فایل‌های ذخیره شده در R2 (ویدیو و صدا به طور مستقیم پخش می‌شوند)
+      if (url.pathname.startsWith("/file/") && request.method === "GET") {
+        const key = url.pathname.replace("/file/", "");
+        const object = await env.MY_BUCKET.get(key);
+
+        if (object === null) {
+          return new Response("فایل یافت نشد", { status: 404 });
+        }
+
+        const headers = new Headers();
+        object.writeHttpMetadata(headers);
+        headers.set("etag", object.httpEtag);
+        Object.assign(headers, corsHeaders); // اضافه کردن هدرهای CORS برای پخش چندرسانه‌ای
+
+        return new Response(object.body, {
+          headers
+        });
+      }
+
+      // ۳. لیست تمام فایل‌ها برای گالری چرخشی
       if (url.pathname === "/list-files" && request.method === "GET") {
-        const ghUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/uploads`;
-        const ghResponse = await fetch(ghUrl, {
-          headers: {
-            "Authorization": `Bearer ${GITHUB_TOKEN}`,
-            "User-Agent": "Cloudflare-Worker"
-          }
+        const objects = await env.MY_BUCKET.list();
+        const files = objects.objects.map(obj => ({
+          url: `${url.origin}/file/${obj.key}`,
+          name: obj.key,
+          type: obj.key.match(/\.(mp4|webm|mkv)$/i) ? 'video' : 
+                obj.key.match(/\.(mp3|wav|ogg)$/i) ? 'audio' : 'image'
+        }));
+        return new Response(JSON.stringify(files), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" }
+        });
+      }
+
+      // ۴. ساخت تصویر با هوش مصنوعی (همان کد قبلی)
+      if (url.pathname === "/generate-image" && request.method === "POST") {
+        const { prompt } = await request.json();
+        const aiResponse = await env.AI.run("@cf/bytedance/stable-diffusion-xl-lightning", {
+          prompt: prompt
         });
 
-        if (ghResponse.ok) {
-          const items = await ghResponse.json();
-          const files = items.map(item => ({
-            url: item.download_url,
-            name: item.name.replace(/^\d+-/, ''),
-            type: item.name.match(/\.(mp4|webm|mkv)$/i) ? 'video' : 
-                  item.name.match(/\.(mp3|wav|ogg)$/i) ? 'audio' : 'image'
-          }));
-          return new Response(JSON.stringify(files), {
-            headers: { ...corsHeaders, "Content-Type": "application/json" }
-          });
-        }
-        return new Response(JSON.stringify([]), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" }
+        return new Response(aiResponse, {
+          headers: { ...corsHeaders, "Content-Type": "image/png" }
         });
       }
 
@@ -118,6 +95,6 @@ export default {
       });
     }
 
-    return new Response("مسیر نامعتبر است", { status: 404, headers: corsHeaders });
+    return new Response("مسیر نامعتبر", { status: 404, headers: corsHeaders });
   }
 };
