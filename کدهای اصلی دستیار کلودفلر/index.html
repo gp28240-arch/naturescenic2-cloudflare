@@ -19,6 +19,7 @@
       direction: rtl;
     }
 
+    /* سربرگ */
     .main-header {
       display: flex;
       justify-content: space-between;
@@ -49,6 +50,7 @@
     .header-titles h2 { color: #38bdf8; font-size: 1.4rem; }
     .header-titles p { font-size: 0.9rem; color: #94a3b8; }
 
+    /* پنل دکمه‌ها */
     .control-panel {
       display: flex;
       flex-wrap: wrap;
@@ -72,6 +74,7 @@
     .btn-ai { background-color: #a855f7; color: #ffffff; border-color: #a855f7; }
     .btn-ai:hover { background-color: #9333ea; }
 
+    /* باکس ساخت تصویر هوش مصنوعی */
     .ai-inline-box {
       background: #1e293b;
       border: 2px solid #a855f7;
@@ -92,13 +95,36 @@
       background: #0f172a;
       color: #fff;
     }
-    .ai-status-text {
-      width: 100%;
-      color: #c084fc;
-      font-size: 0.85rem;
+
+    /* باکس وضعیت آپلود و لودر چرخنده */
+    .upload-status-box {
       display: none;
+      background: #1e293b;
+      border: 1px solid #38bdf8;
+      border-radius: 10px;
+      padding: 12px 20px;
+      margin-bottom: 20px;
+      align-items: center;
+      gap: 15px;
+    }
+    .spinner {
+      width: 24px;
+      height: 24px;
+      border: 3px solid #334155;
+      border-top: 3px solid #38bdf8;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .status-text {
+      font-size: 0.95rem;
+      font-weight: bold;
     }
 
+    /* شبکه کارت‌ها */
     .media-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -147,11 +173,16 @@
     </label>
   </div>
 
+  <!-- باکس وضعیت و نشانگر چرخنده (Spinner) -->
+  <div class="upload-status-box" id="status-box">
+    <div class="spinner" id="status-spinner"></div>
+    <div class="status-text" id="status-text">در حال ارسال به سرور...</div>
+  </div>
+
   <div class="ai-inline-box">
     <span style="font-weight:bold; color:#c084fc;">✨ ساخت تصویر هوش مصنوعی:</span>
-    <input type="text" id="ai-prompt-input" class="ai-inline-input" placeholder="توصیف تصویر...">
+    <input type="text" id="ai-prompt-input" class="ai-inline-input" placeholder="توصیف تصویر را بنویسید...">
     <button class="btn btn-ai" id="btn-submit-ai" onclick="submitAIGeneration()">ساخت عکس</button>
-    <div class="ai-status-text" id="ai-loading-status">⏳ در حال دریافت تصویر از سرور کلودفلر...</div>
   </div>
 
   <div class="media-grid" id="media-grid"></div>
@@ -159,9 +190,28 @@
   <script>
     const WORKER_URL = 'https://naturescenic2-cloudflare.gp28240.workers.dev';
 
+    // دریافت لیست فایل‌های اینترنتی پس از بارگذاری کامل صفحه
     window.addEventListener('DOMContentLoaded', loadSavedFiles);
 
+    function showStatus(message, isError = false, isLoading = true) {
+      const box = document.getElementById('status-box');
+      const text = document.getElementById('status-text');
+      const spinner = document.getElementById('status-spinner');
+      
+      box.style.display = 'flex';
+      text.innerText = message;
+      text.style.color = isError ? '#f87171' : '#f8fafc';
+      spinner.style.display = isLoading ? 'block' : 'none';
+    }
+
+    function hideStatus(delay = 3000) {
+      setTimeout(() => {
+        document.getElementById('status-box').style.display = 'none';
+      }, delay);
+    }
+
     async function loadSavedFiles() {
+      showStatus("در حال دریافت فایل‌های ذخیره‌شده از اینترنت...", false, true);
       try {
         const res = await fetch(`${WORKER_URL}/list-files`);
         if (res.ok) {
@@ -173,15 +223,21 @@
             if (['mp3', 'wav', 'ogg'].includes(ext)) type = 'audio';
             createMediaCard(file.url, type, file.name);
           });
+          showStatus("فایل‌ها با موفقیت دریافت شدند ✅", false, false);
+          hideStatus(2000);
+        } else {
+          showStatus("خطا در دریافت لیست فایل‌ها از کلودفلر", true, false);
         }
       } catch (e) {
-        console.error("خطا در دریافت لیست فایل‌ها از سرور:", e);
+        showStatus("ارتباط با سرور آنلاین برقرار نشد ❌", true, false);
       }
     }
 
     async function handleFileUpload(event, type) {
       const file = event.target.files[0];
       if (!file) return;
+
+      showStatus(`در حال آپلود فایل "${file.name}" به سرور...`, false, true);
 
       const formData = new FormData();
       formData.append("file", file);
@@ -196,18 +252,19 @@
         if (response.ok) {
           const resData = await response.json();
           createMediaCard(resData.url || URL.createObjectURL(file), type, file.name);
+          showStatus(`آپلود فایل "${file.name}" با موفقیت انجام شد ✅`, false, false);
+          hideStatus(3000);
         } else {
-          alert("خطا در آپلود روی سرور کلودفلر.");
+          showStatus("خطا در آپلود فایل روی سرور کلودفلر ❌", true, false);
         }
       } catch (e) {
-        alert("خطا در برقراری ارتباط با سرور کلودفلر.");
+        showStatus("اتصال اینترنت یا سرور قطع شد ❌", true, false);
       }
     }
 
     async function submitAIGeneration() {
       const promptInput = document.getElementById('ai-prompt-input');
       const promptText = promptInput.value.trim();
-      const loadingStatus = document.getElementById('ai-loading-status');
       const btnSubmit = document.getElementById('btn-submit-ai');
 
       if (!promptText) {
@@ -215,7 +272,7 @@
         return;
       }
 
-      loadingStatus.style.display = 'block';
+      showStatus("در حال ساخت تصویر با هوش مصنوعی... لطفاً شکیبا باشید ⏳", false, true);
       btnSubmit.disabled = true;
 
       try {
@@ -230,13 +287,14 @@
           const imageUrl = URL.createObjectURL(blob);
           createMediaCard(imageUrl, 'image', `هوش مصنوعی: ${promptText}`);
           promptInput.value = '';
+          showStatus("تصویر با موفقیت ساخته شد ✅", false, false);
+          hideStatus(3000);
         } else {
-          alert("خطا در تولید تصویر از سمت سرور.");
+          showStatus("خطا در تولید تصویر توسط کلودفلر ❌", true, false);
         }
       } catch (e) {
-        alert("خطای ارتباط با سرور کلودفلر هنگام ساخت تصویر.");
+        showStatus("ارتباط با سرور تولید تصویر قطع شد ❌", true, false);
       } finally {
-        loadingStatus.style.display = 'none';
         btnSubmit.disabled = false;
       }
     }
