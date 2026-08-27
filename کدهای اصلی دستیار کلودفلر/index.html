@@ -1,88 +1,396 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>naturescenic2 | دستیار طبیعت و گردشگری</title>
-    <style>
-        :root { --primary-color: #2e7d32; --bg-color: #f0f4f8; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg-color); margin: 0; padding: 20px; direction: rtl; color: #333; text-align: center; }
-        .container { max-width: 800px; margin: 0 auto; }
-        
-        /* بخش هدر و مشخصات کانال */
-        header { background: linear-gradient(135deg, #1e4620, #2e7d32); color: white; padding: 25px 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
-        .channel-title { font-size: 26px; font-weight: bold; margin: 0 0 10px 0; }
-        .yt-btn { display: inline-block; background-color: #ff0000; color: white; text-decoration: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; font-size: 14px; transition: 0.2s; }
-        .yt-btn:hover { background-color: #cc0000; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>naturescenic2-ai | دستیار اختصاصی طبیعت</title>
+  
+  <style>
+    /* استایل‌های پایه و تم تاریک */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      background-color: #0f172a;
+      color: #f8fafc;
+      padding: 20px;
+      direction: rtl;
+    }
 
-        /* ابزار ترجمه خودکار */
-        #google_translate_element { margin-bottom: 15px; text-align: left; }
+    /* ۱. سربرگ (Header) */
+    .main-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #1e293b;
+      padding: 15px 25px;
+      border-radius: 12px;
+      border: 1px solid #334155;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .yt-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background-color: #cc0000;
+      color: #ffffff;
+      padding: 10px 18px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      box-shadow: 0 4px 10px rgba(204, 0, 0, 0.4);
+      transition: 0.3s;
+    }
+    .yt-btn:hover {
+      background-color: #ff0000;
+      transform: translateY(-2px);
+    }
+    .yt-logo {
+      height: 28px;
+      border-radius: 4px;
+    }
+    .header-titles {
+      text-align: left;
+    }
+    .header-titles h2 {
+      color: #38bdf8;
+      font-size: 1.4rem;
+    }
+    .header-titles p {
+      font-size: 0.9rem;
+      color: #94a3b8;
+    }
 
-        /* کارت‌های محتوا */
-        .card { background: white; padding: 20px; margin: 15px 0; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); text-align: right; }
-        audio, video { width: 100%; margin-top: 10px; border-radius: 8px; }
-        img { max-width: 100%; height: auto; border-radius: 8px; display: block; margin: 10px 0; }
-        h2 { color: #1e4620; border-bottom: 2px solid #2e7d32; padding-bottom: 5px; text-align: right; margin-top: 30px; }
-        h3 { color: #1e3a8a; margin-top: 0; margin-bottom: 8px; }
-        
-        /* کادر توضیحات قابل ترجمه */
-        .description { background-color: #f8fafc; padding: 12px 15px; border-right: 4px solid #3b82f6; border-radius: 4px; font-size: 0.95em; line-height: 1.6; color: #475569; margin-top: 10px; }
-    </style>
-    <!-- ابزار ترجمه اتوماتیک گوگل -->
-    <script type="text/javascript">
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({pageLanguage: 'fa', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
-        }
-    </script>
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    /* ۲. منوی ترجمه گوگل (برجسته و شکیل) */
+    .translate-section {
+      background: #1e293b;
+      padding: 12px 20px;
+      border-radius: 10px;
+      border: 2px solid #22c55e;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
+    }
+    .translate-title {
+      font-weight: bold;
+      color: #4ade80;
+    }
+    /* اصلاح ظاهر ابزار گوگل ترنسلیت */
+    .goog-te-gadget-simple {
+      background-color: #0f172a !important;
+      border: 1px solid #334155 !important;
+      padding: 6px 12px !important;
+      border-radius: 6px !important;
+      font-size: 14px !important;
+    }
+    .goog-te-gadget-simple span, .goog-te-menu-value span {
+      color: #ffffff !important;
+      font-weight: bold !important;
+    }
+
+    /* ۳. منوی کنترلی و دکمه‌ها */
+    .control-panel {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 25px;
+    }
+    .btn {
+      font-weight: bold;
+      background-color: #1e293b;
+      color: #ffffff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      border: 2px solid #38bdf8;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn:hover {
+      background-color: #38bdf8;
+      color: #0f172a;
+    }
+    .btn-lang {
+      border-color: #f59e0b;
+      color: #fbbf24;
+    }
+    .btn-lang:hover {
+      background-color: #f59e0b;
+      color: #0f172a;
+    }
+    .btn-ai {
+      border-color: #a855f7;
+      color: #c084fc;
+    }
+    .btn-ai:hover {
+      background-color: #a855f7;
+      color: #ffffff;
+    }
+
+    /* ۴. چیدمان کارت‌ها (شبکه‌ای) */
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .media-card {
+      background: #1e293b;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #334155;
+      display: flex;
+      flex-direction: column;
+    }
+    .media-card img, .media-card video {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+    .card-body {
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex-grow: 1;
+    }
+    .card-title-fa {
+      font-weight: bold;
+      color: #f8fafc;
+    }
+    .card-title-en {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      direction: ltr;
+      text-align: right;
+    }
+    .rename-box {
+      display: flex;
+      gap: 5px;
+      margin-top: auto;
+    }
+    .rename-input {
+      flex: 1;
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid #475569;
+      background: #0f172a;
+      color: #fff;
+      font-size: 0.85rem;
+    }
+    .btn-action {
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 0.85rem;
+    }
+    .btn-rename {
+      background-color: #0284c7;
+      color: white;
+    }
+    .btn-delete {
+      background-color: #dc2626;
+      color: white;
+      width: 100%;
+      margin-top: 5px;
+    }
+    .btn-delete:hover {
+      background-color: #b91c1c;
+    }
+  </style>
 </head>
 <body>
 
-    <div class="container">
-        <!-- منوی تغییر زبان برای کاربران جهانی -->
-        <div id="google_translate_element"></div>
+  <!-- سربرگ -->
+  <header class="main-header">
+    <a href="https://youtube.com/@naturescenic2" target="_blank" class="yt-btn">
+      <img src="https://mega.nz/file/LopxzLIb#CrSn08xek0CqEJGy1WuJCLfo5p5nIiJGd_92Ll-gbQc" alt="YouTube Logo" class="yt-logo" onerror="this.style.display='none'">
+      <span>کانال یوتیوب / YouTube: @naturescenic2</span>
+    </a>
 
-        <!-- هدر اصلی -->
-        <header>
-            <div class="channel-title">🌿 کانال طبیعت naturescenic2</div>
-            <p style="margin: 0 0 12px 0; opacity: 0.9;">دستیار اختصاصی تصاویر، ویدیوها و صدای طبیعت</p>
-            <a href="https://www.youtube.com/@naturescenic2" target="_blank" class="yt-btn">▶ عضویت در کانال یوتیوب naturescenic2</a>
-        </header>
+    <div class="header-titles">
+      <h2>naturescenic2-ai</h2>
+      <p>طبیعت دیلگون، کهگیلویه و بویراحمد (کوهستان زاگرس)</p>
+      <p>Dilgon Zagros Mountains / Nature Regional Assistant</p>
+    </div>
+  </header>
 
-        <!-- بخش فایل‌های صوتی -->
-        <h2>🎵 فایل‌های صوتی</h2>
-        <div class="card">
-            <h3>صدای طبیعت (بلبل و گنجشک)</h3>
-            <audio controls preload="metadata">
-                <source src="https://github.com/gp28240-arch/naturescenic2-cloudflare/releases/download/v1/default.m4a" type="audio/mp4">
-            </audio>
-            <div class="description">
-                <strong>توضیحات:</strong> ضبط‌شده در طبیعت دل‌انگیز دشت چرام و دیلگون. صدای دلنشین پرندگان و بلبل‌های کوهستانی.
-            </div>
+  <!-- منوی ترجمه گوگل برجسته -->
+  <div class="translate-section">
+    <span class="translate-title">🌐 مترجم سریع صفحه / Quick Translator:</span>
+    <div id="google_translate_element"></div>
+  </div>
+
+  <!-- پنل کنترلی و آپلودها -->
+  <div class="control-panel">
+    <button class="btn btn-lang" id="toggle-lang-btn" onclick="toggleLanguage()">🌐 Switch to English / تغییر زبان</button>
+    
+    <label class="btn">
+      📷 آپلود عکس / Wallpaper
+      <input type="file" id="upload-image" accept="image/*" hidden onchange="handleFileUpload(event, 'image')">
+    </label>
+    
+    <label class="btn">
+      🎥 آپلود ویدیو / Video
+      <input type="file" id="upload-video" accept="video/*" hidden onchange="handleFileUpload(event, 'video')">
+    </label>
+
+    <label class="btn">
+      🎵 آپلود صدا / Audio
+      <input type="file" id="upload-audio" accept="audio/*" hidden onchange="handleFileUpload(event, 'audio')">
+    </label>
+
+    <button class="btn btn-ai" onclick="generateAIImage()">✨ ساخت عکس هوش مصنوعی (Cloudflare)</button>
+  </div>
+
+  <!-- بخش نمایش کارت‌ها -->
+  <div class="media-grid" id="media-grid">
+    
+    <!-- کارت نمونه ۱ -->
+    <div class="media-card" id="card-1">
+      <img src="https://drive.google.com/thumbnail?id=162c6fzZnSo-wAWq2eWnfhcFOWLBnpb8B&sz=w800" alt="کوهستان دیلگون">
+      <div class="card-body">
+        <div class="card-title-fa" id="title-fa-1">کوهستان سردسیری دیلگون ۱</div>
+        <div class="card-title-en" id="title-en-1">Dilgon Cold Mountain 1</div>
+        <div class="rename-box">
+          <input type="text" class="rename-input" id="input-1" placeholder="نام جدید...">
+          <button class="btn-action btn-rename" onclick="renameItem('1')">تغییر نام</button>
         </div>
-
-        <!-- بخش ویدیوها -->
-        <h2>🎥 ویدیوها</h2>
-        <div class="card">
-            <h3>ویدیوی شماره ۱</h3>
-            <video controls>
-                <source src="https://github.com/gp28240-arch/naturescenic2-cloudflare/releases/download/v1/video1.mp4" type="video/mp4">
-            </video>
-            <div class="description">
-                <strong>توضیحات:</strong> مناظر فوق‌العاده طبیعت بکر و چشم‌اندازهای سرسبز.
-            </div>
-        </div>
-
-        <!-- بخش عکس‌ها -->
-        <h2>🖼️ تصاویر</h2>
-        <div class="card">
-            <h3>تصویر شماره ۱</h3>
-            <img src="https://github.com/gp28240-arch/naturescenic2-cloudflare/releases/download/v1/image1.jpg" alt="تصویر طبیعت">
-            <div class="description">
-                <strong>توضیحات:</strong> نمای زیبای پاییزی و درختان منطقه.
-            </div>
-        </div>
+        <button class="btn-action btn-delete" onclick="deleteItem('card-1')">🗑️ حذف فایل (Delete)</button>
+      </div>
     </div>
 
+    <!-- کارت نمونه ۲ -->
+    <div class="media-card" id="card-2">
+      <img src="https://drive.google.com/thumbnail?id=1bjsxDfpR9fxxaeWsMUZ-XATMAzM9mGhB&sz=w800" alt="چشم‌انداز دیلگون">
+      <div class="card-body">
+        <div class="card-title-fa" id="title-fa-2">چشم‌انداز طبیعی دیلگون ۲</div>
+        <div class="card-title-en" id="title-en-2">Dilgon Scenic View 2</div>
+        <div class="rename-box">
+          <input type="text" class="rename-input" id="input-2" placeholder="نام جدید...">
+          <button class="btn-action btn-rename" onclick="renameItem('2')">تغییر نام</button>
+        </div>
+        <button class="btn-action btn-delete" onclick="deleteItem('card-2')">🗑️ حذف فایل (Delete)</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- اسکریپت مترجم گوگل -->
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'fa',
+        includedLanguages: 'en,fa,ar,fr,de,es',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+      }, 'google_translate_element');
+    }
+  </script>
+  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+  <!-- اسکریپت‌های عملیاتی -->
+  <script>
+    let currentLang = 'fa';
+
+    // سوئیچ بین زبان فارسی و انگلیسی
+    function toggleLanguage() {
+      const body = document.body;
+      const langBtn = document.getElementById('toggle-lang-btn');
+      
+      if (currentLang === 'fa') {
+        body.style.direction = 'ltr';
+        langBtn.innerText = '🌐 تغییر به فارسی / Switch to Persian';
+        currentLang = 'en';
+      } else {
+        body.style.direction = 'rtl';
+        langBtn.innerText = '🌐 Switch to English / تغییر زبان';
+        currentLang = 'fa';
+      }
+    }
+
+    // تغییر نام و ترجمه خودکار ساده
+    function renameItem(id) {
+      const inputVal = document.getElementById(`input-${id}`).value;
+      if (!inputVal.trim()) {
+        alert("لطفاً نام جدید را وارد کنید / Please enter a name");
+        return;
+      }
+      document.getElementById(`title-fa-${id}`).innerText = inputVal;
+      document.getElementById(`title-en-${id}`).innerText = inputVal + " (Translated)";
+      document.getElementById(`input-${id}`).value = '';
+    }
+
+    // حذف فایل (Delete)
+    function deleteItem(cardId) {
+      if (confirm("آیا از حذف این فایل مطمئن هستید؟\nAre you sure you want to delete this file?")) {
+        const element = document.getElementById(cardId);
+        if (element) {
+          element.remove();
+        }
+      }
+    }
+
+    // مدیریت آپلود فایل جدید
+    function handleFileUpload(event, type) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const grid = document.getElementById('media-grid');
+      const newId = Date.now();
+      const card = document.createElement('div');
+      card.className = 'media-card';
+      card.id = `card-${newId}`;
+
+      let mediaTag = `<img src="${URL.createObjectURL(file)}" alt="${file.name}">`;
+      if (type === 'video') {
+        mediaTag = `<video src="${URL.createObjectURL(file)}" controls></video>`;
+      } else if (type === 'audio') {
+        mediaTag = `<audio src="${URL.createObjectURL(file)}" controls style="width:100%; margin-top:20px;"></audio>`;
+      }
+
+      card.innerHTML = `
+        ${mediaTag}
+        <div class="card-body">
+          <div class="card-title-fa" id="title-fa-${newId}">${file.name}</div>
+          <div class="card-title-en" id="title-en-${newId}">Uploaded File</div>
+          <div class="rename-box">
+            <input type="text" class="rename-input" id="input-${newId}" placeholder="نام جدید...">
+            <button class="btn-action btn-rename" onclick="renameItem('${newId}')">تغییر نام</button>
+          </div>
+          <button class="btn-action btn-delete" onclick="deleteItem('card-${newId}')">🗑️ حذف فایل (Delete)</button>
+        </div>
+      `;
+      grid.prepend(card);
+    }
+
+    // اتصال به هوش مصنوعی کلودفلر
+    async function generateAIImage() {
+      const promptText = prompt("توصیف تصویر مورد نظر را بنویسید (به انگلیسی یا فارسی):\nEnter image prompt:");
+      if (!promptText) return;
+
+      alert("در حال ارتباط با Cloudflare Workers...\nدر صورت تنظیم بودن Worker عکس ساخته خواهد شد.");
+      
+      /* 
+        نکته جهت اتصال واقعی به کلودفلر:
+        آدرس Worker خود را در fetch زیر جایگزین کنید:
+        
+        fetch('https://your-worker.workers.dev', {
+          method: 'POST',
+          body: JSON.stringify({ prompt: promptText })
+        })
+      */
+    }
+  </script>
 </body>
 </html>
