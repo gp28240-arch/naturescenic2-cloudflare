@@ -32,6 +32,23 @@
       flex-wrap: wrap;
       gap: 15px;
     }
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .site-logo {
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #38bdf8;
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+      transition: transform 0.3s ease;
+    }
+    .site-logo:hover {
+      transform: scale(1.08);
+    }
     .yt-logo-btn {
       display: flex;
       align-items: center;
@@ -318,19 +335,22 @@
 </head>
 <body>
 
-  <!-- سربرگ با لوگوی یوتیوب -->
+  <!-- سربرگ با لوگوی اصلی و یوتیوب -->
   <header class="main-header">
+    <div class="header-brand">
+      <img src="https://lh3.googleusercontent.com/d/1EZf35v8476qtDC_rTS_h-6-_zIq0RNTh" alt="naturescenic2 logo" class="site-logo">
+      <div class="header-titles">
+        <h2>naturescenic2-ai</h2>
+        <p id="sub-header">طبیعت دیلگون، کهگیلویه و بویراحمد (کوهستان زاگرس)</p>
+      </div>
+    </div>
+
     <a href="https://youtube.com/@naturescenic2" target="_blank" class="yt-logo-btn">
       <svg class="yt-icon" viewBox="0 0 24 24">
         <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
       </svg>
       <span>naturescenic2 @ YouTube</span>
     </a>
-
-    <div class="header-titles">
-      <h2>naturescenic2-ai</h2>
-      <p id="sub-header">طبیعت دیلگون، کهگیلویه و بویراحمد (کوهستان زاگرس)</p>
-    </div>
   </header>
 
   <div class="translate-section">
