@@ -3,163 +3,465 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>دستیار هوشمند Naturescenic</title>
+  <title>naturescenic2-ai | دستیار اختصاصی طبیعت</title>
+  
   <style>
-    :root {
-      --bg-color: #111827;
-      --chat-bg: #1f2937;
-      --user-msg: #3b82f6;
-      --bot-msg: #374151;
-      --text-color: #f3f4f6;
-      --accent: #60a5fa;
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
-    body { background-color: var(--bg-color); color: var(--text-color); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+    body {
+      background-color: #0f172a;
+      color: #f8fafc;
+      padding: 20px;
+      direction: rtl;
+    }
 
-    header { background: var(--chat-bg); padding: 15px; text-align: center; font-weight: bold; font-size: 1.1rem; border-bottom: 1px solid #374151; display: flex; justify-content: space-between; align-items: center; }
-    .archive-btn { background: var(--accent); color: #fff; border: none; padding: 7px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
+    /* سربرگ */
+    .main-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #1e293b;
+      padding: 15px 25px;
+      border-radius: 12px;
+      border: 1px solid #334155;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .yt-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background-color: #cc0000;
+      color: #ffffff;
+      padding: 10px 18px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      box-shadow: 0 4px 10px rgba(204, 0, 0, 0.4);
+      transition: 0.3s;
+    }
+    .yt-btn:hover { background-color: #ff0000; }
+    .yt-logo {
+      height: 28px;
+      width: auto;
+      border-radius: 4px;
+    }
+    .header-titles { text-align: right; }
+    .header-titles h2 { color: #38bdf8; font-size: 1.4rem; }
+    .header-titles p { font-size: 0.9rem; color: #94a3b8; }
 
-    #chat-container { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; scroll-behavior: smooth; }
-    .msg { max-width: 85%; padding: 12px 16px; border-radius: 14px; line-height: 1.6; font-size: 0.9rem; word-break: break-word; position: relative; animation: fadeIn 0.3s; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    .user { background: var(--user-msg); align-self: flex-end; border-bottom-left-radius: 2px; }
-    .bot { background: var(--bot-msg); align-self: flex-start; border-bottom-right-radius: 2px; }
+    /* مترجم گوگل */
+    .translate-section {
+      background: #1e293b;
+      padding: 12px 20px;
+      border-radius: 10px;
+      border: 2px solid #22c55e;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
+    }
+    .translate-title { font-weight: bold; color: #4ade80; }
 
-    .media-content { width: 100%; max-width: 350px; border-radius: 8px; margin-top: 8px; display: block; overflow: hidden; border: 1px solid #4b5563; }
-    video.media-content { background: #000; height: 200px; }
-    audio.media-content { height: 40px; background: #2a3241; }
+    /* پنل دکمه‌ها */
+    .control-panel {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .btn {
+      font-weight: bold;
+      background-color: #1e293b;
+      color: #ffffff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      border: 2px solid #38bdf8;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+    .btn:hover { background-color: #38bdf8; color: #0f172a; }
+    .btn-lang { border-color: #f59e0b; color: #fbbf24; }
+    .btn-download { border-color: #22c55e; color: #4ade80; }
 
-    .carousel { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; scroll-snap-type: x mandatory; scrollbar-width: thin; scrollbar-color: var(--accent) #1f2937; }
-    .carousel-item { flex: 0 0 200px; height: 130px; border-radius: 8px; overflow: hidden; border: 1px solid #4b5563; position: relative; scroll-snap-align: start; cursor: pointer; transition: transform 0.2s; }
-    .carousel-item:hover { transform: scale(1.03); }
-    .carousel-item img { width: 100%; height: 100%; object-fit: cover; }
-    .carousel-item .file-name { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.7); padding: 4px; font-size: 0.7rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #fff; }
+    /* بخش جدید: کادر بزرگ هوش مصنوعی ساخت تصویر */
+    .ai-generator-section {
+      background: #1e293b;
+      border: 2px solid #a855f7;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 25px;
+      box-shadow: 0 4px 15px rgba(168, 85, 247, 0.2);
+    }
+    .ai-generator-section h3 {
+      color: #c084fc;
+      margin-bottom: 10px;
+    }
+    .ai-input-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .ai-textarea {
+      flex: 1;
+      height: 70px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #475569;
+      background: #0f172a;
+      color: #fff;
+      font-size: 1rem;
+      resize: vertical;
+    }
+    .btn-generate {
+      background: #a855f7;
+      color: white;
+      border: none;
+      padding: 0 25px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .btn-generate:hover { background: #9333ea; }
 
-    #input-bar { background: var(--chat-bg); padding: 12px; display: flex; align-items: center; gap: 10px; border-top: 1px solid #374151; }
-    #text-input { flex: 1; background: var(--bg-color); border: 1px solid #4b5563; color: #fff; padding: 11px 15px; border-radius: 20px; outline: none; font-size: 0.9rem; }
-    #text-input:focus { border-color: var(--accent); }
+    /* نوار پیشرفت و چرخنده آپلود */
+    .spinner {
+      display: none;
+      width: 24px;
+      height: 24px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: #38bdf8;
+      animation: spin 1s ease-in-out infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    .btn { background: var(--accent); border: none; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; font-size: 1rem; }
-    .btn:hover { background: #3b82f6; }
-    .btn-attach { background: #4b5563; }
-    .btn-attach:hover { background: #6b7280; }
-    #file-upload { display: none; }
+    /* منوی فیلتر رسانه‌ها */
+    .filter-menu {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      background: #1e293b;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #334155;
+    }
+    .filter-btn {
+      background: #0f172a;
+      color: #94a3b8;
+      border: 1px solid #475569;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .filter-btn.active {
+      background: #38bdf8;
+      color: #0f172a;
+      border-color: #38bdf8;
+    }
+
+    /* شبکه کارت‌ها */
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .media-card {
+      background: #1e293b;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #334155;
+      display: flex;
+      flex-direction: column;
+    }
+    .media-card img, .media-card video {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+    }
+    .media-card audio { width: 90%; margin: 20px auto; }
+    .card-body {
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex-grow: 1;
+    }
+    .card-title-fa { font-weight: bold; color: #f8fafc; }
+    .card-title-en { font-size: 0.85rem; color: #94a3b8; direction: ltr; text-align: right; }
+    .rename-box { display: flex; gap: 5px; margin-top: auto; }
+    .rename-input {
+      flex: 1;
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid #475569;
+      background: #0f172a;
+      color: #fff;
+      font-size: 0.85rem;
+    }
+    .btn-action {
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 0.85rem;
+    }
+    .btn-rename { background-color: #0284c7; color: white; }
+    .btn-delete { background-color: #dc2626; color: white; width: 100%; margin-top: 5px; }
   </style>
 </head>
 <body>
 
-  <header>
-    <span>Naturescenic AI</span>
-    <button class="archive-btn" onclick="showGallery()">📂 آرشیو</button>
+  <header class="main-header">
+    <a href="https://youtube.com/@naturescenic2" target="_blank" class="yt-btn">
+      <img src="https://lh3.googleusercontent.com/d/1EZf35v8476qtDC_rTS_h-6-_zIq0RNTh" alt="YouTube Logo" class="yt-logo">
+      <span>کانال یوتیوب / YouTube: @naturescenic2</span>
+    </a>
+
+    <div class="header-titles">
+      <h2>naturescenic2-ai</h2>
+      <p>طبیعت دیلگون، کهگیلویه و بویراحمد (کوهستان زاگرس)</p>
+      <p>Dilgon Zagros Mountains / Nature Regional Assistant</p>
+    </div>
   </header>
 
-  <div id="chat-container">
-    <div class="msg bot">سلام! من دستیار شما هستم. می‌توانید فایل‌های عکس، ویدیو، صدا بفرستید یا متن بنویسید.</div>
+  <div class="translate-section">
+    <span class="translate-title">🌐 مترجم سریع صفحه / Quick Translator:</span>
+    <div id="google_translate_element"></div>
   </div>
 
-  <div id="input-bar">
-    <label for="file-upload" class="btn btn-attach" title="ارسال فایل">📎</label>
-    <input type="file" id="file-upload" accept="image/*,video/*,audio/*" onchange="uploadFile()">
-    <input type="text" id="text-input" placeholder="پیامی بنویسید..." onkeypress="if(event.key==='Enter') sendMessage()">
-    <button class="btn" onclick="sendMessage()">➔</button>
+  <div class="ai-generator-section">
+    <h3>✨ ساخت تصویر با هوش مصنوعی (AI Image Generator)</h3>
+    <p style="font-size: 0.85rem; color: #94a3b8;">توصیف تصویر مورد نظر را بنویسید و کلید Enter را فشار دهید یا روی دکمه ساخت کلیک کنید:</p>
+    <div class="ai-input-group">
+      <textarea id="ai-prompt-input" class="ai-textarea" placeholder="مثلاً: کوهستان برفی زاگرس در غروب خورشید با کیفیت بالا..." onkeydown="handleAiKeyPress(event)"></textarea>
+      <button class="btn-generate" onclick="generateAiImage()">ساخت تصویر</button>
+    </div>
   </div>
+
+  <div class="control-panel">
+    <button class="btn btn-lang" id="toggle-lang-btn" onclick="toggleLanguage()">🌐 Switch to English / تغییر زبان</button>
+    <button class="btn btn-download" onclick="downloadApp()">📥 دانلود اپلیکیشن / Download App</button>
+
+    <label class="btn">
+      📷 آپلود عکس
+      <input type="file" id="upload-image" accept="image/*" hidden onchange="handleFileUpload(event, 'image')">
+    </label>
+    
+    <label class="btn">
+      🎥 آپلود ویدیو
+      <input type="file" id="upload-video" accept="video/*" hidden onchange="handleFileUpload(event, 'video')">
+    </label>
+
+    <label class="btn">
+      🎵 آپلود صدا
+      <input type="file" id="upload-audio" accept="audio/*" hidden onchange="handleFileUpload(event, 'audio')">
+    </label>
+
+    <div id="upload-spinner" class="spinner"></div>
+  </div>
+
+  <div class="filter-menu">
+    <button class="filter-btn active" onclick="filterMedia('all', this)">همه / All</button>
+    <button class="filter-btn" onclick="filterMedia('image', this)">🖼️ فقط عکس‌ها</button>
+    <button class="filter-btn" onclick="filterMedia('video', this)">🎥 فقط ویدیوها</button>
+    <button class="filter-btn" onclick="filterMedia('audio', this)">🎵 فقط صداها</button>
+  </div>
+
+  <div class="media-grid" id="media-grid"></div>
+
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'fa',
+        includedLanguages: 'en,fa,ar,fr,de,es',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+      }, 'google_translate_element');
+    }
+  </script>
+  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
   <script>
-    // آدرس دقیق ورکر جاگذاری شده شما
-    const API_URL = "https://naturescenic2-cloudflare.gp28240.workers.dev";
+    let currentLang = 'fa';
 
-    function appendMessage(sender, contentHTML) {
-      const container = document.getElementById("chat-container");
-      const msgDiv = document.createElement("div");
-      msgDiv.className = `msg ${sender}`;
-      msgDiv.innerHTML = contentHTML;
-      container.appendChild(msgDiv);
-      container.scrollTop = container.scrollHeight;
+    function toggleLanguage() {
+      const body = document.body;
+      const langBtn = document.getElementById('toggle-lang-btn');
+      if (currentLang === 'fa') {
+        body.style.direction = 'ltr';
+        langBtn.innerText = '🌐 تغییر به فارسی / Switch to Persian';
+        currentLang = 'en';
+      } else {
+        body.style.direction = 'rtl';
+        langBtn.innerText = '🌐 Switch to English / تغییر زبان';
+        currentLang = 'fa';
+      }
     }
 
-    async function uploadFile() {
-      const fileInput = document.getElementById("file-upload");
-      const file = fileInput.files[0];
+    // ساخت تصویر هوش مصنوعی بدون نیاز به پاپ‌آپ و با پشتیبانی از اینتر
+    function handleAiKeyPress(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        generateAiImage();
+      }
+    }
+
+    async function generateAiImage() {
+      const promptInput = document.getElementById('ai-prompt-input');
+      const promptText = promptInput.value.trim();
+      
+      if (!promptText) {
+        alert("لطفاً متنی برای ساخت تصویر بنویسید.");
+        return;
+      }
+
+      const grid = document.getElementById('media-grid');
+      const newId = Date.now();
+      
+      // ساخت تصویر مستقیم با API رایگان Pollinations AI
+      const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(promptText)}?width=1024&height=1024&nologo=true`;
+
+      const card = document.createElement('div');
+      card.className = 'media-card';
+      card.setAttribute('data-type', 'image');
+      card.id = `card-${newId}`;
+
+      card.innerHTML = `
+        <img src="${imageUrl}" alt="${promptText}" loading="lazy">
+        <div class="card-body">
+          <div class="card-title-fa" id="title-fa-${newId}">${promptText}</div>
+          <div class="card-title-en" id="title-en-${newId}">AI Generated Image</div>
+          <div class="rename-box">
+            <input type="text" class="rename-input" id="input-${newId}" placeholder="نام جدید...">
+            <button class="btn-action btn-rename" onclick="renameItem('${newId}')">تغییر نام</button>
+          </div>
+          <button class="btn-action btn-delete" onclick="deleteItem('card-${newId}')">🗑️ حذف فایل</button>
+        </div>
+      `;
+      grid.prepend(card);
+      promptInput.value = '';
+    }
+
+    // آپلود مستقیم فایل به سرور آنلاین Catbox بدون پر شدن حافظه مرورگر همراه با انیمیشن چرخش
+    async function handleFileUpload(event, type) {
+      const file = event.target.files[0];
       if (!file) return;
 
-      appendMessage("user", `در حال ارسال: <b>${file.name}</b>...`);
+      const spinner = document.getElementById('upload-spinner');
+      spinner.style.display = 'inline-block';
 
       const formData = new FormData();
-      formData.append("file", file);
-      formData.append("type", file.type);
+      formData.append("reqtype", "fileupload");
+      formData.append("fileToUpload", file);
 
       try {
-        const res = await fetch(`${API_URL}/upload`, { method: "POST", body: formData });
-        const data = await res.json();
-
-        if (data.success || data.url) {
-          let mediaHTML = "";
-          if (file.type.startsWith("image/")) {
-            mediaHTML = `<img src="${data.url}" style="max-width:100%; border-radius:8px; margin-top:8px;">`;
-          } else if (file.type.startsWith("video/")) {
-            mediaHTML = `<video class="media-content" controls><source src="${data.url}" type="${file.type}"></video>`;
-          } else if (file.type.startsWith("audio/")) {
-            mediaHTML = `<audio class="media-content" controls><source src="${data.url}" type="${file.type}"></audio>`;
-          }
-          appendMessage("bot", `فایل با موفقیت دریافت شد:<br>${mediaHTML}`);
-        } else {
-          appendMessage("bot", "⚠️ خطا در پردازش فایل روی سرور.");
-        }
-      } catch (err) {
-        appendMessage("bot", "⚠️ خطا در ارتباط با سرور.");
-      }
-      fileInput.value = "";
-    }
-
-    async function sendMessage() {
-      const input = document.getElementById("text-input");
-      const text = input.value.trim();
-      if (!text) return;
-
-      appendMessage("user", text);
-      input.value = "";
-
-      if (text.startsWith("عکس ") || text.startsWith("تصویر ")) {
-        appendMessage("bot", "🎨 در حال تولید تصویر با هوش مصنوعی...");
-        const prompt = text.replace(/^(عکس|تصویر)\s+/, "");
-        
-        try {
-          const res = await fetch(`${API_URL}/generate-image`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ prompt })
-          });
-          const blob = await res.blob();
-          const imgUrl = URL.createObjectURL(blob);
-          appendMessage("bot", `<img src="${imgUrl}" style="max-width:100%; border-radius:8px;">`);
-        } catch (e) {
-          appendMessage("bot", "⚠️ خطا در تولید تصویر.");
-        }
-      } else {
-        appendMessage("bot", "پیام دریافت شد.");
-      }
-    }
-
-    async function showGallery() {
-      appendMessage("bot", "در حال دریافت آرشیو فایل‌ها...");
-      try {
-        const res = await fetch(`${API_URL}/list-files`);
-        const files = await res.json();
-        
-        if (!files || files.length === 0) {
-          appendMessage("bot", "هیچ فایلی در آرشیو یافت نشد.");
-          return;
-        }
-
-        let carouselHTML = `<div><b>آرشیو فایل‌ها:</b><div class="carousel">`;
-        files.forEach(f => {
-          carouselHTML += `<div class="carousel-item" onclick="window.open('${f.url}', '_blank')"><img src="${f.url}"><div class="file-name">${f.name}</div></div>`;
+        const response = await fetch("https://catbox.moe/user/api.php", {
+          method: "POST",
+          body: formData
         });
-        carouselHTML += `</div></div>`;
-        appendMessage("bot", carouselHTML);
-      } catch (e) {
-        appendMessage("bot", "خطا در دریافت آرشیو.");
+
+        if (!response.ok) throw new Error("خطا در آپلود به سرور");
+
+        const fileUrl = await response.text();
+        
+        const grid = document.getElementById('media-grid');
+        const newId = Date.now();
+        const card = document.createElement('div');
+        card.className = 'media-card';
+        card.setAttribute('data-type', type);
+        card.id = `card-${newId}`;
+
+        let mediaTag = `<img src="${fileUrl}" alt="${file.name}">`;
+        if (type === 'video') {
+          mediaTag = `<video src="${fileUrl}" controls></video>`;
+        } else if (type === 'audio') {
+          mediaTag = `<audio src="${fileUrl}" controls></audio>`;
+        }
+
+        card.innerHTML = `
+          ${mediaTag}
+          <div class="card-body">
+            <div class="card-title-fa" id="title-fa-${newId}">${file.name}</div>
+            <div class="card-title-en" id="title-en-${newId}">Online Hosted File</div>
+            <div class="rename-box">
+              <input type="text" class="rename-input" id="input-${newId}" placeholder="نام جدید...">
+              <button class="btn-action btn-rename" onclick="renameItem('${newId}')">تغییر نام</button>
+            </div>
+            <button class="btn-action btn-delete" onclick="deleteItem('card-${newId}')">🗑️ حذف فایل</button>
+          </div>
+        `;
+        grid.prepend(card);
+        alert("فایل با موفقیت روی سرور آنلاین آپلود شد.");
+      } catch (err) {
+        alert("خطا در ارتباط با سرور: " + err.message);
+      } finally {
+        spinner.style.display = 'none';
       }
+    }
+
+    async function renameItem(id) {
+      const inputVal = document.getElementById(`input-${id}`).value.trim();
+      if (!inputVal) return;
+      document.getElementById(`title-fa-${id}`).innerText = inputVal;
+      document.getElementById(`title-en-${id}`).innerText = "در حال ترجمه...";
+
+      try {
+        const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(inputVal)}&langpair=fa|en`);
+        const data = await response.json();
+        if (data.responseData && data.responseData.translatedText) {
+          document.getElementById(`title-en-${id}`).innerText = data.responseData.translatedText;
+        }
+      } catch (e) {
+        document.getElementById(`title-en-${id}`).innerText = inputVal;
+      }
+      document.getElementById(`input-${id}`).value = '';
+    }
+
+    function deleteItem(cardId) {
+      if (confirm("آیا از حذف مطمئن هستید؟")) {
+        const element = document.getElementById(cardId);
+        if (element) element.remove();
+      }
+    }
+
+    function filterMedia(type, btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.media-card').forEach(card => {
+        if (type === 'all' || card.getAttribute('data-type') === type) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // دانلود واقعی سورس اپلیکیشن
+    function downloadApp() {
+      const pageCode = document.documentElement.outerHTML;
+      const blob = new Blob([pageCode], { type: "text/html;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "naturescenic2-ai-app.html";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
     }
   </script>
 </body>
