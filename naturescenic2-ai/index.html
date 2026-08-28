@@ -129,18 +129,19 @@
     }
     .btn-lang { border-color: #f59e0b; color: #fbbf24; }
     
-    /* کلید هوش مصنوعی و جمنای (بزرگ‌تر و برجسته) */
-    .btn-ai-gemini { 
+    /* کلید‌های برجسته و متحرک */
+    .btn-ai-gemini, .btn-chat-animated { 
       border-color: #a855f7; 
       background: linear-gradient(135deg, #7e22ce, #a855f7);
       color: #ffffff; 
-      font-size: 1.25rem;
-      padding: 16px 28px;
+      font-size: 1.1rem;
+      padding: 14px 24px;
       border-radius: 12px;
       box-shadow: 0 6px 20px rgba(168, 85, 247, 0.5);
       animation: pulse 2s infinite;
+      cursor: pointer;
     }
-    .btn-ai-gemini:hover {
+    .btn-ai-gemini:hover, .btn-chat-animated:hover {
       background: linear-gradient(135deg, #9333ea, #c084fc);
       color: #ffffff;
       transform: scale(1.05);
@@ -152,7 +153,6 @@
       100% { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0); }
     }
 
-    .btn-chat { border-color: #06b6d4; color: #67e8f9; }
     .btn-download { border-color: #22c55e; color: #4ade80; }
     .btn-url { border-color: #eab308; color: #fef08a; }
 
@@ -181,7 +181,7 @@
       border-color: #38bdf8;
     }
 
-    /* کارت‌ها با ابعاد بزرگ و واضح */
+    /* کارت‌ها */
     .media-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -195,13 +195,15 @@
       display: flex;
       flex-direction: column;
       box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+      position: relative;
     }
-    .media-card img, .media-card video {
+    .media-card img, .media-card video, .media-card iframe {
       width: 100%;
       height: 240px;
       object-fit: cover;
       background-color: #0f172a;
       display: block;
+      border: none;
     }
     .media-card audio {
       width: 100%;
@@ -251,7 +253,32 @@
     .btn-rename { background-color: #0284c7; color: white; }
     .btn-delete { background-color: #dc2626; color: white; width: 100%; margin-top: 5px; }
 
-    /* پنجره‌های پاپ‌آپ (Modal) */
+    /* انیمیشن چرخشی برای لودر آپلود */
+    .loading-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.85);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      gap: 10px;
+    }
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #334155;
+      border-top: 4px solid #38bdf8;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* پاپ‌آپ‌ها (Modal) */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -275,8 +302,6 @@
       flex-direction: column;
       gap: 15px;
     }
-    
-    /* بزرگ‌سازی و برجسته کردن پنجره جمنای / هوش مصنوعی */
     .gemini-modal-content {
       border: 3px solid #c084fc;
       box-shadow: 0 0 35px rgba(168, 85, 247, 0.4);
@@ -292,8 +317,7 @@
       padding: 16px;
       border: 2px solid #a855f7;
     }
-
-    .chat-modal-content { border-color: #06b6d4; }
+    .chat-modal-content { border-color: #a855f7; }
     .modal-content input, .modal-content select, .modal-content textarea {
       padding: 12px;
       border-radius: 8px;
@@ -335,13 +359,12 @@
 </head>
 <body>
 
-  <!-- سربرگ با لوگوی اصلی و یوتیوب -->
   <header class="main-header">
     <div class="header-brand">
       <img src="https://lh3.googleusercontent.com/d/1EZf35v8476qtDC_rTS_h-6-_zIq0RNTh" alt="naturescenic2 logo" class="site-logo">
       <div class="header-titles">
         <h2>naturescenic2-ai</h2>
-        <p id="sub-header">طبیعت دیلگون، کهگیلویه و بویراحمد (کوهستان زاگرس)</p>
+        <p id="sub-header">طبیعت ایران</p>
       </div>
     </div>
 
@@ -379,10 +402,9 @@
 
     <button class="btn btn-url" id="btn-upload-url" onclick="openURLModal()">🌐 آپلود از لینک / Upload via URL</button>
     
-    <!-- کلید جمنای و ساخت عکس (بزرگ و برجسته) -->
-    <button class="btn btn-ai-gemini" id="btn-ai-img" onclick="openAIModal()">✨ ساخت عکس با هوش مصنوعی GEMINI ✨</button>
-    
-    <button class="btn btn-chat" id="btn-translate-menu" onclick="openChatModal()">🌐 ترجمه متن / Text Translator</button>
+    <button class="btn-ai-gemini" id="btn-ai-img" onclick="openAIModal()">✨ ساخت عکس با هوش مصنوعی GEMINI ✨</button>
+
+    <button class="btn-chat-animated" id="btn-translate-menu" onclick="openChatModal()">🌐 ترجمه متن / Text Translator</button>
   </div>
 
   <div class="filter-menu">
@@ -394,11 +416,10 @@
 
   <div class="media-grid" id="media-grid"></div>
 
-  <!-- پنجره ساخت عکس متصل به هوش مصنوعی GEMINI (بزرگ و عریض) -->
   <div class="modal-overlay" id="ai-modal">
     <div class="modal-content gemini-modal-content">
       <h3 id="modal-ai-title">✨ ساخت تصویر با هوش مصنوعی GEMINI ✨</h3>
-      <p id="modal-ai-desc" style="font-size:1rem; color:#cbd5e1; text-align:center;">توصیف تصویر را به هر زبانی بنویسید؛ سیستم هوشمند آن را پردازش و تصویر باکیفیت تولید می‌کند:</p>
+      <p id="modal-ai-desc" style="font-size:1rem; color:#cbd5e1; text-align:center;">توصیف تصویر را بنویسید؛ سیستم هوشمند آن را به انگلیسی ترجمه کرده و تصویر را می‌سازد:</p>
       <input type="text" id="ai-prompt-input" placeholder="مثال: رودخانه خروشان، درختان سرسبز و پرندگان در آسمان...">
       
       <div class="generated-img-container" id="ai-image-result">
@@ -412,7 +433,6 @@
     </div>
   </div>
 
-  <!-- پنجره مترجم واقعاً کاربردی (Google Translate Direct) -->
   <div class="modal-overlay" id="chat-modal">
     <div class="modal-content chat-modal-content">
       <h3 id="modal-trans-title">🌐 مترجم پیشرفته و دقیق تمام زبان‌های دنیا</h3>
@@ -435,46 +455,6 @@
           <option value="it">ایتالیایی (Italian)</option>
           <option value="ku">کوردی (Kurdish)</option>
         </optgroup>
-        <optgroup label="🌍 تمام زبان‌های جهان">
-          <option value="af">آفریکانس (Afrikaans)</option>
-          <option value="sq">آلبانیایی (Albanian)</option>
-          <option value="hy">ارمنی (Armenian)</option>
-          <option value="az">آذربایجانی (Azerbaijani)</option>
-          <option value="bn">بنگالی (Bengali)</option>
-          <option value="bs">بوسنیایی (Bosnian)</option>
-          <option value="bg">بلغاری (Bulgarian)</option>
-          <option value="ca">کاتالان (Catalan)</option>
-          <option value="hr">کرواسی (Croatian)</option>
-          <option value="cs">چکی (Czech)</option>
-          <option value="da">دانمارکی (Danish)</option>
-          <option value="nl">هلندی (Dutch)</option>
-          <option value="fi">فنلاندی (Finnish)</option>
-          <option value="ka">گرجی (Georgian)</option>
-          <option value="el">یونانی (Greek)</option>
-          <option value="he">عبری (Hebrew)</option>
-          <option value="hi">هندی (Hindi)</option>
-          <option value="hu">مجاری (Hungarian)</option>
-          <option value="is">ایسلندی (Icelandic)</option>
-          <option value="id">اندونزیایی (Indonesian)</option>
-          <option value="ko">کره‌ای (Korean)</option>
-          <option value="la">لاتین (Latin)</option>
-          <option value="lv">لتونیایی (Latvian)</option>
-          <option value="lt">لیتوانیایی (Lithuanian)</option>
-          <option value="no">نروژی (Norwegian)</option>
-          <option value="ps">پشتو (Pashto)</option>
-          <option value="pl">لهستانی (Polish)</option>
-          <option value="pt">پرتغالی (Portuguese)</option>
-          <option value="ro">رومانیایی (Romanian)</option>
-          <option value="sr">صربی (Serbian)</option>
-          <option value="sk">اسلواکی (Slovak)</option>
-          <option value="sv">سوئدی (Swedish)</option>
-          <option value="tg">تاجیکی (Tajik)</option>
-          <option value="th">تایلندی (Thai)</option>
-          <option value="uk">اوکراینی (Ukrainian)</option>
-          <option value="ur">اردو (Urdu)</option>
-          <option value="uz">ازبکی (Uzbek)</option>
-          <option value="vi">ویتنامی (Vietnamese)</option>
-        </optgroup>
       </select>
 
       <button class="btn-action btn-rename" onclick="sendTranslationRequest()">ترجمه کن / Translate</button>
@@ -485,17 +465,16 @@
     </div>
   </div>
 
-  <!-- پنجره آپلود مستقیم از لینک -->
   <div class="modal-overlay" id="url-modal">
     <div class="modal-content">
       <h3>🌐 آپلود مستقیم فایل از لینک اینترنتی</h3>
-      <input type="url" id="url-input" placeholder="لینک مستقیم تصویر یا ویدیو (مثال: https://site.com/image.jpg)">
+      <input type="url" id="url-input" placeholder="لینک مستقیم تصویر، ویدیو یا یوتیوب (مثال: https://youtube.com/watch?v=...)">
       <select id="url-type-select">
         <option value="image">تصویر (Image)</option>
         <option value="video">ویدیو (Video)</option>
         <option value="audio">صدا (Audio)</option>
       </select>
-      <input type="text" id="url-title-input" placeholder="عنوان فایل...">
+      <input type="text" id="url-title-input" placeholder="عنوان فایل (به فارسی)...">
       <div style="display:flex; gap:10px; justify-content:flex-end;">
         <button class="btn-action btn-delete" style="width:auto; margin:0;" onclick="closeURLModal()">انصراف</button>
         <button class="btn-action btn-rename" onclick="addURLMedia()">افزودن و نمایش</button>
@@ -514,23 +493,14 @@
   <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
   <script>
-    /* ======================================================== */
-    /* کلید جمنای را اینجا قرار بده */
-    const GEMINI_API_KEY = "AQ.Ab8RN6LxBDyZ1g5WrNqBWU7usXhfHdX6__B6UryRCSmZkYSx0Q";
-    /* ======================================================== */
-
     let currentLang = 'fa';
     let mediaItems = [];
 
-    // بارگذاری داده‌ها
     window.addEventListener('DOMContentLoaded', () => {
       const saved = localStorage.getItem('naturescenic_media_items');
       if (saved) {
-        try {
-          mediaItems = JSON.parse(saved);
-        } catch(e) {
-          mediaItems = getInitialDefaultData();
-        }
+        try { mediaItems = JSON.parse(saved); } 
+        catch(e) { mediaItems = getInitialDefaultData(); }
       } else {
         mediaItems = getInitialDefaultData();
       }
@@ -551,6 +521,13 @@
       localStorage.setItem('naturescenic_media_items', JSON.stringify(mediaItems));
     }
 
+    // استخراج ID ویدیو یوتیوب
+    function getYoutubeEmbedUrl(url) {
+      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+      const match = url.match(regExp);
+      return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}` : null;
+    }
+
     function renderMediaItems() {
       const grid = document.getElementById('media-grid');
       grid.innerHTML = '';
@@ -561,11 +538,27 @@
         card.setAttribute('data-type', item.type);
         card.id = `card-${item.id}`;
 
-        let mediaTag = `<img src="${item.src}" alt="${item.titleFa}" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1506744038136-46273834b3fb';">`;
-        if (item.type === 'video') mediaTag = `<video src="${item.src}" controls></video>`;
-        else if (item.type === 'audio') mediaTag = `<audio src="${item.src}" controls></audio>`;
+        let mediaTag = '';
+        const ytUrl = getYoutubeEmbedUrl(item.src);
+
+        if (ytUrl) {
+          mediaTag = `<iframe src="${ytUrl}" allowfullscreen></iframe>`;
+        } else if (item.type === 'video') {
+          mediaTag = `<video src="${item.src}" controls></video>`;
+        } else if (item.type === 'audio') {
+          mediaTag = `<audio src="${item.src}" controls></audio>`;
+        } else {
+          mediaTag = `<img src="${item.src}" alt="${item.titleFa}" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1506744038136-46273834b3fb';">`;
+        }
+
+        const loadingHTML = item.isLoading ? `
+          <div class="loading-overlay">
+            <div class="spinner"></div>
+            <span style="color:#38bdf8; font-size:0.9rem;">در حال آپلود...</span>
+          </div>` : '';
 
         card.innerHTML = `
+          ${loadingHTML}
           ${mediaTag}
           <div class="card-body">
             <div class="card-title-fa" id="title-fa-${item.id}">${item.titleFa}</div>
@@ -588,8 +581,7 @@
       if (currentLang === 'fa') {
         body.style.direction = 'ltr';
         langBtn.innerText = '🌐 تغییر به فارسی / Switch to Persian';
-        
-        document.getElementById('sub-header').innerText = 'Dilgon Nature, Kohgiluyeh and Boyer-Ahmad (Zagros Mountains)';
+        document.getElementById('sub-header').innerText = 'Iran Nature';
         document.getElementById('lbl-quick-trans').innerText = '🌐 Quick Translator:';
         document.getElementById('btn-download-app').innerText = '📥 Download App';
         document.getElementById('lbl-upload-img').childNodes[0].textContent = '📷 Upload Image ';
@@ -598,18 +590,15 @@
         document.getElementById('btn-upload-url').innerText = '🌐 Upload via URL';
         document.getElementById('btn-ai-img').innerText = '✨ GEMINI AI Image Generator';
         document.getElementById('btn-translate-menu').innerText = '🌐 Text Translator';
-
         document.getElementById('filter-all').innerText = 'All';
         document.getElementById('filter-img').innerText = '🖼️ Images Only';
         document.getElementById('filter-vid').innerText = '🎥 Videos Only';
         document.getElementById('filter-aud').innerText = '🎵 Audio Only';
-
         currentLang = 'en';
       } else {
         body.style.direction = 'rtl';
         langBtn.innerText = '🌐 Switch to English / تغییر زبان';
-        
-        document.getElementById('sub-header').innerText = 'طبیعت دیلگون، کهگیلویه و بویراحمد (کوهستان زاگرس)';
+        document.getElementById('sub-header').innerText = 'طبیعت ایران';
         document.getElementById('lbl-quick-trans').innerText = '🌐 مترجم سریع صفحه / Quick Translator:';
         document.getElementById('btn-download-app').innerText = '📥 دانلود اپلیکیشن / Download App';
         document.getElementById('lbl-upload-img').childNodes[0].textContent = '📷 آپلود عکس / Wallpaper ';
@@ -618,17 +607,14 @@
         document.getElementById('btn-upload-url').innerText = '🌐 آپلود از لینک / Upload via URL';
         document.getElementById('btn-ai-img').innerText = '✨ ساخت عکس با هوش مصنوعی GEMINI ✨';
         document.getElementById('btn-translate-menu').innerText = '🌐 ترجمه متن / Text Translator';
-
         document.getElementById('filter-all').innerText = 'همه / All';
         document.getElementById('filter-img').innerText = '🖼️ فقط عکس‌ها / Images Only';
         document.getElementById('filter-vid').innerText = '🎥 فقط ویدیوها / Videos Only';
         document.getElementById('filter-aud').innerText = '🎵 فقط صداها / Audio Only';
-
         currentLang = 'fa';
       }
     }
 
-    // موتور ترجمه گوگل دقیق و بدون فینگلیش
     async function translateTextDirect(text, targetLangCode) {
       try {
         const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLangCode}&dt=t&q=${encodeURIComponent(text)}`;
@@ -636,9 +622,7 @@
         const data = await response.json();
         let translatedText = '';
         if (data && data[0]) {
-          data[0].forEach(item => {
-            if (item[0]) translatedText += item[0];
-          });
+          data[0].forEach(item => { if (item[0]) translatedText += item[0]; });
         }
         return translatedText || text;
       } catch (e) {
@@ -688,18 +672,29 @@
       const file = event.target.files[0];
       if (!file) return;
 
+      const tempId = String(Date.now());
+      const newItem = {
+        id: tempId,
+        type: type,
+        src: '',
+        titleFa: file.name,
+        titleEn: 'Uploading...',
+        isLoading: true
+      };
+
+      mediaItems.unshift(newItem);
+      renderMediaItems();
+
       const reader = new FileReader();
-      reader.onload = function(e) {
-        const newItem = {
-          id: String(Date.now()),
-          type: type,
-          src: e.target.result,
-          titleFa: file.name,
-          titleEn: 'Uploaded File'
-        };
-        mediaItems.unshift(newItem);
-        saveToStorage();
-        renderMediaItems();
+      reader.onload = async function(e) {
+        const targetItem = mediaItems.find(i => i.id === tempId);
+        if (targetItem) {
+          targetItem.src = e.target.result;
+          targetItem.isLoading = false;
+          targetItem.titleEn = await translateTextDirect(file.name, 'en');
+          saveToStorage();
+          renderMediaItems();
+        }
       };
       reader.readAsDataURL(file);
     }
@@ -707,20 +702,28 @@
     function openURLModal() { document.getElementById('url-modal').style.display = 'flex'; }
     function closeURLModal() { document.getElementById('url-modal').style.display = 'none'; }
     
-    function addURLMedia() {
+    async function addURLMedia() {
       const url = document.getElementById('url-input').value.trim();
-      const type = document.getElementById('url-type-select').value;
-      const title = document.getElementById('url-title-input').value.trim() || 'فایل از لینک';
+      let type = document.getElementById('url-type-select').value;
+      const titleFa = document.getElementById('url-title-input').value.trim() || 'فایل از لینک';
 
-      if (!url) return alert("لطفاً لینک مستقیم فایل را وارد کنید");
+      if (!url) return alert("لطفاً لینک مستقیم یا لینک یوتیوب را وارد کنید");
+
+      if (getYoutubeEmbedUrl(url)) {
+        type = 'video';
+      }
+
+      const tempId = String(Date.now());
+      const titleEn = await translateTextDirect(titleFa, 'en');
 
       const newItem = {
-        id: String(Date.now()),
+        id: tempId,
         type: type,
         src: url,
-        titleFa: title,
-        titleEn: 'Web Media'
+        titleFa: titleFa,
+        titleEn: titleEn
       };
+
       mediaItems.unshift(newItem);
       saveToStorage();
       renderMediaItems();
@@ -735,19 +738,15 @@
     function openChatModal() { document.getElementById('chat-modal').style.display = 'flex'; }
     function closeChatModal() { document.getElementById('chat-modal').style.display = 'none'; }
 
-    // ساخت عکس هوشمند متصل به مترجم خودکار و فیلتر محتوا
     async function submitAIGeneration() {
       const userPrompt = document.getElementById('ai-prompt-input').value.trim();
       if (!userPrompt) return alert("لطفاً توصیف تصویر را بنویسید");
 
       const resultDiv = document.getElementById('ai-image-result');
-      resultDiv.innerHTML = "<p style='color:#38bdf8;'>در حال ترجمه توصیف و ساخت تصویر باکیفیت توسط Gemini... چند ثانیه صبر کنید...</p>";
+      resultDiv.innerHTML = "<p style='color:#38bdf8;'>در حال پردازش توصیف و ساخت تصویر با کیفیت... چند ثانیه صبر کنید...</p>";
 
-      // ۱. ترجمه خودکار عبارت ورودی به انگلیسی استاندارد
       const englishPrompt = await translateTextDirect(userPrompt, 'en');
-
-      // ۲. اضافه کردن کلمات کلیدی برای زیبایی، کیفیت و پاکسازی محتوا
-      const cleanPrompt = encodeURIComponent(`Beautiful realistic landscape of ${englishPrompt}, highly detailed, nature scenery, photorealistic, 8k resolution, safe, no humans`);
+      const cleanPrompt = encodeURIComponent(`high quality realistic nature scene of ${englishPrompt}, 8k resolution, photorealistic, safe content`);
       
       const randomSeed = Math.floor(Math.random() * 999999);
       const imageUrl = `https://image.pollinations.ai/prompt/${cleanPrompt}?seed=${randomSeed}&width=1024&height=768&nologo=true`;
@@ -759,7 +758,6 @@
         resultDiv.innerHTML = "";
         resultDiv.appendChild(img);
 
-        // افزودن اتوماتیک تصویر به لیست کارت‌های اصلی
         const newItem = {
           id: String(Date.now()),
           type: 'image',
@@ -776,7 +774,6 @@
       };
     }
 
-    // درخواست ترجمه متون
     async function sendTranslationRequest() {
       const text = document.getElementById('trans-text-input').value.trim();
       const targetLang = document.getElementById('trans-target-lang').value;
@@ -784,13 +781,11 @@
 
       if (!text) return alert("لطفاً متنی برای ترجمه وارد کنید.");
 
-      resultDiv.innerText = "در حال دریافت ترجمه دقیق از سرور گوگل...";
-
+      resultDiv.innerText = "در حال دریافت ترجمه...";
       const translatedText = await translateTextDirect(text, targetLang);
       resultDiv.innerText = translatedText;
     }
 
-    // دانلود برنامه به صورت یک فایل وب کاملاً مستقل
     function downloadApp() {
       const appContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
       const blob = new Blob([appContent], { type: "text/html;charset=utf-8" });
