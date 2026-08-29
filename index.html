@@ -279,7 +279,7 @@
       100% { transform: rotate(360deg); }
     }
 
-    /* پاپ‌آپ‌ها (Modal) - سایز استاندارد */
+    /* پاپ‌آپ‌ها (Modal) - دقیقا طول و عرض برابر (مربعی 360px в 360px) */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -288,45 +288,54 @@
       align-items: center;
       justify-content: center;
       z-index: 1000;
-      padding: 20px;
+      padding: 15px;
     }
     .modal-content {
       background: #1e293b;
-      padding: 20px;
-      border-radius: 12px;
+      padding: 15px !important;
+      border-radius: 12px !important;
       border: 1px solid #334155;
-      width: 100%;
-      max-width: 500px;
-      max-height: 90vh;
+      width: 360px !important;
+      height: 360px !important; /* طول و عرض دقیقاً برابر */
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      justify-content: space-between;
+      gap: 10px !important;
+    }
+    .modal-content h3 {
+      font-size: 0.95rem !important;
+      color: #38bdf8;
+    }
+    .modal-content p {
+      font-size: 0.8rem !important;
     }
     .modal-content input, .modal-content select, .modal-content textarea {
-      padding: 10px;
+      padding: 8px !important;
       border-radius: 6px;
       border: 1px solid #475569;
       background: #0f172a;
       color: white;
       width: 100%;
-      font-size: 0.9rem;
+      font-size: 0.85rem !important;
     }
-    .modal-content textarea { height: 100px; resize: vertical; }
+    .modal-content textarea { height: 70px !important; resize: none; }
+    
     .translation-result {
-      min-height: 80px;
+      height: 80px !important;
       background: #0f172a;
       border: 1px solid #334155;
       border-radius: 6px;
-      padding: 10px;
+      padding: 8px !important;
       color: #38bdf8;
-      font-size: 0.9rem;
-      line-height: 1.5;
+      font-size: 0.85rem !important;
+      line-height: 1.4;
+      overflow-y: auto;
       white-space: pre-wrap;
     }
     .generated-img-container {
       width: 100%;
-      min-height: 200px;
+      height: 160px !important;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -337,8 +346,8 @@
     }
     .generated-img {
       width: 100%;
-      max-height: 350px;
-      object-fit: contain;
+      height: 100% !important;
+      object-fit: cover;
     }
   </style>
 </head>
@@ -404,17 +413,16 @@
   <!-- پنجره GEMINI AI -->
   <div class="modal-overlay" id="ai-modal">
     <div class="modal-content">
-      <h3 id="modal-ai-title">✨ ساخت تصویر با هوش مصنوعی GEMINI ✨</h3>
-      <p id="modal-ai-desc" style="font-size:0.85rem; color:#cbd5e1;">توصیف تصویر را بنویسید؛ سیستم هوشمند آن را به انگلیسی ترجمه کرده و تصویر را می‌سازد:</p>
-      <input type="text" id="ai-prompt-input" placeholder="مثال: رودخانه خروشان، درختان سرسبز و پرندگان در آسمان...">
+      <h3 id="modal-ai-title">✨ ساخت تصویر GEMINI ✨</h3>
+      <input type="text" id="ai-prompt-input" placeholder="توصیف تصویر...">
       
       <div class="generated-img-container" id="ai-image-result">
-        <p style="color:#64748b; font-size:0.9rem;">تصویر ساخته شده توسط Gemini اینجا نمایش داده می‌شود</p>
+        <p style="color:#64748b; font-size:0.8rem;">پیش‌نمایش تصویر</p>
       </div>
 
-      <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:5px;">
-        <button class="btn-action btn-delete" style="width:auto; margin:0;" onclick="closeAIModal()">انصراف / Close</button>
-        <button class="btn-action btn-rename" style="background:#a855f7;" onclick="submitAIGeneration()">✨ تولید تصویر</button>
+      <div style="display:flex; gap:8px; justify-content:flex-end;">
+        <button class="btn-action btn-delete" style="width:auto; margin:0;" onclick="closeAIModal()">انصراف</button>
+        <button class="btn-action btn-rename" style="background:#a855f7;" onclick="submitAIGeneration()">✨ ساخت</button>
       </div>
     </div>
   </div>
@@ -422,13 +430,11 @@
   <!-- پنجره ترجمه متن -->
   <div class="modal-overlay" id="chat-modal">
     <div class="modal-content">
-      <h3 id="modal-trans-title">🌐 مترجم پیشرفته و دقیق تمام زبان‌های دنیا</h3>
-      <p style="font-size:0.85rem; color:#94a3b8;">متن را بنویسید و زبان مقصد را انتخاب کنید:</p>
-      
-      <textarea id="trans-text-input" placeholder="متن خود را اینجا بنویسید..."></textarea>
+      <h3 id="modal-trans-title">🌐 مترجم متن</h3>
+      <textarea id="trans-text-input" placeholder="متن جهت ترجمه..."></textarea>
       
       <select id="trans-target-lang">
-        <optgroup label="⭐ زبان‌های اصلی و پرکاربرد">
+        <optgroup label="⭐ زبان‌های اصلی">
           <option value="fa">فارسی (Persian)</option>
           <option value="en" selected>انگلیسی (English)</option>
           <option value="ar">عربی (Arabic)</option>
@@ -444,28 +450,27 @@
         </optgroup>
       </select>
 
-      <button class="btn-action btn-rename" onclick="sendTranslationRequest()">ترجمه کن / Translate</button>
-      
-      <div class="translation-result" id="translation-result">نتیجه ترجمه اینجا به صورت کاملاً دقیق نمایش داده می‌شود...</div>
+      <button class="btn-action btn-rename" onclick="sendTranslationRequest()">ترجمه کن</button>
+      <div class="translation-result" id="translation-result">نتیجه ترجمه...</div>
 
-      <button class="btn-action btn-delete" style="width:auto; align-self:flex-end;" onclick="closeChatModal()">بستن / Close</button>
+      <button class="btn-action btn-delete" style="width:auto; align-self:flex-end;" onclick="closeChatModal()">بستن</button>
     </div>
   </div>
 
   <!-- پنجره آپلود از لینک -->
   <div class="modal-overlay" id="url-modal">
     <div class="modal-content">
-      <h3>🌐 آپلود مستقیم فایل از لینک اینترنتی</h3>
-      <input type="url" id="url-input" placeholder="لینک مستقیم تصویر، ویدیو یا یوتیوب (مثال: https://youtube.com/watch?v=...)">
+      <h3>🌐 آپلود از لینک</h3>
+      <input type="url" id="url-input" placeholder="لینک مستقیم فایل یا یوتیوب...">
       <select id="url-type-select">
         <option value="image">تصویر (Image)</option>
         <option value="video">ویدیو (Video)</option>
         <option value="audio">صدا (Audio)</option>
       </select>
-      <input type="text" id="url-title-input" placeholder="عنوان فایل (به فارسی)...">
-      <div style="display:flex; gap:10px; justify-content:flex-end;">
+      <input type="text" id="url-title-input" placeholder="عنوان فایل...">
+      <div style="display:flex; gap:8px; justify-content:flex-end;">
         <button class="btn-action btn-delete" style="width:auto; margin:0;" onclick="closeURLModal()">انصراف</button>
-        <button class="btn-action btn-rename" onclick="addURLMedia()">افزودن و نمایش</button>
+        <button class="btn-action btn-rename" onclick="addURLMedia()">افزودن</button>
       </div>
     </div>
   </div>
@@ -692,7 +697,7 @@
     function openAIModal() { 
       document.getElementById('ai-prompt-input').value = ''; 
       document.getElementById('ai-image-result').innerHTML = 
-        '<p style="color:#64748b; font-size:0.9rem;">تصویر ساخته شده توسط Gemini اینجا نمایش داده می‌شود</p>';
+        '<p style="color:#64748b; font-size:0.8rem;">پیش‌نمایش تصویر</p>';
       document.getElementById('ai-modal').style.display = 'flex'; 
     }
 
@@ -705,7 +710,7 @@
       if (!userPrompt) return alert("لطفاً توصیف تصویر را بنویسید");
 
       const resultDiv = document.getElementById('ai-image-result');
-      resultDiv.innerHTML = "<p style='color:#38bdf8; font-size:0.85rem;'>در حال پردازش توصیف و ساخت تصویر... چند ثانیه صبر کنید...</p>";
+      resultDiv.innerHTML = "<p style='color:#38bdf8; font-size:0.8rem;'>در حال ساخت...</p>";
 
       const englishPrompt = await translateTextDirect(userPrompt, 'en');
       const cleanPrompt = encodeURIComponent(`high quality realistic nature scene of ${englishPrompt}, 8k resolution, photorealistic, safe content`);
@@ -732,7 +737,7 @@
         renderMediaItems();
       };
       img.onerror = () => {
-        resultDiv.innerHTML = "<p style='color:#ef4444;'>خطا در ساخت تصویر. لطفاً دوباره تلاش کنید.</p>";
+        resultDiv.innerHTML = "<p style='color:#ef4444; font-size:0.8rem;'>خطا در ساخت.</p>";
       };
     }
 
@@ -743,7 +748,7 @@
 
       if (!text) return alert("لطفاً متنی برای ترجمه وارد کنید.");
 
-      resultDiv.innerText = "در حال دریافت ترجمه...";
+      resultDiv.innerText = "در حال ترجمه...";
       const translatedText = await translateTextDirect(text, targetLang);
       resultDiv.innerText = translatedText;
     }
