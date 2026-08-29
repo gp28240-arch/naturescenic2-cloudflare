@@ -19,7 +19,6 @@
       direction: rtl;
     }
 
-    /* سربرگ و لوگو */
     .main-header {
       display: flex;
       justify-content: space-between;
@@ -83,7 +82,6 @@
       color: #94a3b8;
     }
 
-    /* مترجم گوگل صفحه */
     .translate-section {
       background: #1e293b;
       padding: 12px 20px;
@@ -100,7 +98,6 @@
       color: #4ade80;
     }
 
-    /* پنل دکمه‌ها */
     .control-panel {
       display: flex;
       flex-wrap: wrap;
@@ -128,7 +125,9 @@
       color: #0f172a;
     }
     .btn-lang { border-color: #f59e0b; color: #fbbf24; }
-    
+    .btn-app { border-color: #10b981; color: #34d399; }
+    .btn-app:hover { background-color: #10b981; color: #0f172a; }
+
     .btn-ai-gemini, .btn-chat-animated { 
       border-color: #a855f7; 
       background: linear-gradient(135deg, #7e22ce, #a855f7);
@@ -154,7 +153,6 @@
 
     .btn-url { border-color: #eab308; color: #fef08a; }
 
-    /* منوی فیلتر رسانه‌ها */
     .filter-menu {
       display: flex;
       gap: 10px;
@@ -179,7 +177,6 @@
       border-color: #38bdf8;
     }
 
-    /* کارت‌ها */
     .media-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -251,7 +248,6 @@
     .btn-rename { background-color: #0284c7; color: white; }
     .btn-delete { background-color: #dc2626; color: white; width: 100%; margin-top: 5px; }
 
-    /* پنجره‌های پاپ‌آپ فقط در صورت کلیک روی دکمه‌های مربوطه باز می‌شوند */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -355,6 +351,9 @@
 
   <div class="control-panel">
     <button class="btn btn-lang" id="toggle-lang-btn" onclick="toggleLanguage()">🌐 Switch to English / تغییر زبان</button>
+    
+    <!-- دکمه دانلود اپلیکیشن -->
+    <button class="btn btn-app" id="btn-download-app" onclick="downloadHTMLApp()">📲 دانلود اپلیکیشن / Download App</button>
 
     <label class="btn" id="lbl-upload-img">
       📷 آپلود عکس / Wallpaper
@@ -392,7 +391,8 @@
     <div class="modal-content gemini-modal-content">
       <h3 id="modal-ai-title">✨ ساخت تصویر با هوش مصنوعی GEMINI ✨</h3>
       <p id="modal-ai-desc" style="font-size:1rem; color:#cbd5e1; text-align:center;">توصیف تصویر را بنویسید؛ سیستم هوشمند آن را به انگلیسی ترجمه کرده و تصویر را می‌سازد:</p>
-      <input type="text" id="ai-prompt-input" placeholder="مثال: رودخانه خروشان، درختان سرسبز و پرندگان در آسمان...">
+      
+      <input type="text" id="ai-prompt-input" placeholder="مثال: رودخانه خروشان، درختان سرسبز..." onkeydown="handleAIKeyDown(event)">
       
       <div class="generated-img-container" id="ai-image-result">
         <p style="color:#64748b; font-size:1.1rem;">تصویر ساخته شده توسط Gemini اینجا نمایش داده می‌شود</p>
@@ -486,6 +486,17 @@
       localStorage.setItem('naturescenic_media_items', JSON.stringify(mediaItems));
     }
 
+    function downloadHTMLApp() {
+      const htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+      const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'naturescenic2-app.html';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
     function getYoutubeEmbedUrl(url) {
       const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
       const match = url.match(regExp);
@@ -534,10 +545,12 @@
     function toggleLanguage() {
       const body = document.body;
       const langBtn = document.getElementById('toggle-lang-btn');
+      const appBtn = document.getElementById('btn-download-app');
       
       if (currentLang === 'fa') {
         body.style.direction = 'ltr';
         langBtn.innerText = '🌐 تغییر به فارسی / Switch to Persian';
+        appBtn.innerText = '📲 Download App';
         document.getElementById('sub-header').innerText = 'Iran Nature';
         document.getElementById('lbl-quick-trans').innerText = '🌐 Quick Translator:';
         document.getElementById('lbl-upload-img').childNodes[0].textContent = '📷 Upload Image ';
@@ -554,6 +567,7 @@
       } else {
         body.style.direction = 'rtl';
         langBtn.innerText = '🌐 Switch to English / تغییر زبان';
+        appBtn.innerText = '📲 دانلود اپلیکیشن / Download App';
         document.getElementById('sub-header').innerText = 'طبیعت ایران';
         document.getElementById('lbl-quick-trans').innerText = '🌐 مترجم سریع صفحه / Quick Translator:';
         document.getElementById('lbl-upload-img').childNodes[0].textContent = '📷 آپلود عکس / Wallpaper ';
@@ -643,10 +657,22 @@
 
     function openURLModal() { document.getElementById('url-modal').style.display = 'flex'; }
     function closeURLModal() { document.getElementById('url-modal').style.display = 'none'; }
-    function openAIModal() { document.getElementById('ai-modal').style.display = 'flex'; }
+    
+    function openAIModal() { 
+      document.getElementById('ai-modal').style.display = 'flex'; 
+      document.getElementById('ai-prompt-input').focus();
+    }
     function closeAIModal() { document.getElementById('ai-modal').style.display = 'none'; }
+    
     function openChatModal() { document.getElementById('chat-modal').style.display = 'flex'; }
     function closeChatModal() { document.getElementById('chat-modal').style.display = 'none'; }
+
+    function handleAIKeyDown(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        submitAIGeneration();
+      }
+    }
 
     async function addURLMedia() {
       const url = document.getElementById('url-input').value.trim();
@@ -669,8 +695,11 @@
     }
 
     async function submitAIGeneration() {
-      const userPrompt = document.getElementById('ai-prompt-input').value.trim();
+      const inputEl = document.getElementById('ai-prompt-input');
+      const userPrompt = inputEl.value.trim();
       if (!userPrompt) return alert("لطفاً توصیف تصویر را بنویسید");
+
+      inputEl.value = '';
 
       const resultDiv = document.getElementById('ai-image-result');
       resultDiv.innerHTML = "<p style='color:#38bdf8;'>در حال ساخت تصویر... لطفاً صبر کنید...</p>";
