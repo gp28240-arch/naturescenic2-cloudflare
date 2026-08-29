@@ -752,54 +752,16 @@
       const imageUrl = `https://image.pollinations.ai/prompt/${cleanPrompt}?seed=${randomSeed}&width=1024&height=768&nologo=true`;
       
       const img = new Image();
-      img.crossOrigin = "anonymous";
       img.src = imageUrl;
+      img.className = "generated-img";
       img.onload = () => {
-        // حک کردن پرامپت روی تصویر اصلی با canvas
-        const canvas = document.createElement('canvas');
-        canvas.width = img.width || 1024;
-        canvas.height = img.height || 768;
-        const ctx = canvas.getContext('2d');
-
-        // کشیدن عکس اصلی
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-        // تنظیمات استایل متن حک شده
-        const padding = 20;
-        const text = userPrompt;
-        ctx.font = 'bold 32px Tahoma, sans-serif';
-
-        const textMetrics = ctx.measureText(text);
-        const rectWidth = textMetrics.width + (padding * 2);
-        const rectHeight = 50;
-        const rectX = (canvas.width - rectWidth) / 2;
-        const rectY = canvas.height - rectHeight - 30;
-
-        // پس‌زمینه کادر متن
-        ctx.fillStyle = 'rgba(15, 23, 42, 0.75)';
-        ctx.beginPath();
-        ctx.roundRect(rectX, rectY, rectWidth, rectHeight, 10);
-        ctx.fill();
-
-        // نوشتن متن داخل تصویر
-        ctx.fillStyle = '#ffffff';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(text, canvas.width / 2, rectY + (rectHeight / 2));
-
-        const finalDataUrl = canvas.toDataURL('image/jpeg');
-
-        const finalImg = new Image();
-        finalImg.src = finalDataUrl;
-        finalImg.className = "generated-img";
-
         resultDiv.innerHTML = "";
-        resultDiv.appendChild(finalImg);
+        resultDiv.appendChild(img);
 
         const newItem = {
           id: String(Date.now()),
           type: 'image',
-          src: finalDataUrl,
+          src: imageUrl,
           titleFa: userPrompt,
           titleEn: englishPrompt
         };
