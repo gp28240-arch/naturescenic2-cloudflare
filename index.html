@@ -134,22 +134,23 @@
       border-color: #a855f7; 
       background: linear-gradient(135deg, #7e22ce, #a855f7);
       color: #ffffff; 
-      font-size: 1.1rem;
-      padding: 14px 24px;
-      border-radius: 12px;
-      box-shadow: 0 6px 20px rgba(168, 85, 247, 0.5);
+      font-size: 1rem;
+      padding: 12px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(168, 85, 247, 0.4);
       animation: pulse 2s infinite;
       cursor: pointer;
+      font-weight: bold;
     }
     .btn-ai-gemini:hover, .btn-chat-animated:hover {
       background: linear-gradient(135deg, #9333ea, #c084fc);
       color: #ffffff;
-      transform: scale(1.05);
+      transform: translateY(-2px);
     }
 
     @keyframes pulse {
       0% { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.7); }
-      70% { box-shadow: 0 0 0 15px rgba(168, 85, 247, 0); }
+      70% { box-shadow: 0 0 0 10px rgba(168, 85, 247, 0); }
       100% { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0); }
     }
 
@@ -278,11 +279,11 @@
       100% { transform: rotate(360deg); }
     }
 
-    /* پاپ‌آپ‌ها (Modal) */
+    /* پاپ‌آپ‌ها (Modal) - سایز استاندارد */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.85);
+      background: rgba(0,0,0,0.8);
       display: none;
       align-items: center;
       justify-content: center;
@@ -291,68 +292,52 @@
     }
     .modal-content {
       background: #1e293b;
-      padding: 25px;
+      padding: 20px;
       border-radius: 12px;
-      border: 2px solid #a855f7;
-      width: 95%;
-      max-width: 800px;
+      border: 1px solid #334155;
+      width: 100%;
+      max-width: 500px;
       max-height: 90vh;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 12px;
     }
-    .gemini-modal-content {
-      border: 3px solid #c084fc;
-      box-shadow: 0 0 35px rgba(168, 85, 247, 0.4);
-      padding: 35px;
-    }
-    .gemini-modal-content h3 {
-      font-size: 1.8rem;
-      color: #c084fc;
-      text-align: center;
-    }
-    .gemini-modal-content input {
-      font-size: 1.1rem;
-      padding: 16px;
-      border: 2px solid #a855f7;
-    }
-    .chat-modal-content { border-color: #a855f7; }
     .modal-content input, .modal-content select, .modal-content textarea {
-      padding: 12px;
-      border-radius: 8px;
+      padding: 10px;
+      border-radius: 6px;
       border: 1px solid #475569;
       background: #0f172a;
       color: white;
       width: 100%;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
     }
-    .modal-content textarea { height: 120px; resize: vertical; }
+    .modal-content textarea { height: 100px; resize: vertical; }
     .translation-result {
-      min-height: 100px;
+      min-height: 80px;
       background: #0f172a;
       border: 1px solid #334155;
-      border-radius: 8px;
-      padding: 15px;
+      border-radius: 6px;
+      padding: 10px;
       color: #38bdf8;
-      font-size: 1rem;
-      line-height: 1.6;
+      font-size: 0.9rem;
+      line-height: 1.5;
       white-space: pre-wrap;
     }
     .generated-img-container {
       width: 100%;
-      min-height: 300px;
+      min-height: 200px;
       display: flex;
       align-items: center;
       justify-content: center;
       background: #0f172a;
-      border-radius: 8px;
+      border-radius: 6px;
       overflow: hidden;
       border: 1px solid #334155;
     }
     .generated-img {
       width: 100%;
-      max-height: 500px;
+      max-height: 350px;
       object-fit: contain;
     }
   </style>
@@ -416,25 +401,27 @@
 
   <div class="media-grid" id="media-grid"></div>
 
+  <!-- پنجره GEMINI AI -->
   <div class="modal-overlay" id="ai-modal">
-    <div class="modal-content gemini-modal-content">
+    <div class="modal-content">
       <h3 id="modal-ai-title">✨ ساخت تصویر با هوش مصنوعی GEMINI ✨</h3>
-      <p id="modal-ai-desc" style="font-size:1rem; color:#cbd5e1; text-align:center;">توصیف تصویر را بنویسید؛ سیستم هوشمند آن را به انگلیسی ترجمه کرده و تصویر را می‌سازد:</p>
+      <p id="modal-ai-desc" style="font-size:0.85rem; color:#cbd5e1;">توصیف تصویر را بنویسید؛ سیستم هوشمند آن را به انگلیسی ترجمه کرده و تصویر را می‌سازد:</p>
       <input type="text" id="ai-prompt-input" placeholder="مثال: رودخانه خروشان، درختان سرسبز و پرندگان در آسمان...">
       
       <div class="generated-img-container" id="ai-image-result">
-        <p style="color:#64748b; font-size:1.1rem;">تصویر ساخته شده توسط Gemini اینجا نمایش داده می‌شود</p>
+        <p style="color:#64748b; font-size:0.9rem;">تصویر ساخته شده توسط Gemini اینجا نمایش داده می‌شود</p>
       </div>
 
-      <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap; margin-top:10px;">
-        <button class="btn-action btn-delete" style="width:auto; padding: 12px 24px; font-size:1rem;" onclick="closeAIModal()">بستن / Close</button>
-        <button class="btn-action btn-rename" style="background:#a855f7; padding: 12px 30px; font-size:1.1rem;" onclick="submitAIGeneration()">✨ تولید تصویر با Gemini</button>
+      <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:5px;">
+        <button class="btn-action btn-delete" style="width:auto; margin:0;" onclick="closeAIModal()">انصراف / Close</button>
+        <button class="btn-action btn-rename" style="background:#a855f7;" onclick="submitAIGeneration()">✨ تولید تصویر</button>
       </div>
     </div>
   </div>
 
+  <!-- پنجره ترجمه متن -->
   <div class="modal-overlay" id="chat-modal">
-    <div class="modal-content chat-modal-content">
+    <div class="modal-content">
       <h3 id="modal-trans-title">🌐 مترجم پیشرفته و دقیق تمام زبان‌های دنیا</h3>
       <p style="font-size:0.85rem; color:#94a3b8;">متن را بنویسید و زبان مقصد را انتخاب کنید:</p>
       
@@ -465,6 +452,7 @@
     </div>
   </div>
 
+  <!-- پنجره آپلود از لینک -->
   <div class="modal-overlay" id="url-modal">
     <div class="modal-content">
       <h3>🌐 آپلود مستقیم فایل از لینک اینترنتی</h3>
@@ -521,7 +509,6 @@
       localStorage.setItem('naturescenic_media_items', JSON.stringify(mediaItems));
     }
 
-    // استخراج ID ویدیو یوتیوب
     function getYoutubeEmbedUrl(url) {
       const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
       const match = url.match(regExp);
@@ -701,48 +688,11 @@
 
     function openURLModal() { document.getElementById('url-modal').style.display = 'flex'; }
     function closeURLModal() { document.getElementById('url-modal').style.display = 'none'; }
-    
-    async function addURLMedia() {
-      const url = document.getElementById('url-input').value.trim();
-      let type = document.getElementById('url-type-select').value;
-      const titleFa = document.getElementById('url-title-input').value.trim() || 'فایل از لینک';
 
-      if (!url) return alert("لطفاً لینک مستقیم یا لینک یوتیوب را وارد کنید");
-
-      if (getYoutubeEmbedUrl(url)) {
-        type = 'video';
-      }
-
-      const tempId = String(Date.now());
-      const titleEn = await translateTextDirect(titleFa, 'en');
-
-      const newItem = {
-        id: tempId,
-        type: type,
-        src: url,
-        titleFa: titleFa,
-        titleEn: titleEn
-      };
-
-      mediaItems.unshift(newItem);
-      saveToStorage();
-      renderMediaItems();
-      
-      document.getElementById('url-input').value = '';
-      document.getElementById('url-title-input').value = '';
-      closeURLModal();
-    }
-
-    // تابع جایگزین شده طبق درخواست شما
     function openAIModal() { 
-      // پاک کردن ورودی پرامپت
       document.getElementById('ai-prompt-input').value = ''; 
-      
-      // بازگرداندن کادر پیش‌نمایش تصویر به حالت اولیه
       document.getElementById('ai-image-result').innerHTML = 
-        '<p style="color:#64748b; font-size:1.1rem;">تصویر ساخته شده توسط Gemini اینجا نمایش داده می‌شود</p>';
-      
-      // نمایش مدال
+        '<p style="color:#64748b; font-size:0.9rem;">تصویر ساخته شده توسط Gemini اینجا نمایش داده می‌شود</p>';
       document.getElementById('ai-modal').style.display = 'flex'; 
     }
 
@@ -755,7 +705,7 @@
       if (!userPrompt) return alert("لطفاً توصیف تصویر را بنویسید");
 
       const resultDiv = document.getElementById('ai-image-result');
-      resultDiv.innerHTML = "<p style='color:#38bdf8;'>در حال پردازش توصیف و ساخت تصویر با کیفیت... چند ثانیه صبر کنید...</p>";
+      resultDiv.innerHTML = "<p style='color:#38bdf8; font-size:0.85rem;'>در حال پردازش توصیف و ساخت تصویر... چند ثانیه صبر کنید...</p>";
 
       const englishPrompt = await translateTextDirect(userPrompt, 'en');
       const cleanPrompt = encodeURIComponent(`high quality realistic nature scene of ${englishPrompt}, 8k resolution, photorealistic, safe content`);
