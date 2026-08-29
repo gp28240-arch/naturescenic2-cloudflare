@@ -457,6 +457,15 @@
   <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
   <script>
+    /* ===========================================================================
+       🔑 تنظیمات کلید API برای اتصال آپلود برنامه‌تان به سایت ImgBB
+       =========================================================================== */
+    
+    // ⬇️ کلید اختصاصی خود از سایت ImgBB را در کادر زیر بین دو کوتیشن "" کپی کنید:
+    const IMGBB_API_KEY = "e5a6e2d94d3b4b13603d0bad68b60162";
+    
+    /* =========================================================================== */
+
     let currentLang = 'fa';
     let mediaItems = [];
 
@@ -622,25 +631,69 @@
       });
     }
 
-    function handleFileUpload(event, type) {
+    // تابع اصلی آپلود خودکار روی ImgBB
+    async function uploadFileToImgBB(file) {
+      if (!IMGBB_API_KEY || IMGBB_API_KEY === "اینجا_کلید_ای_پی_ای_خود_را_قرار_دهید") {
+        throw new Error("لطفاً کلید API ImgBB را در ابتدای بخش Script تنظیم کنید.");
+      }
+
+      const formData = new FormData();
+      formData.append('image', file);
+
+      const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+        method: 'POST',
+        body: formData
+      });
+
+      const data = await response.json();
+      if (data && data.success) {
+        return data.data.url; // دریافت لینک مستقیم عکس
+      } else {
+        throw new Error(data.error ? data.error.message : "خطا در آپلود فایل به ImgBB");
+      }
+    }
+
+    async function handleFileUpload(event, type) {
       const file = event.target.files[0];
       if (!file) return;
 
       const tempId = String(Date.now());
-      const reader = new FileReader();
-      reader.onload = async function(e) {
-        const newItem = {
-          id: tempId,
-          type: type,
-          src: e.target.result,
-          titleFa: file.name,
-          titleEn: await translateTextDirect(file.name, 'en')
+      
+      if (type === 'image') {
+        alert("در حال آپلود عکس به سرور... لطفاً کمی صبر کنید.");
+        try {
+          const directUrl = await uploadFileToImgBB(file);
+          const newItem = {
+            id: tempId,
+            type: 'image',
+            src: directUrl,
+            titleFa: file.name,
+            titleEn: await translateTextDirect(file.name, 'en')
+          };
+          mediaItems.unshift(newItem);
+          saveToStorage();
+          renderMediaItems();
+          alert("عکس با موفقیت آپلود شد و لینک مستقیم آن ذخیره گردید.");
+        } catch (error) {
+          alert("خطا در آپلود عکس: " + error.message);
+        }
+      } else {
+        // برای ویدیو و صدا (آپلود به صورت Data URL محلی)
+        const reader = new FileReader();
+        reader.onload = async function(e) {
+          const newItem = {
+            id: tempId,
+            type: type,
+            src: e.target.result,
+            titleFa: file.name,
+            titleEn: await translateTextDirect(file.name, 'en')
+          };
+          mediaItems.unshift(newItem);
+          saveToStorage();
+          renderMediaItems();
         };
-        mediaItems.unshift(newItem);
-        saveToStorage();
-        renderMediaItems();
-      };
-      reader.readAsDataURL(file);
+        reader.readAsDataURL(file);
+      }
     }
 
     function openURLModal() { document.getElementById('url-modal').style.display = 'flex'; }
@@ -682,7 +735,6 @@
       closeURLModal();
     }
 
-    // عملکرد اصلاح شده هوشمند ساخت تصویر با سیستم Fallback
     async function submitAIGeneration() {
       const inputEl = document.getElementById('ai-prompt-input');
       const userPrompt = inputEl.value.trim();
@@ -695,7 +747,6 @@
       const seed = Math.floor(Math.random() * 999999);
       const cleanPrompt = encodeURIComponent(`high quality realistic nature landscape of ${englishPrompt}, 8k resolution, photorealistic, beautiful lighting`);
       
-      // لینک سرور اصلی و لینک سرور پشتیبان
       const primaryUrl = `https://image.pollinations.ai/prompt/${cleanPrompt}?seed=${seed}&width=1024&height=768&nologo=true`;
       const fallbackUrl = `https://image.pollinations.ai/prompt/${cleanPrompt}?seed=${seed}&width=1024&height=768&model=turbo&nologo=true`;
 
@@ -726,7 +777,6 @@
       img.onload = () => finishSuccess(primaryUrl);
 
       img.onerror = () => {
-        // در صورت عدم پاسخ‌دهی سرور اول، لود از سرور پشتیبان آغاز می‌شود
         const fallbackImg = new Image();
         fallbackImg.onload = () => finishSuccess(fallbackUrl);
         fallbackImg.onerror = () => {
