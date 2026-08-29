@@ -185,7 +185,7 @@
     /* کارت‌ها */
     .media-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 25px;
     }
     .media-card {
@@ -200,7 +200,7 @@
     }
     .media-card img, .media-card video, .media-card iframe {
       width: 100%;
-      height: 240px;
+      height: 200px;
       object-fit: cover;
       background-color: #0f172a;
       display: block;
@@ -279,7 +279,7 @@
       100% { transform: rotate(360deg); }
     }
 
-    /* پاپ‌آپ‌ها (Modal) - دقیقا طول و عرض برابر (مربعی 360px в 360px) */
+    /* پاپ‌آپ‌ها (Modal) - کامپیوتر و موبایل دقیقاً 320px در 320px مربعی کاملاً یکسان */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -288,54 +288,57 @@
       align-items: center;
       justify-content: center;
       z-index: 1000;
-      padding: 15px;
+      padding: 10px;
     }
     .modal-content {
       background: #1e293b;
-      padding: 15px !important;
+      padding: 12px !important;
       border-radius: 12px !important;
       border: 1px solid #334155;
-      width: 360px !important;
-      height: 360px !important; /* طول و عرض دقیقاً برابر */
-      overflow-y: auto;
+      width: 320px !important;
+      height: 320px !important; /* طول و عرض دقیقاً متناسب و مربعی برابر */
+      min-width: 320px !important;
+      min-height: 320px !important;
+      max-width: 320px !important;
+      max-height: 320px !important;
+      box-sizing: border-box !important;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      gap: 10px !important;
+      gap: 6px !important;
     }
     .modal-content h3 {
-      font-size: 0.95rem !important;
+      font-size: 0.9rem !important;
       color: #38bdf8;
-    }
-    .modal-content p {
-      font-size: 0.8rem !important;
+      margin: 0 !important;
     }
     .modal-content input, .modal-content select, .modal-content textarea {
-      padding: 8px !important;
+      padding: 6px !important;
       border-radius: 6px;
       border: 1px solid #475569;
       background: #0f172a;
       color: white;
       width: 100%;
-      font-size: 0.85rem !important;
+      font-size: 0.8rem !important;
+      box-sizing: border-box !important;
     }
-    .modal-content textarea { height: 70px !important; resize: none; }
+    .modal-content textarea { height: 50px !important; resize: none; }
     
     .translation-result {
-      height: 80px !important;
+      height: 60px !important;
       background: #0f172a;
       border: 1px solid #334155;
       border-radius: 6px;
-      padding: 8px !important;
+      padding: 6px !important;
       color: #38bdf8;
-      font-size: 0.85rem !important;
-      line-height: 1.4;
+      font-size: 0.8rem !important;
+      line-height: 1.3;
       overflow-y: auto;
       white-space: pre-wrap;
     }
     .generated-img-container {
       width: 100%;
-      height: 160px !important;
+      height: 120px !important;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -417,10 +420,10 @@
       <input type="text" id="ai-prompt-input" placeholder="توصیف تصویر...">
       
       <div class="generated-img-container" id="ai-image-result">
-        <p style="color:#64748b; font-size:0.8rem;">پیش‌نمایش تصویر</p>
+        <p style="color:#64748b; font-size:0.75rem;">پیش‌نمایش تصویر</p>
       </div>
 
-      <div style="display:flex; gap:8px; justify-content:flex-end;">
+      <div style="display:flex; gap:6px; justify-content:flex-end;">
         <button class="btn-action btn-delete" style="width:auto; margin:0;" onclick="closeAIModal()">انصراف</button>
         <button class="btn-action btn-rename" style="background:#a855f7;" onclick="submitAIGeneration()">✨ ساخت</button>
       </div>
@@ -468,7 +471,7 @@
         <option value="audio">صدا (Audio)</option>
       </select>
       <input type="text" id="url-title-input" placeholder="عنوان فایل...">
-      <div style="display:flex; gap:8px; justify-content:flex-end;">
+      <div style="display:flex; gap:6px; justify-content:flex-end;">
         <button class="btn-action btn-delete" style="width:auto; margin:0;" onclick="closeURLModal()">انصراف</button>
         <button class="btn-action btn-rename" onclick="addURLMedia()">افزودن</button>
       </div>
@@ -697,7 +700,7 @@
     function openAIModal() { 
       document.getElementById('ai-prompt-input').value = ''; 
       document.getElementById('ai-image-result').innerHTML = 
-        '<p style="color:#64748b; font-size:0.8rem;">پیش‌نمایش تصویر</p>';
+        '<p style="color:#64748b; font-size:0.75rem;">پیش‌نمایش تصویر</p>';
       document.getElementById('ai-modal').style.display = 'flex'; 
     }
 
@@ -710,7 +713,7 @@
       if (!userPrompt) return alert("لطفاً توصیف تصویر را بنویسید");
 
       const resultDiv = document.getElementById('ai-image-result');
-      resultDiv.innerHTML = "<p style='color:#38bdf8; font-size:0.8rem;'>در حال ساخت...</p>";
+      resultDiv.innerHTML = "<p style='color:#38bdf8; font-size:0.75rem;'>در حال ساخت...</p>";
 
       const englishPrompt = await translateTextDirect(userPrompt, 'en');
       const cleanPrompt = encodeURIComponent(`high quality realistic nature scene of ${englishPrompt}, 8k resolution, photorealistic, safe content`);
@@ -737,7 +740,7 @@
         renderMediaItems();
       };
       img.onerror = () => {
-        resultDiv.innerHTML = "<p style='color:#ef4444; font-size:0.8rem;'>خطا در ساخت.</p>";
+        resultDiv.innerHTML = "<p style='color:#ef4444; font-size:0.75rem;'>خطا در ساخت.</p>";
       };
     }
 
