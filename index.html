@@ -129,7 +129,6 @@
     }
     .btn-lang { border-color: #f59e0b; color: #fbbf24; }
     
-    /* کلید‌های برجسته و متحرک */
     .btn-ai-gemini, .btn-chat-animated { 
       border-color: #a855f7; 
       background: linear-gradient(135deg, #7e22ce, #a855f7);
@@ -153,7 +152,6 @@
       100% { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0); }
     }
 
-    .btn-download { border-color: #22c55e; color: #4ade80; }
     .btn-url { border-color: #eab308; color: #fef08a; }
 
     /* منوی فیلتر رسانه‌ها */
@@ -253,32 +251,7 @@
     .btn-rename { background-color: #0284c7; color: white; }
     .btn-delete { background-color: #dc2626; color: white; width: 100%; margin-top: 5px; }
 
-    /* انیمیشن چرخشی برای لودر آپلود */
-    .loading-overlay {
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(15, 23, 42, 0.85);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 10;
-      gap: 10px;
-    }
-    .spinner {
-      width: 40px;
-      height: 40px;
-      border: 4px solid #334155;
-      border-top: 4px solid #38bdf8;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    /* پاپ‌آپ‌ها (Modal) */
+    /* پنجره‌های پاپ‌آپ فقط در صورت کلیک روی دکمه‌های مربوطه باز می‌شوند */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -317,7 +290,6 @@
       padding: 16px;
       border: 2px solid #a855f7;
     }
-    .chat-modal-content { border-color: #a855f7; }
     .modal-content input, .modal-content select, .modal-content textarea {
       padding: 12px;
       border-radius: 8px;
@@ -383,7 +355,6 @@
 
   <div class="control-panel">
     <button class="btn btn-lang" id="toggle-lang-btn" onclick="toggleLanguage()">🌐 Switch to English / تغییر زبان</button>
-    <button class="btn btn-download" id="btn-download-app" onclick="downloadApp()">📥 دانلود فایل نسخه آفلاین / Download App File</button>
 
     <label class="btn" id="lbl-upload-img">
       📷 آپلود عکس / Wallpaper
@@ -416,6 +387,7 @@
 
   <div class="media-grid" id="media-grid"></div>
 
+  <!-- Modal GEMINI -->
   <div class="modal-overlay" id="ai-modal">
     <div class="modal-content gemini-modal-content">
       <h3 id="modal-ai-title">✨ ساخت تصویر با هوش مصنوعی GEMINI ✨</h3>
@@ -433,42 +405,35 @@
     </div>
   </div>
 
+  <!-- Modal Translator -->
   <div class="modal-overlay" id="chat-modal">
-    <div class="modal-content chat-modal-content">
-      <h3 id="modal-trans-title">🌐 مترجم پیشرفته و دقیق تمام زبان‌های دنیا</h3>
-      <p style="font-size:0.85rem; color:#94a3b8;">متن را بنویسید و زبان مقصد را انتخاب کنید:</p>
-      
+    <div class="modal-content">
+      <h3 id="modal-trans-title">🌐 مترجم پیشرفته و دقیق زبان‌ها</h3>
       <textarea id="trans-text-input" placeholder="متن خود را اینجا بنویسید..."></textarea>
       
       <select id="trans-target-lang">
-        <optgroup label="⭐ زبان‌های اصلی و پرکاربرد">
-          <option value="fa">فارسی (Persian)</option>
-          <option value="en" selected>انگلیسی (English)</option>
-          <option value="ar">عربی (Arabic)</option>
-          <option value="fr">فرانسوی (French)</option>
-          <option value="de">آلمانی (German)</option>
-          <option value="es">اسپانیایی (Spanish)</option>
-          <option value="tr">ترکی (Turkish)</option>
-          <option value="ru">روسی (Russian)</option>
-          <option value="zh">چینی (Chinese)</option>
-          <option value="ja">ژاپنی (Japanese)</option>
-          <option value="it">ایتالیایی (Italian)</option>
-          <option value="ku">کوردی (Kurdish)</option>
-        </optgroup>
+        <option value="fa">فارسی (Persian)</option>
+        <option value="en" selected>انگلیسی (English)</option>
+        <option value="ar">عربی (Arabic)</option>
+        <option value="fr">فرانسوی (French)</option>
+        <option value="de">آلمانی (German)</option>
+        <option value="es">اسپانیایی (Spanish)</option>
+        <option value="tr">ترکی (Turkish)</option>
+        <option value="ru">روسی (Russian)</option>
       </select>
 
       <button class="btn-action btn-rename" onclick="sendTranslationRequest()">ترجمه کن / Translate</button>
-      
-      <div class="translation-result" id="translation-result">نتیجه ترجمه اینجا به صورت کاملاً دقیق نمایش داده می‌شود...</div>
+      <div class="translation-result" id="translation-result">نتیجه ترجمه...</div>
 
       <button class="btn-action btn-delete" style="width:auto; align-self:flex-end;" onclick="closeChatModal()">بستن / Close</button>
     </div>
   </div>
 
+  <!-- Modal URL -->
   <div class="modal-overlay" id="url-modal">
     <div class="modal-content">
       <h3>🌐 آپلود مستقیم فایل از لینک اینترنتی</h3>
-      <input type="url" id="url-input" placeholder="لینک مستقیم تصویر، ویدیو یا یوتیوب (مثال: https://youtube.com/watch?v=...)">
+      <input type="url" id="url-input" placeholder="لینک مستقیم تصویر، ویدیو یا یوتیوب">
       <select id="url-type-select">
         <option value="image">تصویر (Image)</option>
         <option value="video">ویدیو (Video)</option>
@@ -550,14 +515,7 @@
           mediaTag = `<img src="${item.src}" alt="${item.titleFa}" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1506744038136-46273834b3fb';">`;
         }
 
-        const loadingHTML = item.isLoading ? `
-          <div class="loading-overlay">
-            <div class="spinner"></div>
-            <span style="color:#38bdf8; font-size:0.9rem;">در حال آپلود...</span>
-          </div>` : '';
-
         card.innerHTML = `
-          ${loadingHTML}
           ${mediaTag}
           <div class="card-body">
             <div class="card-title-fa" id="title-fa-${item.id}">${item.titleFa}</div>
@@ -582,7 +540,6 @@
         langBtn.innerText = '🌐 تغییر به فارسی / Switch to Persian';
         document.getElementById('sub-header').innerText = 'Iran Nature';
         document.getElementById('lbl-quick-trans').innerText = '🌐 Quick Translator:';
-        document.getElementById('btn-download-app').innerText = '📥 Download Offline App';
         document.getElementById('lbl-upload-img').childNodes[0].textContent = '📷 Upload Image ';
         document.getElementById('lbl-upload-video').childNodes[0].textContent = '🎥 Upload Video ';
         document.getElementById('lbl-upload-audio').childNodes[0].textContent = '🎵 Upload Audio ';
@@ -599,7 +556,6 @@
         langBtn.innerText = '🌐 Switch to English / تغییر زبان';
         document.getElementById('sub-header').innerText = 'طبیعت ایران';
         document.getElementById('lbl-quick-trans').innerText = '🌐 مترجم سریع صفحه / Quick Translator:';
-        document.getElementById('btn-download-app').innerText = '📥 دانلود فایل نسخه آفلاین / Download App File';
         document.getElementById('lbl-upload-img').childNodes[0].textContent = '📷 آپلود عکس / Wallpaper ';
         document.getElementById('lbl-upload-video').childNodes[0].textContent = '🎥 آپلود ویدیو / Video ';
         document.getElementById('lbl-upload-audio').childNodes[0].textContent = '🎵 آپلود صدا / Audio ';
@@ -637,9 +593,6 @@
       if (!item) return;
 
       item.titleFa = inputVal;
-      item.titleEn = "Translating...";
-      renderMediaItems();
-
       item.titleEn = await translateTextDirect(inputVal, 'en');
       saveToStorage();
       renderMediaItems();
@@ -672,58 +625,41 @@
       if (!file) return;
 
       const tempId = String(Date.now());
-      const newItem = {
-        id: tempId,
-        type: type,
-        src: '',
-        titleFa: file.name,
-        titleEn: 'Uploading...',
-        isLoading: true
-      };
-
-      mediaItems.unshift(newItem);
-      renderMediaItems();
-
       const reader = new FileReader();
       reader.onload = async function(e) {
-        const targetItem = mediaItems.find(i => i.id === tempId);
-        if (targetItem) {
-          targetItem.src = e.target.result;
-          targetItem.isLoading = false;
-          targetItem.titleEn = await translateTextDirect(file.name, 'en');
-          saveToStorage();
-          renderMediaItems();
-        }
+        const newItem = {
+          id: tempId,
+          type: type,
+          src: e.target.result,
+          titleFa: file.name,
+          titleEn: await translateTextDirect(file.name, 'en')
+        };
+        mediaItems.unshift(newItem);
+        saveToStorage();
+        renderMediaItems();
       };
       reader.readAsDataURL(file);
     }
 
     function openURLModal() { document.getElementById('url-modal').style.display = 'flex'; }
     function closeURLModal() { document.getElementById('url-modal').style.display = 'none'; }
-    
+    function openAIModal() { document.getElementById('ai-modal').style.display = 'flex'; }
+    function closeAIModal() { document.getElementById('ai-modal').style.display = 'none'; }
+    function openChatModal() { document.getElementById('chat-modal').style.display = 'flex'; }
+    function closeChatModal() { document.getElementById('chat-modal').style.display = 'none'; }
+
     async function addURLMedia() {
       const url = document.getElementById('url-input').value.trim();
       let type = document.getElementById('url-type-select').value;
       const titleFa = document.getElementById('url-title-input').value.trim() || 'فایل از لینک';
 
-      if (!url) return alert("لطفاً لینک مستقیم یا لینک یوتیوب را وارد کنید");
-
-      if (getYoutubeEmbedUrl(url)) {
-        type = 'video';
-      }
+      if (!url) return alert("لطفاً لینک را وارد کنید");
+      if (getYoutubeEmbedUrl(url)) type = 'video';
 
       const tempId = String(Date.now());
       const titleEn = await translateTextDirect(titleFa, 'en');
 
-      const newItem = {
-        id: tempId,
-        type: type,
-        src: url,
-        titleFa: titleFa,
-        titleEn: titleEn
-      };
-
-      mediaItems.unshift(newItem);
+      mediaItems.unshift({ id: tempId, type: type, src: url, titleFa: titleFa, titleEn: titleEn });
       saveToStorage();
       renderMediaItems();
       
@@ -732,23 +668,17 @@
       closeURLModal();
     }
 
-    function openAIModal() { document.getElementById('ai-modal').style.display = 'flex'; }
-    function closeAIModal() { document.getElementById('ai-modal').style.display = 'none'; }
-    function openChatModal() { document.getElementById('chat-modal').style.display = 'flex'; }
-    function closeChatModal() { document.getElementById('chat-modal').style.display = 'none'; }
-
     async function submitAIGeneration() {
       const userPrompt = document.getElementById('ai-prompt-input').value.trim();
       if (!userPrompt) return alert("لطفاً توصیف تصویر را بنویسید");
 
       const resultDiv = document.getElementById('ai-image-result');
-      resultDiv.innerHTML = "<p style='color:#38bdf8;'>در حال پردازش توصیف و ساخت تصویر با کیفیت... چند ثانیه صبر کنید...</p>";
+      resultDiv.innerHTML = "<p style='color:#38bdf8;'>در حال ساخت تصویر... لطفاً صبر کنید...</p>";
 
       const englishPrompt = await translateTextDirect(userPrompt, 'en');
       const cleanPrompt = encodeURIComponent(`high quality realistic nature scene of ${englishPrompt}, 8k resolution, photorealistic, safe content`);
       
-      const randomSeed = Math.floor(Math.random() * 999999);
-      const imageUrl = `https://image.pollinations.ai/prompt/${cleanPrompt}?seed=${randomSeed}&width=1024&height=768&nologo=true`;
+      const imageUrl = `https://image.pollinations.ai/prompt/${cleanPrompt}?seed=${Math.floor(Math.random() * 999999)}&width=1024&height=768&nologo=true`;
       
       const img = new Image();
       img.src = imageUrl;
@@ -757,19 +687,12 @@
         resultDiv.innerHTML = "";
         resultDiv.appendChild(img);
 
-        const newItem = {
-          id: String(Date.now()),
-          type: 'image',
-          src: imageUrl,
-          titleFa: userPrompt,
-          titleEn: englishPrompt
-        };
-        mediaItems.unshift(newItem);
+        mediaItems.unshift({ id: String(Date.now()), type: 'image', src: imageUrl, titleFa: userPrompt, titleEn: englishPrompt });
         saveToStorage();
         renderMediaItems();
       };
       img.onerror = () => {
-        resultDiv.innerHTML = "<p style='color:#ef4444;'>خطا در ساخت تصویر. لطفاً دوباره تلاش کنید.</p>";
+        resultDiv.innerHTML = "<p style='color:#ef4444;'>خطا در ساخت تصویر. دوباره سعی کنید.</p>";
       };
     }
 
@@ -778,26 +701,10 @@
       const targetLang = document.getElementById('trans-target-lang').value;
       const resultDiv = document.getElementById('translation-result');
 
-      if (!text) return alert("لطفاً متنی برای ترجمه وارد کنید.");
+      if (!text) return alert("متنی وارد نکرده‌اید.");
 
-      resultDiv.innerText = "در حال دریافت ترجمه...";
-      const translatedText = await translateTextDirect(text, targetLang);
-      resultDiv.innerText = translatedText;
-    }
-
-    /* تابع اصلاح‌شده جهت ذخیره سورس آفلاین برنامه */
-    function downloadApp() {
-      const appContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-      const blob = new Blob([appContent], { type: "text/html;charset=utf-8" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "naturescenic2-AI-Offline-App.html";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      alert("نسخه آفلاین برنامه با موفقیت دانلود شد. می‌توانید این فایل را در سیستم یا گوشی بدون نیاز به ابزار خاصی مستقیم اجرا کنید.");
+      resultDiv.innerText = "در حال ترجمه...";
+      resultDiv.innerText = await translateTextDirect(text, targetLang);
     }
   </script>
 </body>
