@@ -352,7 +352,6 @@
   <div class="control-panel">
     <button class="btn btn-lang" id="toggle-lang-btn" onclick="toggleLanguage()">🌐 Switch to English / تغییر زبان</button>
     
-    <!-- دکمه دانلود اپلیکیشن مستقیم لینک APK -->
     <a href="https://bucket.appilix.com/app-apk-871e215b25a647e39675c7dce258ea03-1787985295.apk" class="btn btn-app" id="btn-download-app" target="_blank">📲 دانلود اپلیکیشن / Download App</a>
 
     <label class="btn" id="lbl-upload-img">
@@ -683,35 +682,62 @@
       closeURLModal();
     }
 
+    // عملکرد اصلاح شده هوشمند ساخت تصویر با سیستم Fallback
     async function submitAIGeneration() {
       const inputEl = document.getElementById('ai-prompt-input');
       const userPrompt = inputEl.value.trim();
       if (!userPrompt) return alert("لطفاً توصیف تصویر را بنویسید");
 
-      inputEl.value = '';
-
       const resultDiv = document.getElementById('ai-image-result');
-      resultDiv.innerHTML = "<p style='color:#38bdf8;'>در حال ساخت تصویر... لطفاً صبر کنید...</p>";
+      resultDiv.innerHTML = "<p style='color:#38bdf8;'>در حال پردازش هوشمند تصویر... لطفاً صبر کنید...</p>";
 
       const englishPrompt = await translateTextDirect(userPrompt, 'en');
-      const cleanPrompt = encodeURIComponent(`high quality realistic nature scene of ${englishPrompt}, 8k resolution, photorealistic, safe content`);
+      const seed = Math.floor(Math.random() * 999999);
+      const cleanPrompt = encodeURIComponent(`high quality realistic nature landscape of ${englishPrompt}, 8k resolution, photorealistic, beautiful lighting`);
       
-      const imageUrl = `https://image.pollinations.ai/prompt/${cleanPrompt}?seed=${Math.floor(Math.random() * 999999)}&width=1024&height=768&nologo=true`;
-      
-      const img = new Image();
-      img.src = imageUrl;
-      img.className = "generated-img";
-      img.onload = () => {
-        resultDiv.innerHTML = "";
-        resultDiv.appendChild(img);
+      // لینک سرور اصلی و لینک سرور پشتیبان
+      const primaryUrl = `https://image.pollinations.ai/prompt/${cleanPrompt}?seed=${seed}&width=1024&height=768&nologo=true`;
+      const fallbackUrl = `https://image.pollinations.ai/prompt/${cleanPrompt}?seed=${seed}&width=1024&height=768&model=turbo&nologo=true`;
 
-        mediaItems.unshift({ id: String(Date.now()), type: 'image', src: imageUrl, titleFa: userPrompt, titleEn: englishPrompt });
+      let imgLoaded = false;
+      const img = new Image();
+
+      const finishSuccess = (finalSrc) => {
+        if (imgLoaded) return;
+        imgLoaded = true;
+        resultDiv.innerHTML = "";
+        const finalImg = document.createElement('img');
+        finalImg.src = finalSrc;
+        finalImg.className = "generated-img";
+        resultDiv.appendChild(finalImg);
+
+        mediaItems.unshift({ 
+          id: String(Date.now()), 
+          type: 'image', 
+          src: finalSrc, 
+          titleFa: userPrompt, 
+          titleEn: englishPrompt 
+        });
         saveToStorage();
         renderMediaItems();
+        inputEl.value = '';
       };
+
+      img.onload = () => finishSuccess(primaryUrl);
+
       img.onerror = () => {
-        resultDiv.innerHTML = "<p style='color:#ef4444;'>خطا در ساخت تصویر. دوباره سعی کنید.</p>";
+        // در صورت عدم پاسخ‌دهی سرور اول، لود از سرور پشتیبان آغاز می‌شود
+        const fallbackImg = new Image();
+        fallbackImg.onload = () => finishSuccess(fallbackUrl);
+        fallbackImg.onerror = () => {
+          if (!imgLoaded) {
+            resultDiv.innerHTML = "<p style='color:#ef4444;'>سرورهای تصویر پاسخگو نبودند. لطفاً لحظاتی بعد مجدداً تلاش کنید.</p>";
+          }
+        };
+        fallbackImg.src = fallbackUrl;
       };
+
+      img.src = primaryUrl;
     }
 
     async function sendTranslationRequest() {
