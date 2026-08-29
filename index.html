@@ -383,7 +383,7 @@
 
   <div class="control-panel">
     <button class="btn btn-lang" id="toggle-lang-btn" onclick="toggleLanguage()">🌐 Switch to English / تغییر زبان</button>
-    <button class="btn btn-download" id="btn-download-app" onclick="downloadApp()">📥 دانلود اپلیکیشن / Download App</button>
+    <button class="btn btn-download" id="btn-download-app" onclick="downloadApp()">📥 دانلود فایل نسخه آفلاین / Download App File</button>
 
     <label class="btn" id="lbl-upload-img">
       📷 آپلود عکس / Wallpaper
@@ -521,7 +521,6 @@
       localStorage.setItem('naturescenic_media_items', JSON.stringify(mediaItems));
     }
 
-    // استخراج ID ویدیو یوتیوب
     function getYoutubeEmbedUrl(url) {
       const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
       const match = url.match(regExp);
@@ -583,7 +582,7 @@
         langBtn.innerText = '🌐 تغییر به فارسی / Switch to Persian';
         document.getElementById('sub-header').innerText = 'Iran Nature';
         document.getElementById('lbl-quick-trans').innerText = '🌐 Quick Translator:';
-        document.getElementById('btn-download-app').innerText = '📥 Download App';
+        document.getElementById('btn-download-app').innerText = '📥 Download Offline App';
         document.getElementById('lbl-upload-img').childNodes[0].textContent = '📷 Upload Image ';
         document.getElementById('lbl-upload-video').childNodes[0].textContent = '🎥 Upload Video ';
         document.getElementById('lbl-upload-audio').childNodes[0].textContent = '🎵 Upload Audio ';
@@ -600,7 +599,7 @@
         langBtn.innerText = '🌐 Switch to English / تغییر زبان';
         document.getElementById('sub-header').innerText = 'طبیعت ایران';
         document.getElementById('lbl-quick-trans').innerText = '🌐 مترجم سریع صفحه / Quick Translator:';
-        document.getElementById('btn-download-app').innerText = '📥 دانلود اپلیکیشن / Download App';
+        document.getElementById('btn-download-app').innerText = '📥 دانلود فایل نسخه آفلاین / Download App File';
         document.getElementById('lbl-upload-img').childNodes[0].textContent = '📷 آپلود عکس / Wallpaper ';
         document.getElementById('lbl-upload-video').childNodes[0].textContent = '🎥 آپلود ویدیو / Video ';
         document.getElementById('lbl-upload-audio').childNodes[0].textContent = '🎵 آپلود صدا / Audio ';
@@ -786,17 +785,19 @@
       resultDiv.innerText = translatedText;
     }
 
+    /* تابع اصلاح‌شده جهت ذخیره سورس آفلاین برنامه */
     function downloadApp() {
       const appContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
       const blob = new Blob([appContent], { type: "text/html;charset=utf-8" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "naturescenic2-ai-app.html";
+      a.download = "naturescenic2-AI-Offline-App.html";
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
+      alert("نسخه آفلاین برنامه با موفقیت دانلود شد. می‌توانید این فایل را در سیستم یا گوشی بدون نیاز به ابزار خاصی مستقیم اجرا کنید.");
     }
   </script>
 </body>
