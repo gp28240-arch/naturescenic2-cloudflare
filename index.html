@@ -352,8 +352,8 @@
   <div class="control-panel">
     <button class="btn btn-lang" id="toggle-lang-btn" onclick="toggleLanguage()">🌐 Switch to English / تغییر زبان</button>
     
-    <!-- دکمه دانلود اپلیکیشن -->
-    <button class="btn btn-app" id="btn-download-app" onclick="downloadHTMLApp()">📲 دانلود اپلیکیشن / Download App</button>
+    <!-- دکمه دانلود اپلیکیشن مستقیم لینک APK -->
+    <a href="https://bucket.appilix.com/app-apk-871e215b25a647e39675c7dce258ea03-1787985295.apk" class="btn btn-app" id="btn-download-app" target="_blank">📲 دانلود اپلیکیشن / Download App</a>
 
     <label class="btn" id="lbl-upload-img">
       📷 آپلود عکس / Wallpaper
@@ -484,17 +484,6 @@
 
     function saveToStorage() {
       localStorage.setItem('naturescenic_media_items', JSON.stringify(mediaItems));
-    }
-
-    function downloadHTMLApp() {
-      const htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-      const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = 'naturescenic2-app.html';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
     }
 
     function getYoutubeEmbedUrl(url) {
