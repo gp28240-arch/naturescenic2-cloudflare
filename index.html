@@ -141,8 +141,8 @@
   <div class="modal-overlay" id="ai-modal">
     <div class="modal-content gemini-modal-content">
       <h3 id="modal-ai-title">✨ ساخت تصویر با هوش مصنوعی GEMINI ✨</h3>
-      <p id="modal-ai-desc" style="font-size:1rem; color:#cbd5e1; text-align:center;">توصیف تصویر را بنویسید (مثلاً: یک گوسفند در چراگاه، مرغ و جوجه...)؛ هوش مصنوعی آن را طراحی می‌کند:</p>
-      <input type="text" id="ai-prompt-input" placeholder="مثال: یک گوسفند سفید زیبا در دشت سرسبز..." onkeydown="handleAIKeyDown(event)">
+      <p id="modal-ai-desc" style="font-size:1rem; color:#cbd5e1; text-align:center;">توصیف تصویر را بنویسید؛ هوش مصنوعی آن را طراحی می‌کند:</p>
+      <input type="text" id="ai-prompt-input" placeholder="مثال: طبیعت سرسبز چرام..." onkeydown="handleAIKeyDown(event)">
       <div class="generated-img-container" id="ai-image-result">
         <p style="color:#64748b; font-size:1.1rem;">تصویر ساخته شده توسط هوش مصنوعی اینجا نمایش داده می‌شود</p>
       </div>
@@ -203,39 +203,41 @@
     const IMGBB_API_KEY = "e5a6e2d94d3b4b13603d0bad68b60162";
     let currentLang = 'fa';
 
-    // لیست تصاویر منطقه دیلگون و چشمه بلقیس چرام (با عنوان تصحیح شده برای d9)
+    // لیست کامل ۳۰ تصویر بدون شماره در عنوان‌ها
     let mediaItems = [
-      // عکس‌های دیلگون
-      { id: "d5", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/5.JPG", titleFa: "منطقه سردسیری دیلگون ۵", titleEn: "Dilgon Highlands 5" },
-      { id: "d9", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/9.JPG", titleFa: "منطقه سردسیری دیلگون ۹", titleEn: "Dilgon Highlands 9" },
-      { id: "d18", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/18.JPG", titleFa: "منطقه سردسیری دیلگون ۱۸", titleEn: "Dilgon Highlands 18" },
-      { id: "d21", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/21.JPG", titleFa: "منطقه سردسیری دیلگون ۲۱", titleEn: "Dilgon Highlands 21" },
+      // عکس‌های چشمه بلقیس چرام (۶ عکس)
+      { id: "b1", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/1.JPG", titleFa: "منطقه چرام و چشمه بلقیس", titleEn: "Belqis Spring Choram" },
+      { id: "b2", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/2.JPG", titleFa: "منطقه چرام و چشمه بلقیس", titleEn: "Belqis Spring Choram" },
+      { id: "b3", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/3.JPG", titleFa: "منطقه چرام و چشمه بلقیس", titleEn: "Belqis Spring Choram" },
+      { id: "b4", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/4.JPG", titleFa: "منطقه چرام و چشمه بلقیس", titleEn: "Belqis Spring Choram" },
+      { id: "b5", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/5.JPG", titleFa: "منطقه چرام و چشمه بلقیس", titleEn: "Belqis Spring Choram" },
+      { id: "b6", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/6.JPG", titleFa: "منطقه چرام و چشمه بلقیس", titleEn: "Belqis Spring Choram" },
 
-      // عکس‌های چشمه بلقیس چرام
-      { id: "b1", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/1.JPG", titleFa: "چشمه بلقیس چرام ۱", titleEn: "Belqis Spring Choram 1" },
-      { id: "b2", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/2.JPG", titleFa: "چشمه بلقیس چرام ۲", titleEn: "Belqis Spring Choram 2" },
-      { id: "b3", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/3.JPG", titleFa: "چشمه بلقیس چرام ۳", titleEn: "Belqis Spring Choram 3" },
-      { id: "b4", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/4.JPG", titleFa: "چشمه بلقیس چرام ۴", titleEn: "Belqis Spring Choram 4" },
-      { id: "b5", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/5.JPG", titleFa: "چشمه بلقیس چرام ۵", titleEn: "Belqis Spring Choram 5" },
-      { id: "b6", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/6.JPG", titleFa: "چشمه بلقیس چرام ۶", titleEn: "Belqis Spring Choram 6" },
-
-      // سایر تصاویر دیلگون
-      { id: "1", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/1.JPG", titleFa: "منطقه سردسیری دیلگون ۱", titleEn: "Dilgon Highlands 1" },
-      { id: "2", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/2.JPG", titleFa: "منطقه سردسیری دیلگون ۲", titleEn: "Dilgon Highlands 2" },
-      { id: "3", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/3.JPG", titleFa: "منطقه سردسیری دیلگون ۳", titleEn: "Dilgon Highlands 3" },
-      { id: "4", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/4.JPG", titleFa: "منطقه سردسیری دیلگون ۴", titleEn: "Dilgon Highlands 4" },
-      { id: "7", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/7.JPG", titleFa: "منطقه سردسیری دیلگون ۷", titleEn: "Dilgon Highlands 7" },
-      { id: "8", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/8.JPG", titleFa: "منطقه سردسیری دیلگون ۸", titleEn: "Dilgon Highlands 8" },
-      { id: "10", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/10.JPG", titleFa: "منطقه سردسیری دیلگون ۱۰", titleEn: "Dilgon Highlands 10" },
-      { id: "11", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/11.JPG", titleFa: "منطقه سردسیری دیلگون ۱۱", titleEn: "Dilgon Highlands 11" },
-      { id: "12", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/12.JPG", titleFa: "منطقه سردسیری دیلگون ۱۲", titleEn: "Dilgon Highlands 12" },
-      { id: "14", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/14.JPG", titleFa: "منطقه سردسیری دیلگون ۱۴", titleEn: "Dilgon Highlands 14" },
-      { id: "15", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/15.JPG", titleFa: "منطقه سردسیری دیلگون ۱۵", titleEn: "Dilgon Highlands 15" },
-      { id: "16", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/16.JPG", titleFa: "منطقه سردسیری دیلگون ۱۶", titleEn: "Dilgon Highlands 16" },
-      { id: "17", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/17.JPG", titleFa: "منطقه سردسیری دیلگون ۱7", titleEn: "Dilgon Highlands 17" },
-      { id: "20", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/20.JPG", titleFa: "منطقه سردسیری دیلگون ۲۰", titleEn: "Dilgon Highlands 20" },
-      { id: "23", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/23.JPG", titleFa: "منطقه سردسیری دیلگون ۲۳", titleEn: "Dilgon Highlands 23" },
-      { id: "24", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/24.JPG", titleFa: "منطقه سردسیری دیلگون ۲۴", titleEn: "Dilgon Highlands 24" }
+      // عکس‌های منطقه سردسیری دیلگون (۲۴ عکس لینک داده‌شده)
+      { id: "d1", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/1.JPG", titleFa: "منطقه سردسیری دیلگون", titleEn: "Dilgon Highlands" },
+      { id: "d10", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/10.JPG", titleFa: "منطقه سردسیری دیلگون", titleEn: "Dilgon Highlands" },
+      { id: "d11", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/11.JPG", titleFa: "منطقه سردسیری دیلگون", titleEn: "Dilgon Highlands" },
+      { id: "d12_1", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/12.JPG", titleFa: "منطقه سردسیری دیلگون", titleEn: "Dilgon Highlands" },
+      { id: "d12_2", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/12.JPG", titleFa: "منطقه سردسیری دیلگون", titleEn: "Dilgon Highlands" },
+      { id: "d14", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/14.JPG", titleFa: "منطقه سردسیری دیلگون", titleEn: "Dilgon Highlands" },
+      { id: "d15", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/15.JPG", titleFa: "منطقه سردسیری دیلگون", titleEn: "Dilgon Highlands" },
+      { id: "d16", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/16.JPG", titleFa: "منطقه سردسیری دیلگون", titleEn: "Dilgon Highlands" },
+      { id: "d17", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/17.JPG", titleFa: "منطقه سردسیری دیلگون", titleEn: "Dilgon Highlands" },
+      { id: "d18_1", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/18.JPG", titleFa: "منطقه سردسیری دیلگون", titleEn: "Dilgon Highlands" },
+      { id: "d18_2", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/18.JPG", titleFa: "منطقه سردسیری دیلگون", titleEn: "Dilgon Highlands" },
+      { id: "d2", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/2.JPG", titleFa: "منطقه سردسیری دیلگون", titleEn: "Dilgon Highlands" },
+      { id: "d20", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/20.JPG", titleFa: "منطقه سردسیری دیلگون", titleEn: "Dilgon Highlands" },
+      { id: "d21_1", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/21.JPG", titleFa: "منطقه سردسیری دیلگون", titleEn: "Dilgon Highlands" },
+      { id: "d21_2", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/21.JPG", titleFa: "منطقه سردسیری دیلگون", titleEn: "Dilgon Highlands" },
+      { id: "d23", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/23.JPG", titleFa: "منطقه سردسیری دیلگون", titleEn: "Dilgon Highlands" },
+      { id: "d24", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/24.JPG", titleFa: "منطقه سردسیری دیلگون", titleEn: "Dilgon Highlands" },
+      { id: "d3", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/3.JPG", titleFa: "منطقه سردسیری دیلگون", titleEn: "Dilgon Highlands" },
+      { id: "d4", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/4.JPG", titleFa: "منطقه سردسیری دیلگون", titleEn: "Dilgon Highlands" },
+      { id: "d5_1", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/5.JPG", titleFa: "منطقه سردسیری دیلگون", titleEn: "Dilgon Highlands" },
+      { id: "d5_2", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/5.JPG", titleFa: "منطقه سردسیری دیلگون", titleEn: "Dilgon Highlands" },
+      { id: "d7", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/7.JPG", titleFa: "منطقه سردسیری دیلگون", titleEn: "Dilgon Highlands" },
+      { id: "d8", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/8.JPG", titleFa: "منطقه سردسیری دیلگون", titleEn: "Dilgon Highlands" },
+      { id: "d9", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/9.JPG", titleFa: "منطقه سردسیری دیلگون", titleEn: "Dilgon Highlands" }
     ];
 
     window.addEventListener('DOMContentLoaded', () => {
