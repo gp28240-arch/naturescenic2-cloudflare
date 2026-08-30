@@ -6,124 +6,26 @@
   <title>naturescenic2-ai | دستیار اختصاصی طبیعت</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    body {
-      background-color: #0f172a;
-      color: #f8fafc;
-      padding: 20px;
-      direction: rtl;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #0f172a; color: #f8fafc; padding: 20px; direction: rtl; }
 
-    .main-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #1e293b;
-      padding: 15px 25px;
-      border-radius: 12px;
-      border: 1px solid #334155;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-      gap: 15px;
-    }
-    .header-brand {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-    .site-logo {
-      width: 55px;
-      height: 55px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid #38bdf8;
-      box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
-      transition: transform 0.3s ease;
-    }
-    .site-logo:hover {
-      transform: scale(1.08);
-    }
-    .yt-logo-btn {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background-color: #cc0000;
-      color: #ffffff;
-      padding: 10px 20px;
-      border-radius: 10px;
-      text-decoration: none;
-      font-weight: bold;
-      box-shadow: 0 4px 12px rgba(204, 0, 0, 0.4);
-      transition: all 0.3s ease;
-    }
-    .yt-logo-btn:hover {
-      background-color: #ff0000;
-      transform: translateY(-2px);
-    }
-    .yt-icon {
-      width: 28px;
-      height: 28px;
-      fill: white;
-    }
-    .header-titles {
-      text-align: right;
-    }
-    .header-titles h2 {
-      color: #38bdf8;
-      font-size: 1.5rem;
-    }
-    .header-titles p {
-      font-size: 0.95rem;
-      color: #94a3b8;
-    }
+    .main-header { display: flex; justify-content: space-between; align-items: center; background: #1e293b; padding: 15px 25px; border-radius: 12px; border: 1px solid #334155; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
+    .header-brand { display: flex; align-items: center; gap: 15px; }
+    .site-logo { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 2px solid #38bdf8; box-shadow: 0 0 12px rgba(56, 189, 248, 0.4); transition: transform 0.3s ease; }
+    .site-logo:hover { transform: scale(1.08); }
+    .yt-logo-btn { display: flex; align-items: center; gap: 12px; background-color: #cc0000; color: #ffffff; padding: 10px 20px; border-radius: 10px; text-decoration: none; font-weight: bold; box-shadow: 0 4px 12px rgba(204, 0, 0, 0.4); transition: all 0.3s ease; }
+    .yt-logo-btn:hover { background-color: #ff0000; transform: translateY(-2px); }
+    .yt-icon { width: 28px; height: 28px; fill: white; }
+    .header-titles { text-align: right; }
+    .header-titles h2 { color: #38bdf8; font-size: 1.5rem; }
+    .header-titles p { font-size: 0.95rem; color: #94a3b8; }
 
-    .translate-section {
-      background: #1e293b;
-      padding: 12px 20px;
-      border-radius: 10px;
-      border: 2px solid #22c55e;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
-    }
-    .translate-title {
-      font-weight: bold;
-      color: #4ade80;
-    }
+    .translate-section { background: #1e293b; padding: 12px 20px; border-radius: 10px; border: 2px solid #22c55e; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2); }
+    .translate-title { font-weight: bold; color: #4ade80; }
 
-    .control-panel {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 20px;
-      align-items: center;
-    }
-    .btn {
-      font-weight: bold;
-      background-color: #1e293b;
-      color: #ffffff;
-      padding: 12px 20px;
-      border-radius: 8px;
-      border: 2px solid #38bdf8;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-      cursor: pointer;
-      transition: all 0.2s;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      text-decoration: none;
-    }
-    .btn:hover {
-      background-color: #38bdf8;
-      color: #0f172a;
-    }
+    .control-panel { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; align-items: center; }
+    .btn { font-weight: bold; background-color: #1e293b; color: #ffffff; padding: 12px 20px; border-radius: 8px; border: 2px solid #38bdf8; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
+    .btn:hover { background-color: #38bdf8; color: #0f172a; }
     .btn-lang { border-color: #f59e0b; color: #fbbf24; }
     .btn-app { border-color: #10b981; color: #34d399; }
     .btn-app:hover { background-color: #10b981; color: #0f172a; }
@@ -139,11 +41,7 @@
       animation: pulse 2s infinite;
       cursor: pointer;
     }
-    .btn-ai-gemini:hover, .btn-chat-animated:hover {
-      background: linear-gradient(135deg, #9333ea, #c084fc);
-      color: #ffffff;
-      transform: scale(1.05);
-    }
+    .btn-ai-gemini:hover, .btn-chat-animated:hover { background: linear-gradient(135deg, #9333ea, #c084fc); color: #ffffff; transform: scale(1.05); }
 
     @keyframes pulse {
       0% { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.7); }
@@ -153,176 +51,33 @@
 
     .btn-url { border-color: #eab308; color: #fef08a; }
 
-    .filter-menu {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-      background: #1e293b;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #334155;
-    }
-    .filter-btn {
-      background: #0f172a;
-      color: #94a3b8;
-      border: 1px solid #475569;
-      padding: 8px 16px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .filter-btn.active {
-      background: #38bdf8;
-      color: #0f172a;
-      border-color: #38bdf8;
-    }
+    .filter-menu { display: flex; gap: 10px; margin-bottom: 20px; background: #1e293b; padding: 10px; border-radius: 8px; border: 1px solid #334155; }
+    .filter-btn { background: #0f172a; color: #94a3b8; border: 1px solid #475569; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+    .filter-btn.active { background: #38bdf8; color: #0f172a; border-color: #38bdf8; }
 
-    .media-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 25px;
-    }
-    .media-card {
-      background: #1e293b;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid #334155;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-      position: relative;
-    }
-    .media-card img, .media-card video, .media-card iframe {
-      width: 100%;
-      height: 240px;
-      object-fit: cover;
-      background-color: #0f172a;
-      display: block;
-      border: none;
-    }
-    .media-card audio {
-      width: 100%;
-      margin-top: 20px;
-      padding: 10px;
-    }
-    .card-body {
-      padding: 15px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      flex-grow: 1;
-    }
-    .card-title-fa {
-      font-weight: bold;
-      color: #f8fafc;
-      font-size: 1rem;
-    }
-    .card-title-en {
-      font-size: 0.85rem;
-      color: #94a3b8;
-      direction: ltr;
-      text-align: right;
-    }
-    .rename-box {
-      display: flex;
-      gap: 5px;
-      margin-top: auto;
-    }
-    .rename-input {
-      flex: 1;
-      padding: 8px 10px;
-      border-radius: 6px;
-      border: 1px solid #475569;
-      background: #0f172a;
-      color: #fff;
-      font-size: 0.85rem;
-    }
-    .btn-action {
-      padding: 8px 14px;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 0.85rem;
-    }
+    .media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; }
+    .media-card { background: #1e293b; border-radius: 12px; overflow: hidden; border: 1px solid #334155; display: flex; flex-direction: column; box-shadow: 0 4px 15px rgba(0,0,0,0.4); position: relative; }
+    .media-card img, .media-card video, .media-card iframe { width: 100%; height: 240px; object-fit: cover; background-color: #0f172a; display: block; border: none; }
+    .media-card audio { width: 100%; margin-top: 20px; padding: 10px; }
+    .card-body { padding: 15px; display: flex; flex-direction: column; gap: 10px; flex-grow: 1; }
+    .card-title-fa { font-weight: bold; color: #f8fafc; font-size: 1rem; }
+    .card-title-en { font-size: 0.85rem; color: #94a3b8; direction: ltr; text-align: right; }
+    .rename-box { display: flex; gap: 5px; margin-top: auto; }
+    .rename-input { flex: 1; padding: 8px 10px; border-radius: 6px; border: 1px solid #475569; background: #0f172a; color: #fff; font-size: 0.85rem; }
+    .btn-action { padding: 8px 14px; border-radius: 6px; border: none; cursor: pointer; font-weight: bold; font-size: 0.85rem; }
     .btn-rename { background-color: #0284c7; color: white; }
     .btn-delete { background-color: #dc2626; color: white; width: 100%; margin-top: 5px; }
 
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.85);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      padding: 20px;
-    }
-    .modal-content {
-      background: #1e293b;
-      padding: 25px;
-      border-radius: 12px;
-      border: 2px solid #a855f7;
-      width: 95%;
-      max-width: 800px;
-      max-height: 90vh;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-    .gemini-modal-content {
-      border: 3px solid #c084fc;
-      box-shadow: 0 0 35px rgba(168, 85, 247, 0.4);
-      padding: 35px;
-    }
-    .gemini-modal-content h3 {
-      font-size: 1.8rem;
-      color: #c084fc;
-      text-align: center;
-    }
-    .gemini-modal-content input {
-      font-size: 1.1rem;
-      padding: 16px;
-      border: 2px solid #a855f7;
-    }
-    .modal-content input, .modal-content select, .modal-content textarea {
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid #475569;
-      background: #0f172a;
-      color: white;
-      width: 100%;
-      font-size: 0.95rem;
-    }
+    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+    .modal-content { background: #1e293b; padding: 25px; border-radius: 12px; border: 2px solid #a855f7; width: 95%; max-width: 800px; max-height: 90vh; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+    .gemini-modal-content { border: 3px solid #c084fc; box-shadow: 0 0 35px rgba(168, 85, 247, 0.4); padding: 35px; }
+    .gemini-modal-content h3 { font-size: 1.8rem; color: #c084fc; text-align: center; }
+    .gemini-modal-content input { font-size: 1.1rem; padding: 16px; border: 2px solid #a855f7; }
+    .modal-content input, .modal-content select, .modal-content textarea { padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; width: 100%; font-size: 0.95rem; }
     .modal-content textarea { height: 120px; resize: vertical; }
-    .translation-result {
-      min-height: 100px;
-      background: #0f172a;
-      border: 1px solid #334155;
-      border-radius: 8px;
-      padding: 15px;
-      color: #38bdf8;
-      font-size: 1rem;
-      line-height: 1.6;
-      white-space: pre-wrap;
-    }
-    .generated-img-container {
-      width: 100%;
-      min-height: 300px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #0f172a;
-      border-radius: 8px;
-      overflow: hidden;
-      border: 1px solid #334155;
-    }
-    .generated-img {
-      width: 100%;
-      max-height: 500px;
-      object-fit: contain;
-    }
+    .translation-result { min-height: 100px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 15px; color: #38bdf8; font-size: 1rem; line-height: 1.6; white-space: pre-wrap; }
+    .generated-img-container { width: 100%; min-height: 300px; display: flex; align-items: center; justify-content: center; background: #0f172a; border-radius: 8px; overflow: hidden; border: 1px solid #334155; }
+    .generated-img { width: 100%; max-height: 500px; object-fit: contain; }
   </style>
 </head>
 <body>
@@ -351,7 +106,6 @@
 
   <div class="control-panel">
     <button class="btn btn-lang" id="toggle-lang-btn" onclick="toggleLanguage()">🌐 Switch to English / تغییر زبان</button>
-    
     <a href="https://bucket.appilix.com/app-apk-871e215b25a647e39675c7dce258ea03-1787985295.apk" class="btn btn-app" id="btn-download-app" target="_blank">📲 دانلود اپلیکیشن / Download App</a>
 
     <label class="btn" id="lbl-upload-img">
@@ -370,9 +124,7 @@
     </label>
 
     <button class="btn btn-url" id="btn-upload-url" onclick="openURLModal()">🌐 آپلود از لینک / Upload via URL</button>
-    
     <button class="btn-ai-gemini" id="btn-ai-img" onclick="openAIModal()">✨ ساخت عکس با هوش مصنوعی GEMINI ✨</button>
-
     <button class="btn-chat-animated" id="btn-translate-menu" onclick="openChatModal()">🌐 ترجمه متن / Text Translator</button>
   </div>
 
@@ -390,13 +142,10 @@
     <div class="modal-content gemini-modal-content">
       <h3 id="modal-ai-title">✨ ساخت تصویر با هوش مصنوعی GEMINI ✨</h3>
       <p id="modal-ai-desc" style="font-size:1rem; color:#cbd5e1; text-align:center;">توصیف تصویر را بنویسید؛ سیستم هوشمند آن را به انگلیسی ترجمه کرده و تصویر را می‌سازد:</p>
-      
       <input type="text" id="ai-prompt-input" placeholder="مثال: رودخانه خروشان، درختان سرسبز..." onkeydown="handleAIKeyDown(event)">
-      
       <div class="generated-img-container" id="ai-image-result">
         <p style="color:#64748b; font-size:1.1rem;">تصویر ساخته شده توسط Gemini اینجا نمایش داده می‌شود</p>
       </div>
-
       <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap; margin-top:10px;">
         <button class="btn-action btn-delete" style="width:auto; padding: 12px 24px; font-size:1rem;" onclick="closeAIModal()">بستن / Close</button>
         <button class="btn-action btn-rename" style="background:#a855f7; padding: 12px 30px; font-size:1.1rem;" onclick="submitAIGeneration()">✨ تولید تصویر با Gemini</button>
@@ -409,7 +158,6 @@
     <div class="modal-content">
       <h3 id="modal-trans-title">🌐 مترجم پیشرفته و دقیق زبان‌ها</h3>
       <textarea id="trans-text-input" placeholder="متن خود را اینجا بنویسید..."></textarea>
-      
       <select id="trans-target-lang">
         <option value="fa">فارسی (Persian)</option>
         <option value="en" selected>انگلیسی (English)</option>
@@ -420,10 +168,8 @@
         <option value="tr">ترکی (Turkish)</option>
         <option value="ru">روسی (Russian)</option>
       </select>
-
       <button class="btn-action btn-rename" onclick="sendTranslationRequest()">ترجمه کن / Translate</button>
       <div class="translation-result" id="translation-result">نتیجه ترجمه...</div>
-
       <button class="btn-action btn-delete" style="width:auto; align-self:flex-end;" onclick="closeChatModal()">بستن / Close</button>
     </div>
   </div>
@@ -448,69 +194,46 @@
 
   <script type="text/javascript">
     function googleTranslateElementInit() {
-      new google.translate.TranslateElement({
-        pageLanguage: 'fa',
-        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-      }, 'google_translate_element');
+      new google.translate.TranslateElement({ pageLanguage: 'fa', layout: google.translate.TranslateElement.InlineLayout.SIMPLE }, 'google_translate_element');
     }
   </script>
   <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
   <script>
-    /* ===========================================================================
-       🔑 تنظیمات کلید API برای اتصال آپلود برنامه‌تان به سایت ImgBB
-       =========================================================================== */
-    
     const IMGBB_API_KEY = "e5a6e2d94d3b4b13603d0bad68b60162";
-    
-    /* =========================================================================== */
-
     let currentLang = 'fa';
-    let mediaItems = [];
+
+    // لیست ثابت که مستقیم از سرور ابری خوانده می‌شود بدون اشغال حافظه مرورگر
+    let mediaItems = [
+      { id: '1', type: 'image', src: 'https://i.ibb.co/1GFHpsb5/1.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 1)' },
+      { id: '2', type: 'image', src: 'https://i.ibb.co/QFZqBcTZ/2.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۲)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 2)' },
+      { id: '3', type: 'image', src: 'https://i.ibb.co/FkmXHY3Q/3.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۳)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 3)' },
+      { id: '4', type: 'image', src: 'https://i.ibb.co/0VrP8kC8/4.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۴)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 4)' },
+      { id: '5', type: 'image', src: 'https://i.ibb.co/ksbF1PHd/5.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۵)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 5)' },
+      { id: '6', type: 'image', src: 'https://i.ibb.co/jPVhFP0p/6.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۶)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 6)' },
+      { id: '7', type: 'image', src: 'https://i.ibb.co/3g0y6qV/7.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۷)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 7)' },
+      { id: '8', type: 'image', src: 'https://i.ibb.co/Kj3nvXhj/8.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۸)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 8)' },
+      { id: '9', type: 'image', src: 'https://i.ibb.co/B2VXk8K9/9.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۹)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 9)' },
+      { id: '10', type: 'image', src: 'https://i.ibb.co/TDWKpLj8/10.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۰)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 10)' },
+      { id: '11', type: 'image', src: 'https://i.ibb.co/3YVWx00N/11.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۱)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 11)' },
+      { id: '12', type: 'image', src: 'https://i.ibb.co/HTHGfWZb/12.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۲)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 12)' },
+      { id: '13', type: 'image', src: 'https://i.ibb.co/Mk3T3xBn/13.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۳)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 13)' },
+      { id: '14', type: 'image', src: 'https://i.ibb.co/FkVpcqT8/14.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۴)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 14)' },
+      { id: '15', type: 'image', src: 'https://i.ibb.co/qKLqj43/15.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۵)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 15)' },
+      { id: '16', type: 'image', src: 'https://i.ibb.co/nsBqPTkH/16.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۶)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 16)' },
+      { id: '17', type: 'image', src: 'https://i.ibb.co/XZdPFQfp/17.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۷)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 17)' },
+      { id: '18', type: 'image', src: 'https://i.ibb.co/mVFbY577/18.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۸)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 18)' },
+      { id: '19', type: 'image', src: 'https://i.ibb.co/sdpS8D6c/19.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۹)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 19)' },
+      { id: '20', type: 'image', src: 'https://i.ibb.co/v6vF1Rrw/20.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۲۰)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 20)' },
+      { id: '21', type: 'image', src: 'https://i.ibb.co/mxY1W6h/21.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۲۱)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 21)' },
+      { id: '22', type: 'image', src: 'https://i.ibb.co/4gMqnZsx/22.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۲۲)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 22)' },
+      { id: '23', type: 'image', src: 'https://i.ibb.co/bMWTCp8H/23.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۲۳)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 23)' },
+      { id: '24', type: 'image', src: 'https://i.ibb.co/WW87rXVp/24.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۲۴)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 24)' }
+    ];
 
     window.addEventListener('DOMContentLoaded', () => {
-      const saved = localStorage.getItem('naturescenic_media_items');
-      if (saved) {
-        try { mediaItems = JSON.parse(saved); } 
-        catch(e) { mediaItems = getInitialDefaultData(); }
-      } else {
-        mediaItems = getInitialDefaultData();
-      }
       renderMediaItems();
     });
-
-    function getInitialDefaultData() {
-      return [
-        { id: '1', type: 'image', src: 'https://i.ibb.co/1GFHpsb5/1.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 1)' },
-        { id: '2', type: 'image', src: 'https://i.ibb.co/QFZqBcTZ/2.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۲)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 2)' },
-        { id: '3', type: 'image', src: 'https://i.ibb.co/FkmXHY3Q/3.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۳)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 3)' },
-        { id: '4', type: 'image', src: 'https://i.ibb.co/0VrP8kC8/4.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۴)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 4)' },
-        { id: '5', type: 'image', src: 'https://i.ibb.co/ksbF1PHd/5.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۵)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 5)' },
-        { id: '6', type: 'image', src: 'https://i.ibb.co/jPVhFP0p/6.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۶)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 6)' },
-        { id: '7', type: 'image', src: 'https://i.ibb.co/3g0y6qV/7.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۷)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 7)' },
-        { id: '8', type: 'image', src: 'https://i.ibb.co/Kj3nvXhj/8.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۸)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 8)' },
-        { id: '9', type: 'image', src: 'https://i.ibb.co/B2VXk8K9/9.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۹)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 9)' },
-        { id: '10', type: 'image', src: 'https://i.ibb.co/TDWKpLj8/10.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۰)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 10)' },
-        { id: '11', type: 'image', src: 'https://i.ibb.co/3YVWx00N/11.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۱)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 11)' },
-        { id: '12', type: 'image', src: 'https://i.ibb.co/HTHGfWZb/12.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۲)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 12)' },
-        { id: '13', type: 'image', src: 'https://i.ibb.co/Mk3T3xBn/13.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۳)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 13)' },
-        { id: '14', type: 'image', src: 'https://i.ibb.co/FkVpcqT8/14.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۴)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 14)' },
-        { id: '15', type: 'image', src: 'https://i.ibb.co/qKLqj43/15.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۵)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 15)' },
-        { id: '16', type: 'image', src: 'https://i.ibb.co/nsBqPTkH/16.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۶)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 16)' },
-        { id: '17', type: 'image', src: 'https://i.ibb.co/XZdPFQfp/17.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۷)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 17)' },
-        { id: '18', type: 'image', src: 'https://i.ibb.co/mVFbY577/18.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۸)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 18)' },
-        { id: '19', type: 'image', src: 'https://i.ibb.co/sdpS8D6c/19.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۹)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 19)' },
-        { id: '20', type: 'image', src: 'https://i.ibb.co/v6vF1Rrw/20.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۲۰)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 20)' },
-        { id: '21', type: 'image', src: 'https://i.ibb.co/mxY1W6h/21.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۲۱)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 21)' },
-        { id: '22', type: 'image', src: 'https://i.ibb.co/4gMqnZsx/22.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۲۲)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 22)' },
-        { id: '23', type: 'image', src: 'https://i.ibb.co/bMWTCp8H/23.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۲۳)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 23)' },
-        { id: '24', type: 'image', src: 'https://i.ibb.co/WW87rXVp/24.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۲۴)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 24)' }
-      ];
-    }
-
-    function saveToStorage() {
-      localStorage.setItem('naturescenic_media_items', JSON.stringify(mediaItems));
-    }
 
     function getYoutubeEmbedUrl(url) {
       const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -538,7 +261,7 @@
         } else if (item.type === 'audio') {
           mediaTag = `<audio src="${item.src}" controls></audio>`;
         } else {
-          mediaTag = `<img src="${item.src}" alt="${item.titleFa}" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1506744038136-46273834b3fb';">`;
+          mediaTag = `<img src="${item.src}" alt="${item.titleFa}">`;
         }
 
         card.innerHTML = `
@@ -623,14 +346,12 @@
 
       item.titleFa = inputVal;
       item.titleEn = await translateTextDirect(inputVal, 'en');
-      saveToStorage();
       renderMediaItems();
     }
 
     function deleteItem(id) {
       if (confirm("آیا از حذف این فایل مطمئن هستید؟")) {
         mediaItems = mediaItems.filter(i => i.id !== id);
-        saveToStorage();
         renderMediaItems();
       }
     }
@@ -650,10 +371,6 @@
     }
 
     async function uploadFileToImgBB(file) {
-      if (!IMGBB_API_KEY || IMGBB_API_KEY === "اینجا_کلید_ای_پی_ای_خود_را_قرار_دهید") {
-        throw new Error("لطفاً کلید API ImgBB را در ابتدای بخش Script تنظیم کنید.");
-      }
-
       const formData = new FormData();
       formData.append('image', file);
 
@@ -666,7 +383,7 @@
       if (data && data.success) {
         return data.data.url;
       } else {
-        throw new Error(data.error ? data.error.message : "خطا در آپلود فایل به ImgBB");
+        throw new Error("خطا در آپلود فایل");
       }
     }
 
@@ -677,7 +394,7 @@
       const tempId = String(Date.now());
       
       if (type === 'image') {
-        alert("در حال آپلود عکس به سرور... لطفاً کمی صبر کنید.");
+        alert("در حال آپلود عکس به سرور ابری... لطفاً کمی صبر کنید.");
         try {
           const directUrl = await uploadFileToImgBB(file);
           const newItem = {
@@ -688,11 +405,10 @@
             titleEn: await translateTextDirect(file.name, 'en')
           };
           mediaItems.unshift(newItem);
-          saveToStorage();
           renderMediaItems();
-          alert("عکس با موفقیت آپلود شد و لینک مستقیم آن ذخیره گردید.");
+          alert("عکس آپلود شد و لینک مستقیم آن قرار گرفت.");
         } catch (error) {
-          alert("خطا در آپلود عکس: " + error.message);
+          alert("خطا در آپلود: " + error.message);
         }
       } else {
         const reader = new FileReader();
@@ -705,7 +421,6 @@
             titleEn: await translateTextDirect(file.name, 'en')
           };
           mediaItems.unshift(newItem);
-          saveToStorage();
           renderMediaItems();
         };
         reader.readAsDataURL(file);
@@ -743,7 +458,6 @@
       const titleEn = await translateTextDirect(titleFa, 'en');
 
       mediaItems.unshift({ id: tempId, type: type, src: url, titleFa: titleFa, titleEn: titleEn });
-      saveToStorage();
       renderMediaItems();
       
       document.getElementById('url-input').value = '';
@@ -785,13 +499,11 @@
           titleFa: userPrompt, 
           titleEn: englishPrompt 
         });
-        saveToStorage();
         renderMediaItems();
         inputEl.value = '';
       };
 
       img.onload = () => finishSuccess(primaryUrl);
-
       img.onerror = () => {
         const fallbackImg = new Image();
         fallbackImg.onload = () => finishSuccess(fallbackUrl);
@@ -802,7 +514,6 @@
         };
         fallbackImg.src = fallbackUrl;
       };
-
       img.src = primaryUrl;
     }
 
@@ -812,7 +523,6 @@
       const resultDiv = document.getElementById('translation-result');
 
       if (!text) return alert("متنی وارد نکرده‌اید.");
-
       resultDiv.innerText = "در حال ترجمه...";
       resultDiv.innerText = await translateTextDirect(text, targetLang);
     }
