@@ -203,31 +203,28 @@
     const IMGBB_API_KEY = "e5a6e2d94d3b4b13603d0bad68b60162";
     let currentLang = 'fa';
 
+    // ۲۴ لینک تصویر مربوط به چشمه بلقیس چرام و منطقه دیلگون
     let mediaItems = [
-      { id: '1', type: 'image', src: 'https://i.ibb.co/1GFHpsb5/1.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 1)' },
-      { id: '2', type: 'image', src: 'https://i.ibb.co/QFZqBcTZ/2.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۲)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 2)' },
-      { id: '3', type: 'image', src: 'https://i.ibb.co/FkmXHY3Q/3.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۳)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 3)' },
-      { id: '4', type: 'image', src: 'https://i.ibb.co/0VrP8kC8/4.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۴)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 4)' },
-      { id: '5', type: 'image', src: 'https://i.ibb.co/ksbF1PHd/5.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۵)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 5)' },
-      { id: '6', type: 'image', src: 'https://i.ibb.co/jPVhFP0p/6.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۶)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 6)' },
-      { id: '7', type: 'image', src: 'https://i.ibb.co/3g0y6qV/7.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۷)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 7)' },
-      { id: '8', type: 'image', src: 'https://i.ibb.co/Kj3nvXhj/8.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۸)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 8)' },
-      { id: '9', type: 'image', src: 'https://i.ibb.co/B2VXk8K9/9.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۹)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 9)' },
-      { id: '10', type: 'image', src: 'https://i.ibb.co/TDWKpLj8/10.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۰)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 10)' },
-      { id: '11', type: 'image', src: 'https://i.ibb.co/3YVWx00N/11.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۱)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 11)' },
-      { id: '12', type: 'image', src: 'https://i.ibb.co/HTHGfWZb/12.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۲)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 12)' },
-      { id: '13', type: 'image', src: 'https://i.ibb.co/Mk3T3xBn/13.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۳)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 13)' },
-      { id: '14', type: 'image', src: 'https://i.ibb.co/FkVpcqT8/14.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۴)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 14)' },
-      { id: '15', type: 'image', src: 'https://i.ibb.co/qKLqj43/15.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۵)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 15)' },
-      { id: '16', type: 'image', src: 'https://i.ibb.co/nsBqPTkH/16.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۶)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 16)' },
-      { id: '17', type: 'image', src: 'https://i.ibb.co/XZdPFQfp/17.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۷)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 17)' },
-      { id: '18', type: 'image', src: 'https://i.ibb.co/mVFbY577/18.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۸)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 18)' },
-      { id: '19', type: 'image', src: 'https://i.ibb.co/sdpS8D6c/19.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۹)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 19)' },
-      { id: '20', type: 'image', src: 'https://i.ibb.co/v6vF1Rrw/20.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۲۰)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 20)' },
-      { id: '21', type: 'image', src: 'https://i.ibb.co/mxY1W6h/21.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۲۱)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 21)' },
-      { id: '22', type: 'image', src: 'https://i.ibb.co/4gMqnZsx/22.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۲۲)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 22)' },
-      { id: '23', type: 'image', src: 'https://i.ibb.co/bMWTCp8H/23.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۲۳)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 23)' },
-      { id: '24', type: 'image', src: 'https://i.ibb.co/WW87rXVp/24.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۲۴)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 24)' }
+      { id: "1", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/9.JPG", titleFa: "چشمه بلقیس چرام", titleEn: "Cheshmeh Belqeis Choram" },
+      { id: "2", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/1.JPG", titleFa: "منطقه سردسیری دیلگون ۱", titleEn: "Dilgon Highlands 1" },
+      { id: "3", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/10.JPG", titleFa: "منطقه سردسیری دیلگون ۱۰", titleEn: "Dilgon Highlands 10" },
+      { id: "4", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/11.JPG", titleFa: "منطقه سردسیری دیلگون ۱۱", titleEn: "Dilgon Highlands 11" },
+      { id: "5", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/12.JPG", titleFa: "منطقه سردسیری دیلگون ۱۲", titleEn: "Dilgon Highlands 12" },
+      { id: "6", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/14.JPG", titleFa: "منطقه سردسیری دیلگون ۱۴", titleEn: "Dilgon Highlands 14" },
+      { id: "7", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/15.JPG", titleFa: "منطقه سردسیری دیلگون ۱۵", titleEn: "Dilgon Highlands 15" },
+      { id: "8", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/16.JPG", titleFa: "منطقه سردسیری دیلگون ۱۶", titleEn: "Dilgon Highlands 16" },
+      { id: "9", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/17.JPG", titleFa: "منطقه سردسیری دیلگون ۱۷", titleEn: "Dilgon Highlands 17" },
+      { id: "10", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/18.JPG", titleFa: "منطقه سردسیری دیلگون ۱۸", titleEn: "Dilgon Highlands 18" },
+      { id: "11", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/2.JPG", titleFa: "منطقه سردسیری دیلگون ۲", titleEn: "Dilgon Highlands 2" },
+      { id: "12", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/20.JPG", titleFa: "منطقه سردسیری دیلگون ۲۰", titleEn: "Dilgon Highlands 20" },
+      { id: "13", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/21.JPG", titleFa: "منطقه سردسیری دیلگون ۲۱", titleEn: "Dilgon Highlands 21" },
+      { id: "14", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/23.JPG", titleFa: "منطقه سردسیری دیلگون ۲۳", titleEn: "Dilgon Highlands 23" },
+      { id: "15", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/24.JPG", titleFa: "منطقه سردسیری دیلگون ۲۴", titleEn: "Dilgon Highlands 24" },
+      { id: "16", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/3.JPG", titleFa: "منطقه سردسیری دیلگون ۳", titleEn: "Dilgon Highlands 3" },
+      { id: "17", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/4.JPG", titleFa: "منطقه سردسیری دیلگون ۴", titleEn: "Dilgon Highlands 4" },
+      { id: "18", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/5.JPG", titleFa: "منطقه سردسیری دیلگون ۵", titleEn: "Dilgon Highlands 5" },
+      { id: "19", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/7.JPG", titleFa: "منطقه سردسیری دیلگون ۷", titleEn: "Dilgon Highlands 7" },
+      { id: "20", type: "image", src: "https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/8.JPG", titleFa: "منطقه سردسیری دیلگون ۸", titleEn: "Dilgon Highlands 8" }
     ];
 
     window.addEventListener('DOMContentLoaded', () => {
