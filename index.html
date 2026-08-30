@@ -76,7 +76,7 @@
     .modal-content input, .modal-content select, .modal-content textarea { padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; width: 100%; font-size: 0.95rem; }
     .modal-content textarea { height: 120px; resize: vertical; }
     .translation-result { min-height: 100px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 15px; color: #38bdf8; font-size: 1rem; line-height: 1.6; white-space: pre-wrap; }
-    .generated-img-container { width: 100%; min-height: 300px; display: flex; align-items: center; justify-content: center; background: #0f172a; border-radius: 8px; overflow: hidden; border: 1px solid #334155; }
+    .generated-img-container { width: 100%; min-height: 300px; display: flex; align-items: center; justify-content: center; background: #0f172a; border-radius: 8px; overflow: hidden; border: 1px solid #334155; position: relative; }
     .generated-img { width: 100%; max-height: 500px; object-fit: contain; }
   </style>
 </head>
@@ -141,14 +141,14 @@
   <div class="modal-overlay" id="ai-modal">
     <div class="modal-content gemini-modal-content">
       <h3 id="modal-ai-title">✨ ساخت تصویر با هوش مصنوعی GEMINI ✨</h3>
-      <p id="modal-ai-desc" style="font-size:1rem; color:#cbd5e1; text-align:center;">توصیف تصویر را بنویسید؛ سیستم هوشمند آن را به انگلیسی ترجمه کرده و تصویر را می‌سازد:</p>
-      <input type="text" id="ai-prompt-input" placeholder="مثال: رودخانه خروشان، درختان سرسبز..." onkeydown="handleAIKeyDown(event)">
+      <p id="modal-ai-desc" style="font-size:1rem; color:#cbd5e1; text-align:center;">توصیف تصویر را بنویسید (مثلاً: یک گوسفند در چراگاه، مرغ و جوجه...)؛ هوش مصنوعی آن را طراحی می‌کند:</p>
+      <input type="text" id="ai-prompt-input" placeholder="مثال: یک گوسفند سفید زیبا در دشت سرسبز..." onkeydown="handleAIKeyDown(event)">
       <div class="generated-img-container" id="ai-image-result">
-        <p style="color:#64748b; font-size:1.1rem;">تصویر ساخته شده توسط Gemini اینجا نمایش داده می‌شود</p>
+        <p style="color:#64748b; font-size:1.1rem;">تصویر ساخته شده توسط هوش مصنوعی اینجا نمایش داده می‌شود</p>
       </div>
       <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap; margin-top:10px;">
         <button class="btn-action btn-delete" style="width:auto; padding: 12px 24px; font-size:1rem;" onclick="closeAIModal()">بستن / Close</button>
-        <button class="btn-action btn-rename" style="background:#a855f7; padding: 12px 30px; font-size:1.1rem;" onclick="submitAIGeneration()">✨ تولید تصویر با Gemini</button>
+        <button class="btn-action btn-rename" style="background:#a855f7; padding: 12px 30px; font-size:1.1rem;" onclick="submitAIGeneration()">✨ تولید تصویر دقیق با AI</button>
       </div>
     </div>
   </div>
@@ -464,40 +464,48 @@
       closeURLModal();
     }
 
-    // تابع اصلی جایگزین‌شده طبق درخواست شما
     async function submitAIGeneration() {
       const inputEl = document.getElementById('ai-prompt-input');
       const userPrompt = inputEl.value.trim();
       if (!userPrompt) return alert("لطفاً توصیف تصویر را بنویسید");
 
       const resultDiv = document.getElementById('ai-image-result');
-      resultDiv.innerHTML = "<p style='color:#38bdf8;'>در حال پردازش هوشمند تصویر با هوش مصنوعی... لطفاً صبر کنید...</p>";
+      resultDiv.innerHTML = "<p style='color:#38bdf8;'>در حال ترجمه متن و طراحی تصویر با هوش مصنوعی... لطفاً چند ثانیه صبر کنید...</p>";
 
-      // ترجمه متن به انگلیسی برای دقت بالاتر تصویرسازی
-      const englishPrompt = await translateTextDirect(userPrompt, 'en');
-      const seed = Math.floor(Math.random() * 1000000);
-      
-      // ساخت آدرس مستقیم تصویر با کیفیت HD
-      const imageUrl = `https://picsum.photos/seed/${seed}/1024/768`;
+      try {
+        const englishPrompt = await translateTextDirect(userPrompt, 'en');
+        const seed = Math.floor(Math.random() * 1000000);
 
-      // نمایش تصویر ساخته‌شده
-      resultDiv.innerHTML = "";
-      const finalImg = document.createElement('img');
-      finalImg.src = imageUrl;
-      finalImg.className = "generated-img";
-      resultDiv.appendChild(finalImg);
+        const encodedPrompt = encodeURIComponent(englishPrompt);
+        const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?seed=${seed}&width=1024&height=768&nologo=true`;
 
-      // افزودن به لیست رسانه‌ها
-      mediaItems.unshift({ 
-        id: String(Date.now()), 
-        type: 'image', 
-        src: imageUrl, 
-        titleFa: userPrompt, 
-        titleEn: englishPrompt 
-      });
-      
-      renderMediaItems();
-      inputEl.value = '';
+        const imgObj = new Image();
+        imgObj.src = imageUrl;
+        imgObj.className = "generated-img";
+        
+        imgObj.onload = function() {
+          resultDiv.innerHTML = "";
+          resultDiv.appendChild(imgObj);
+
+          mediaItems.unshift({ 
+            id: String(Date.now()), 
+            type: 'image', 
+            src: imageUrl, 
+            titleFa: userPrompt, 
+            titleEn: englishPrompt 
+          });
+          
+          renderMediaItems();
+          inputEl.value = '';
+        };
+
+        imgObj.onerror = function() {
+          resultDiv.innerHTML = "<p style='color:#ef4444;'>خطا در بارگیری تصویر. لطفاً مجدداً تلاش کنید.</p>";
+        };
+
+      } catch (err) {
+        resultDiv.innerHTML = "<p style='color:#ef4444;'>ارتباط با هوش مصنوعی برقرار نشد.</p>";
+      }
     }
 
     async function sendTranslationRequest() {
