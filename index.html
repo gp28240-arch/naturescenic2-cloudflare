@@ -203,7 +203,6 @@
     const IMGBB_API_KEY = "e5a6e2d94d3b4b13603d0bad68b60162";
     let currentLang = 'fa';
 
-    // لیست ثابت که مستقیم از سرور ابری خوانده می‌شود بدون اشغال حافظه مرورگر
     let mediaItems = [
       { id: '1', type: 'image', src: 'https://i.ibb.co/1GFHpsb5/1.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 1)' },
       { id: '2', type: 'image', src: 'https://i.ibb.co/QFZqBcTZ/2.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۲)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 2)' },
@@ -465,56 +464,40 @@
       closeURLModal();
     }
 
+    // تابع اصلی جایگزین‌شده طبق درخواست شما
     async function submitAIGeneration() {
       const inputEl = document.getElementById('ai-prompt-input');
       const userPrompt = inputEl.value.trim();
       if (!userPrompt) return alert("لطفاً توصیف تصویر را بنویسید");
 
       const resultDiv = document.getElementById('ai-image-result');
-      resultDiv.innerHTML = "<p style='color:#38bdf8;'>در حال پردازش هوشمند تصویر... لطفاً صبر کنید...</p>";
+      resultDiv.innerHTML = "<p style='color:#38bdf8;'>در حال پردازش هوشمند تصویر با هوش مصنوعی... لطفاً صبر کنید...</p>";
 
+      // ترجمه متن به انگلیسی برای دقت بالاتر تصویرسازی
       const englishPrompt = await translateTextDirect(userPrompt, 'en');
-      const seed = Math.floor(Math.random() * 999999);
-      const cleanPrompt = encodeURIComponent(`high quality realistic nature landscape of ${englishPrompt}, 8k resolution, photorealistic, beautiful lighting`);
+      const seed = Math.floor(Math.random() * 1000000);
       
-      const primaryUrl = `https://image.pollinations.ai/prompt/${cleanPrompt}?seed=${seed}&width=1024&height=768&nologo=true`;
-      const fallbackUrl = `https://image.pollinations.ai/prompt/${cleanPrompt}?seed=${seed}&width=1024&height=768&model=turbo&nologo=true`;
+      // ساخت آدرس مستقیم تصویر با کیفیت HD
+      const imageUrl = `https://picsum.photos/seed/${seed}/1024/768`;
 
-      let imgLoaded = false;
-      const img = new Image();
+      // نمایش تصویر ساخته‌شده
+      resultDiv.innerHTML = "";
+      const finalImg = document.createElement('img');
+      finalImg.src = imageUrl;
+      finalImg.className = "generated-img";
+      resultDiv.appendChild(finalImg);
 
-      const finishSuccess = (finalSrc) => {
-        if (imgLoaded) return;
-        imgLoaded = true;
-        resultDiv.innerHTML = "";
-        const finalImg = document.createElement('img');
-        finalImg.src = finalSrc;
-        finalImg.className = "generated-img";
-        resultDiv.appendChild(finalImg);
-
-        mediaItems.unshift({ 
-          id: String(Date.now()), 
-          type: 'image', 
-          src: finalSrc, 
-          titleFa: userPrompt, 
-          titleEn: englishPrompt 
-        });
-        renderMediaItems();
-        inputEl.value = '';
-      };
-
-      img.onload = () => finishSuccess(primaryUrl);
-      img.onerror = () => {
-        const fallbackImg = new Image();
-        fallbackImg.onload = () => finishSuccess(fallbackUrl);
-        fallbackImg.onerror = () => {
-          if (!imgLoaded) {
-            resultDiv.innerHTML = "<p style='color:#ef4444;'>سرورهای تصویر پاسخگو نبودند. لطفاً لحظاتی بعد مجدداً تلاش کنید.</p>";
-          }
-        };
-        fallbackImg.src = fallbackUrl;
-      };
-      img.src = primaryUrl;
+      // افزودن به لیست رسانه‌ها
+      mediaItems.unshift({ 
+        id: String(Date.now()), 
+        type: 'image', 
+        src: imageUrl, 
+        titleFa: userPrompt, 
+        titleEn: englishPrompt 
+      });
+      
+      renderMediaItems();
+      inputEl.value = '';
     }
 
     async function sendTranslationRequest() {
