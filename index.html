@@ -3,13 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>برنامه با آپلود Supabase و مترجم صوتی</title>
+  <title>برنامه NatureScenic2 - آپلود و مترجم</title>
 
   <!-- کتابخانه رسمی Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
-    /* استایل‌های پایه و عمومی */
     body {
       font-family: Tahoma, Arial, sans-serif;
       background-color: #0f172a;
@@ -19,7 +18,27 @@
       direction: rtl;
     }
 
-    /* استایل‌های مودال مترجم */
+    .download-container {
+      text-align: center;
+      margin: 20px 0 30px 0;
+    }
+
+    .btn-download {
+      background-color: #22c55e;
+      color: white;
+      padding: 12px 24px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      display: inline-block;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      transition: background 0.2s;
+    }
+
+    .btn-download:hover {
+      background-color: #16a34a;
+    }
+
     .modal-overlay {
       display: none;
       position: fixed;
@@ -62,7 +81,6 @@
     .btn-rename { background: #0284c7; color: white; }
     .btn-delete { background: #ef4444; color: white; }
 
-    /* استایل دکمه پخش صوتی */
     .translation-header {
       display: flex;
       justify-content: space-between;
@@ -84,9 +102,7 @@
       transition: background 0.2s;
     }
 
-    .speaker-btn:hover {
-      background: #0284c7;
-    }
+    .speaker-btn:hover { background: #0284c7; }
 
     .translation-result {
       background: #0f172a;
@@ -100,11 +116,18 @@
 </head>
 <body>
 
-  <h2>مدیریت آپلود فایل و مترجم</h2>
+  <h2>برنامه مدیریت فایل و مترجم</h2>
   
+  <!-- دکمه دانلود مستقیم فایل APK -->
+  <div class="download-container">
+    <a href="https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/NatureScenic2-ai/app-release.apk" download class="btn-download">
+      📥 دانلود مستقیم اپلیکیشن اندروید (APK)
+    </a>
+  </div>
+
   <!-- بخش آپلود فایل -->
   <div style="margin-bottom: 20px;">
-    <label for="file-input" class="btn-action btn-rename" style="display:inline-block;">انتخاب و آپلود مستقیم به Supabase</label>
+    <label for="file-input" class="btn-action btn-rename" style="display:inline-block; cursor:pointer;">انتخاب و آپلود مستقیم عکس به Supabase</label>
     <input type="file" id="file-input" style="display:none;" onchange="handleFileUpload(event, 'image')">
   </div>
 
@@ -114,7 +137,7 @@
   <!-- مودال مترجم -->
   <div class="modal-overlay" id="chat-modal">
     <div class="modal-content">
-      <h3 id="modal-trans-title" style="margin:0;">🌐 مترجم پیشرفته و دقیق زبان‌ها</h3>
+      <h3 id="modal-trans-title" style="margin:0;">🌐 مترجم پیشرفته زبان‌ها</h3>
       <textarea id="trans-text-input" rows="3" placeholder="متن خود را اینجا بنویسید..."></textarea>
       
       <select id="trans-target-lang">
@@ -135,7 +158,7 @@
         <button class="speaker-btn" onclick="playTextToSpeech()" title="پخش صوتی">🔊</button>
       </div>
       
-      <div class="translation-result" id="translation-result">نتیجه ترجمه اینجا نمایش داده می‌شود...</div>
+      <div class="translation-result" id="translation-result">نتیجه ترجمه...</div>
       
       <button class="btn-action btn-delete" style="width:auto; align-self:flex-end;" onclick="closeChatModal()">بستن / Close</button>
     </div>
@@ -143,14 +166,13 @@
 
   <!-- کدهای جاوااسکریپت -->
   <script>
-    // ۱. تنظیمات اتصال به Supabase
     const SUPABASE_URL = "https://xvkbwsejloapnkjgrjde.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_PjBM2rAkc1U3WyrXhVfPCQ_5qrIs_da"; 
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     let mediaItems = [];
 
-    // ۲. تابع آپلود مستقیم به باکت Supabase
+    // آپلود فایل عکس به باکت dilgon-image
     async function uploadFileToSupabase(file) {
       const fileName = `${Date.now()}_${file.name}`;
       const bucketName = 'dilgon-image'; 
@@ -168,12 +190,11 @@
       return publicUrlData.publicUrl;
     }
 
-    // ۳. مدیریت انتخاب و آپلود فایل
     async function handleFileUpload(event, type) {
       const file = event.target.files[0];
       if (!file) return;
 
-      alert("در حال آپلود مستقیم فایل به Supabase... لطفاً کمی صبر کنید.");
+      alert("در حال آپلود مستقیم فایل به Supabase...");
       
       try {
         const directUrl = await uploadFileToSupabase(file);
@@ -186,28 +207,19 @@
         mediaItems.unshift(newItem);
         alert("فایل با موفقیت آپلود شد.\nلینک فایل: " + directUrl);
       } catch (error) {
-        alert("خطا در آپلود به Supabase: " + error.message);
+        alert("خطا در آپلود: " + error.message);
       }
     }
 
-    // ۴. توابع مودال مترجم
-    function openChatModal() {
-      document.getElementById('chat-modal').style.display = 'flex';
-    }
-
-    function closeChatModal() {
-      document.getElementById('chat-modal').style.display = 'none';
-    }
+    function openChatModal() { document.getElementById('chat-modal').style.display = 'flex'; }
+    function closeChatModal() { document.getElementById('chat-modal').style.display = 'none'; }
 
     async function sendTranslationRequest() {
       const text = document.getElementById('trans-text-input').value;
       const targetLang = document.getElementById('trans-target-lang').value;
       const resultDiv = document.getElementById('translation-result');
 
-      if (!text.trim()) {
-        alert("لطفاً متنی برای ترجمه وارد کنید.");
-        return;
-      }
+      if (!text.trim()) return alert("لطفاً متنی برای ترجمه وارد کنید.");
 
       resultDiv.innerText = "در حال ترجمه...";
 
@@ -221,14 +233,11 @@
       }
     }
 
-    // ۵. قابلیت تلفظ صوتی با آیکون بلندگو
     function playTextToSpeech() {
       const text = document.getElementById('translation-result').innerText;
       const targetLang = document.getElementById('trans-target-lang').value;
 
-      if (!text || text === "نتیجه ترجمه..." || text === "در حال ترجمه..." || text === "نتیجه ترجمه اینجا نمایش داده می‌شود...") {
-        return alert("متنی برای خواندن وجود ندارد.");
-      }
+      if (!text || text === "نتیجه ترجمه...") return alert("متنی برای خواندن وجود ندارد.");
 
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
