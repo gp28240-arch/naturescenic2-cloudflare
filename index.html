@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- جلوگیری از ذخیره کش در گوشی و مرورگر جهت به‌روزرسانی آنی -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
@@ -84,10 +83,40 @@
     .modal-content input, .modal-content select, .modal-content textarea { padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; width: 100%; font-size: 0.95rem; }
     .modal-content textarea { height: 120px; resize: vertical; }
 
-    .translation-header { display: flex; justify-content: space-between; align-items: center; margin-top: 5px; }
-    .translation-result { min-height: 100px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 15px; color: #38bdf8; font-size: 1rem; line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
-    .speaker-btn { background: #38bdf8; border: none; border-radius: 50%; width: 42px; height: 42px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; transition: background 0.2s; color: #0f172a; }
-    .speaker-btn:hover { background: #0284c7; color: #fff; }
+    /* کادر اختصاصی ترجمه مشابه گوگل ترنسلیت */
+    .translation-box-wrapper {
+      position: relative;
+      min-height: 120px;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 15px;
+      padding-bottom: 45px;
+      color: #38bdf8;
+      font-size: 1.05rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .inside-speaker-btn {
+      position: absolute;
+      bottom: 8px;
+      left: 10px;
+      background: #38bdf8;
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      transition: all 0.2s;
+      color: #0f172a;
+      box-shadow: 0 2px 8px rgba(56, 189, 248, 0.4);
+    }
+    .inside-speaker-btn:hover { background: #0284c7; color: #fff; transform: scale(1.1); }
 
     .generated-img-container { width: 100%; min-height: 300px; display: flex; align-items: center; justify-content: center; background: #0f172a; border-radius: 8px; overflow: hidden; border: 1px solid #334155; }
     .generated-img { width: 100%; max-height: 500px; object-fit: contain; }
@@ -171,44 +200,51 @@
   <div class="modal-overlay" id="chat-modal">
     <div class="modal-content">
       <h3 id="modal-trans-title">🌐 مترجم پیشرفته و جامع تمام زبان‌های دنیا</h3>
-      <textarea id="trans-text-input" placeholder="متن خود را اینجا بنویسید..."></textarea>
+      <textarea id="trans-text-input" placeholder="متن خود را اینجا بنویسید (به هر زبانی)..."></textarea>
       
+      <label style="color:#cbd5e1; font-size:0.9rem;">زبان مقصد را انتخاب کنید:</label>
       <select id="trans-target-lang">
-        <option value="en" selected>انگلیسی (English)</option>
-        <option value="fa">فارسی (Persian)</option>
-        <option value="ar">عربی (Arabic)</option>
-        <option value="fr">فرانسوی (French)</option>
-        <option value="de">آلمانی (German)</option>
-        <option value="es">اسپانیایی (Spanish)</option>
-        <option value="tr">ترکی استانبولی (Turkish)</option>
-        <option value="ru">روسی (Russian)</option>
-        <option value="zh-CN">چینی ساده‌شده (Chinese Simplified)</option>
-        <option value="ja">ژاپنی (Japanese)</option>
-        <option value="ko">کره‌ای (Korean)</option>
-        <option value="it">ایتالیایی (Italian)</option>
-        <option value="pt">پرتغالی (Portuguese)</option>
-        <option value="hi">هندی (Hindi)</option>
-        <option value="ur">اردو (Urdu)</option>
-        <option value="nl">هلندی (Dutch)</option>
-        <option value="sv">سوئدی (Swedish)</option>
-        <option value="no">نروژی (Norwegian)</option>
-        <option value="da">دانمارکی (Danish)</option>
-        <option value="fi">فنلاندی (Finnish)</option>
-        <option value="pl">لهستانی (Polish)</option>
-        <option value="uk">اوکراینی (Ukrainian)</option>
-        <option value="az">آذربایجانی (Azerbaijani)</option>
-        <option value="ku">کردی (Kurdish)</option>
-        <option value="ps">پشتو (Pashto)</option>
-        <option value="he">عبری (Hebrew)</option>
+        <option value="en" selected>🇬🇧 انگلیسی (English)</option>
+        <option value="fa">🇮🇷 فارسی (Persian)</option>
+        <option value="ar">🇸🇦 عربی (Arabic)</option>
+        <option value="fr">🇫🇷 فرانسوی (French)</option>
+        <option value="de">🇩🇪 آلمانی (German)</option>
+        <option value="es">🇪🇸 اسپانیایی (Spanish)</option>
+        <option value="tr">🇹🇷 ترکی استانبولی (Turkish)</option>
+        <option value="ru">🇷🇺 روسی (Russian)</option>
+        <option value="zh-CN">🇨🇳 چینی (Chinese)</option>
+        <option value="ja">🇯🇵 ژاپنی (Japanese)</option>
+        <option value="ko">🇰🇷 کره‌ای (Korean)</option>
+        <option value="it">🇮🇹 ایتالیایی (Italian)</option>
+        <option value="pt">🇵🇹 پرتغالی (Portuguese)</option>
+        <option value="hi">🇮🇳 هندی (Hindi)</option>
+        <option value="ur">🇵🇰 اردو (Urdu)</option>
+        <option value="nl">🇳🇱 هلندی (Dutch)</option>
+        <option value="sv">🇸🇪 سوئدی (Swedish)</option>
+        <option value="no">🇳🇴 نروژی (Norwegian)</option>
+        <option value="da">🇩🇰 دانمارکی (Danish)</option>
+        <option value="fi">🇫🇮 فنلاندی (Finnish)</option>
+        <option value="pl">🇵🇱 لهستانی (Polish)</option>
+        <option value="uk">🇺🇦 اوکراینی (Ukrainian)</option>
+        <option value="az">🇦🇿 آذربایجانی (Azerbaijani)</option>
+        <option value="ku">☀️ کردی (Kurdish)</option>
+        <option value="ps">🇦🇫 پشتو (Pashto)</option>
+        <option value="he">🇮🇱 عبری (Hebrew)</option>
+        <option value="el">🇬🇷 یونانی (Greek)</option>
+        <option value="th">🇹🇭 تایلندی (Thai)</option>
+        <option value="vi">🇻🇳 ویتنامی (Vietnamese)</option>
+        <option value="id">🇮🇩 اندونزیایی (Indonesian)</option>
       </select>
       
-      <button class="btn-action btn-rename" id="btn-do-translate" onclick="sendTranslationRequest()">ترجمه کن / Translate</button>
+      <button class="btn-action btn-rename" id="btn-do-translate" style="padding: 14px; font-size:1.05rem;" onclick="sendTranslationRequest()">ترجمه کن / Translate</button>
       
-      <div class="translation-header">
-        <span style="color:#94a3b8; font-size:0.9rem;" id="lbl-trans-result">نتیجه ترجمه:</span>
-        <button class="speaker-btn" onclick="playTextToSpeech()" title="پخش صوتی">🔊</button>
+      <span style="color:#94a3b8; font-size:0.9rem;" id="lbl-trans-result">نتیجه ترجمه:</span>
+      
+      <!-- کادر ترجمه به همراه دکمه بلندگو درون کادر -->
+      <div class="translation-box-wrapper">
+        <div id="translation-result">نتیجه ترجمه...</div>
+        <button class="inside-speaker-btn" onclick="playTextToSpeech()" title="پخش صوتی متن">🔊</button>
       </div>
-      <div class="translation-result" id="translation-result">نتیجه ترجمه...</div>
       
       <button class="btn-action btn-delete" style="width:auto; align-self:flex-end;" onclick="closeChatModal()">بستن / Close</button>
     </div>
@@ -400,6 +436,7 @@
       }
     }
 
+    // تابع موتور ترجمه اصلاح‌شده بدون خطای خلط زبان مبدا و مقصد
     async function translateTextDirect(text, targetLangCode) {
       if (!text || text.trim() === '') return '';
       const cleanText = text.trim();
@@ -437,20 +474,20 @@
         return;
       }
 
-      resultEl.innerText = "⏳ در حال ترجمه...";
+      resultEl.innerText = "⏳ در حال ترجمه واقعی با بالاترین کیفیت...";
       const translated = await translateTextDirect(text, targetLang);
       resultEl.innerText = translated;
     }
 
     function playTextToSpeech() {
       const resultText = document.getElementById('translation-result').innerText;
-      if (!resultText || resultText === "نتیجه ترجمه..." || resultText === "⏳ در حال ترجمه...") {
-        alert("متنی برای پخش وجود ندارد.");
+      if (!resultText || resultText === "نتیجه ترجمه..." || resultText.includes("در حال ترجمه")) {
+        alert("متنی برای پخش صوتی وجود ندارد.");
         return;
       }
 
       if (!('speechSynthesis' in window)) {
-        alert("مرورگر شما از قابلیت خواندن صوتی پشتیبانی نمی‌کند.");
+        alert("مرورگر شما از قابلیّت تلفظ صوتی پشتیبانی نمی‌کند.");
         return;
       }
 
@@ -465,7 +502,8 @@
         'zh-CN': 'zh-CN', 'ja': 'ja-JP', 'ko': 'ko-KR', 'it': 'it-IT',
         'pt': 'pt-PT', 'hi': 'hi-IN', 'ur': 'ur-PK', 'nl': 'nl-NL',
         'sv': 'sv-SE', 'no': 'no-NO', 'da': 'da-DK', 'fi': 'fi-FI',
-        'pl': 'pl-PL', 'uk': 'uk-UA', 'az': 'az-AZ', 'he': 'he-IL'
+        'pl': 'pl-PL', 'uk': 'uk-UA', 'az': 'az-AZ', 'he': 'he-IL',
+        'el': 'el-GR', 'th': 'th-TH', 'vi': 'vi-VN', 'id': 'id-ID'
       };
 
       utterance.lang = langMap[targetLang] || targetLang;
@@ -562,65 +600,18 @@
     function openURLModal() { document.getElementById('url-modal').style.display = 'flex'; }
     function closeURLModal() { document.getElementById('url-modal').style.display = 'none'; }
 
-    function handleAIKeyDown(e) {
-      if (e.key === 'Enter') submitAIGeneration();
-    }
-
-    async function submitAIGeneration() {
-      const promptInput = document.getElementById('ai-prompt-input').value.trim();
-      const resultContainer = document.getElementById('ai-image-result');
-
-      if (!promptInput) {
-        alert("لطفاً متنی برای ساخت تصویر وارد کنید.");
-        return;
-      }
-
-      resultContainer.innerHTML = `<p style="color:#38bdf8;">⏳ در حال ترجمه متن و تولید تصویر با هوش مصنوعی... لطفاً چند ثانیه صبر کنید.</p>`;
-
-      try {
-        const translatedPrompt = await translateTextDirect(promptInput, 'en');
-        const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(translatedPrompt)}?width=1024&height=768&nologo=true&seed=${Math.floor(Math.random() * 1000000)}`;
-
-        const img = new Image();
-        img.src = imageUrl;
-        img.className = 'generated-img';
-        img.onload = async () => {
-          resultContainer.innerHTML = '';
-          resultContainer.appendChild(img);
-
-          const newId = 'ai_' + Date.now();
-          const titleEn = translatedPrompt;
-
-          mediaItems.unshift({
-            id: newId,
-            type: 'image',
-            src: imageUrl,
-            titleFa: promptInput,
-            titleEn: titleEn
-          });
-
-          renderMediaItems();
-        };
-        img.onerror = () => {
-          resultContainer.innerHTML = `<p style="color:#ef4444;">خطا در دریافت تصویر. لطفاً مجدداً تلاش کنید.</p>`;
-        };
-      } catch (err) {
-        resultContainer.innerHTML = `<p style="color:#ef4444;">بروز خطا در پردازش درخواست.</p>`;
-      }
-    }
-
     async function addURLMedia() {
       const url = document.getElementById('url-input').value.trim();
       const type = document.getElementById('url-type-select').value;
-      const titleFa = document.getElementById('url-title-input').value.trim() || 'فایل از لینک مستقیم';
+      const titleFa = document.getElementById('url-title-input').value.trim() || 'فایل جدید';
 
       if (!url) {
-        alert("لطفاً لینک مستقیم را وارد کنید.");
+        alert("لطفاً لینک را وارد کنید.");
         return;
       }
 
-      const titleEn = await translateTextDirect(titleFa, 'en');
       const newId = 'url_' + Date.now();
+      const titleEn = await translateTextDirect(titleFa, 'en');
 
       mediaItems.unshift({
         id: newId,
@@ -634,6 +625,41 @@
       closeURLModal();
       document.getElementById('url-input').value = '';
       document.getElementById('url-title-input').value = '';
+    }
+
+    function handleAIKeyDown(event) {
+      if (event.key === 'Enter') submitAIGeneration();
+    }
+
+    async function submitAIGeneration() {
+      const promptInput = document.getElementById('ai-prompt-input').value.trim();
+      const resultDiv = document.getElementById('ai-image-result');
+
+      if (!promptInput) {
+        alert("لطفاً توصیف تصویر را وارد کنید.");
+        return;
+      }
+
+      resultDiv.innerHTML = '<p style="color:#a855f7; font-size:1.1rem; font-weight:bold;">⏳ در حال ساخت تصویر هوشمند... (لطفاً چند ثانیه شکیبا باشید)</p>';
+
+      try {
+        const translatedPrompt = await translateTextDirect(promptInput, 'en');
+        const encodedPrompt = encodeURIComponent(translatedPrompt);
+        const seed = Math.floor(Math.random() * 999999);
+        const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?seed=${seed}&width=1024&height=1024&nologo=true`;
+
+        const imgObj = new Image();
+        imgObj.onload = () => {
+          resultDiv.innerHTML = `<img src="${imageUrl}" class="generated-img" alt="تصویر ساخته شده">`;
+        };
+        imgObj.onerror = () => {
+          resultDiv.innerHTML = '<p style="color:#ef4444;">خطا در دریافت تصویر. لطفاً مجدداً تلاش کنید.</p>';
+        };
+        imgObj.src = imageUrl;
+
+      } catch (err) {
+        resultDiv.innerHTML = '<p style="color:#ef4444;">خطایی رخ داد. لطفاً مجدداً تلاش کنید.</p>';
+      }
     }
   </script>
 </body>
