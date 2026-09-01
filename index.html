@@ -396,13 +396,12 @@
     }
 
     // ==========================================================
-    // 🌐 سیستم بازنویسی شده ترجمه (بدون فیلتر کلمات و بدون خطا)
+    // 🌐 موتور ترجمه گوگل دقیق و بدون پیغام خطا
     // ==========================================================
     async function translateTextDirect(text, targetLangCode) {
       if (!text || text.trim() === '') return '';
       const cleanText = text.trim();
 
-      // اولویت اول: Google Translate API
       try {
         const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLangCode}&dt=t&q=${encodeURIComponent(cleanText)}`;
         const response = await fetch(url);
@@ -410,34 +409,21 @@
           const data = await response.json();
           let translatedText = '';
           if (data && data[0]) {
-            data[0].forEach(item => { if (item && item[0]) translatedText += item[0]; });
+            data[0].forEach(item => { 
+              if (item && item[0]) translatedText += item[0]; 
+            });
           }
-          if (translatedText.trim() && translatedText.trim() !== cleanText) {
+          if (translatedText.trim()) {
             return translatedText.trim();
           }
         }
       } catch (e) {
-        console.warn("گوگل ریسپانس نداد، سوئیچ به سرور دوم...");
-      }
-
-      // اولویت دوم (موتور پشتیبان مستقیم بدون سانسور)
-      try {
-        const fbUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(cleanText)}&langpair=autodetect|${targetLangCode}`;
-        const fbRes = await fetch(fbUrl);
-        if (fbRes.ok) {
-          const fbData = await fbRes.json();
-          if (fbData && fbData.responseData && fbData.responseData.translatedText) {
-            return fbData.responseData.translatedText;
-          }
-        }
-      } catch (err) {
-        console.error("خطای موتور دوم:", err);
+        console.error("خطای موتور ترجمه:", e);
       }
 
       return cleanText;
     }
 
-    // ارسال درخواست ترجمه
     async function sendTranslationRequest() {
       const inputEl = document.getElementById('trans-text-input');
       const text = inputEl.value.trim();
@@ -455,7 +441,7 @@
     }
 
     // ==========================================================
-    // 🔊 سیستم اصلاح شده و استاندارد خواندن صوتی (TTS)
+    // 🔊 سیستم پخش صوتی (TTS)
     // ==========================================================
     function playTextToSpeech() {
       const resultText = document.getElementById('translation-result').innerText;
@@ -469,12 +455,11 @@
         return;
       }
 
-      window.speechSynthesis.cancel(); // توقف صداهای قبلی
+      window.speechSynthesis.cancel();
 
       const targetLang = document.getElementById('trans-target-lang').value;
       const utterance = new SpeechSynthesisUtterance(resultText);
 
-      // نگاشت دقیق زبان‌ها به کدهای بین‌المللی جهت پخش در گوشی و لپ‌تاپ
       const langMap = {
         'fa': 'fa-IR', 'en': 'en-US', 'ar': 'ar-SA', 'fr': 'fr-FR',
         'de': 'de-DE', 'es': 'es-ES', 'tr': 'tr-TR', 'ru': 'ru-RU',
@@ -485,7 +470,7 @@
       };
 
       utterance.lang = langMap[targetLang] || targetLang;
-      utterance.rate = 0.9; // سرعت مناسب
+      utterance.rate = 0.9;
       utterance.pitch = 1.0;
 
       window.speechSynthesis.speak(utterance);
