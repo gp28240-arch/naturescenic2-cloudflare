@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>naturescenic2-ai | دستیار اختصاصی طبیعت</title>
 
+  <!-- کتابخانه رسمی Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
@@ -114,7 +115,7 @@
   <div class="control-panel">
     <button class="btn btn-lang" id="toggle-lang-btn" onclick="toggleLanguage()">🌐 Switch to English / تغییر زبان</button>
     
-    <a href="https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/NatureScenic2-ai/app-release.apk" class="btn btn-app" id="btn-download-app" download target="_blank">📲 دانلود اپلیکیشن / Download App</a>
+    <a href="https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/NatureScenic2-ai/app-release.apk" class="btn btn-app" id="btn-download-app" onclick="handleAppButtonClick(event)">📲 دانلود اپلیکیشن / Download App</a>
 
     <label class="btn" id="lbl-upload-img">
       📷 آپلود عکس / Wallpaper
@@ -145,6 +146,7 @@
 
   <div class="media-grid" id="media-grid"></div>
 
+  <!-- Modal GEMINI -->
   <div class="modal-overlay" id="ai-modal">
     <div class="modal-content gemini-modal-content">
       <h3 id="modal-ai-title">✨ ساخت تصویر با هوش مصنوعی GEMINI ✨</h3>
@@ -160,6 +162,7 @@
     </div>
   </div>
 
+  <!-- Modal Translator -->
   <div class="modal-overlay" id="chat-modal">
     <div class="modal-content">
       <h3 id="modal-trans-title">🌐 مترجم پیشرفته و دقیق زبان‌ها</h3>
@@ -186,9 +189,13 @@
     </div>
   </div>
 
+  <!-- Modal URL -->
   <div class="modal-overlay" id="url-modal">
     <div class="modal-content">
-      <h3>🌐 آپلود مستقیم فایل از لینک اینترنتی</h3>
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3>🌐 آپلود مستقیم فایل از لینک اینترنتی</h3>
+        <button class="btn-action" style="background: #f59e0b; color: #000;" onclick="changeAdminPassword()">🔑 تغییر رمز عبور مدیر</button>
+      </div>
       <input type="url" id="url-input" placeholder="لینک مستقیم تصویر، ویدیو یا یوتیوب">
       <select id="url-type-select">
         <option value="image">تصویر (Image)</option>
@@ -211,39 +218,61 @@
   <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
   <script>
-    // اتصال مستقیم به Supabase
+    // ==========================================
+    // تنظیمات مستقیم Supabase (فقط کلید عمومی)
+    // ==========================================
     const SUPABASE_URL = "https://xvkbwsejloapnkjgrjde.supabase.co";
-    const SUPABASE_ANON_KEY = "sb_publishable_PjBM2rAkc1U3WyrXhVfPCQ_5qrIs_da"; 
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const SUPABASE_KEY = "sb_publishable_PjBM2rAkc1U3WyrXhVfPCQ_5qrIs_da"; 
+
+    const BUCKET_NAME = "dilgon-image";
+
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // سیستم مدیریت رمز عبور مدیر (رمز اولیه: 1234)
+    function getAdminPassword() {
+      return localStorage.getItem('app_admin_pass') || '1234';
+    }
+
+    function checkAdminAuth() {
+      const inputPass = prompt("لطفاً رمز عبور مدیر را وارد کنید:");
+      if (inputPass === getAdminPassword()) {
+        return true;
+      } else if (inputPass !== null) {
+        alert("رمز عبور اشتباه است! دسترسی امکان‌پذیر نیست.");
+      }
+      return false;
+    }
+
+    function changeAdminPassword() {
+      const currentPass = prompt("رمز عبور فعلی را وارد کنید:");
+      if (currentPass === getAdminPassword()) {
+        const newPass = prompt("رمز عبور جدید را وارد کنید:");
+        if (newPass && newPass.trim() !== "") {
+          localStorage.setItem('app_admin_pass', newPass.trim());
+          alert("رمز عبور با موفقیت تغییر یافت.");
+        } else {
+          alert("رمز عبور نمی‌تواند خالی باشد.");
+        }
+      } else if (currentPass !== null) {
+        alert("رمز عبور فعلی نادرست است!");
+      }
+    }
+
+    // هدایت هوشمند دکمه دانلود اپ در موبایل
+    function handleAppButtonClick(e) {
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      if (isMobile) {
+        e.preventDefault();
+        window.open(window.location.href, '_blank');
+      }
+    }
 
     let currentLang = 'fa';
 
-    // ۲۴ تصویر کاملاً سالم و ثابت ابری شما
     let mediaItems = [
-      { id: '1', type: 'image', src: 'https://i.ibb.co/1GFHpsb5/1.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 1)' },
-      { id: '2', type: 'image', src: 'https://i.ibb.co/QFZqBcTZ/2.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۲)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 2)' },
-      { id: '3', type: 'image', src: 'https://i.ibb.co/FkmXHY3Q/3.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۳)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 3)' },
-      { id: '4', type: 'image', src: 'https://i.ibb.co/0VrP8kC8/4.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۴)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 4)' },
-      { id: '5', type: 'image', src: 'https://i.ibb.co/ksbF1PHd/5.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۵)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 5)' },
-      { id: '6', type: 'image', src: 'https://i.ibb.co/jPVhFP0p/6.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۶)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 6)' },
-      { id: '7', type: 'image', src: 'https://i.ibb.co/3g0y6qV/7.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۷)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 7)' },
-      { id: '8', type: 'image', src: 'https://i.ibb.co/Kj3nvXhj/8.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۸)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 8)' },
-      { id: '9', type: 'image', src: 'https://i.ibb.co/B2VXk8K9/9.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۹)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 9)' },
-      { id: '10', type: 'image', src: 'https://i.ibb.co/TDWKpLj8/10.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۰)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 10)' },
-      { id: '11', type: 'image', src: 'https://i.ibb.co/3YVWx00N/11.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۱)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 11)' },
-      { id: '12', type: 'image', src: 'https://i.ibb.co/HTHGfWZb/12.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۲)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 12)' },
-      { id: '13', type: 'image', src: 'https://i.ibb.co/Mk3T3xBn/13.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۳)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 13)' },
-      { id: '14', type: 'image', src: 'https://i.ibb.co/FkVpcqT8/14.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۴)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 14)' },
-      { id: '15', type: 'image', src: 'https://i.ibb.co/qKLqj43/15.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۵)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 15)' },
-      { id: '16', type: 'image', src: 'https://i.ibb.co/nsBqPTkH/16.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۶)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 16)' },
-      { id: '17', type: 'image', src: 'https://i.ibb.co/XZdPFQfp/17.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۷)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 17)' },
-      { id: '18', type: 'image', src: 'https://i.ibb.co/mVFbY577/18.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۸)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 18)' },
-      { id: '19', type: 'image', src: 'https://i.ibb.co/sdpS8D6c/19.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱۹)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 19)' },
-      { id: '20', type: 'image', src: 'https://i.ibb.co/v6vF1Rrw/20.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۲۰)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 20)' },
-      { id: '21', type: 'image', src: 'https://i.ibb.co/mxY1W6h/21.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۲۱)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 21)' },
-      { id: '22', type: 'image', src: 'https://i.ibb.co/4gMqnZsx/22.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۲۲)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 22)' },
-      { id: '23', type: 'image', src: 'https://i.ibb.co/bMWTCp8H/23.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۲۳)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 23)' },
-      { id: '24', type: 'image', src: 'https://i.ibb.co/WW87rXVp/24.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۲۴)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 24)' }
+      { id: '1', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/1.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۱)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 1)' },
+      { id: '2', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/2.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۲)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 2)' },
+      { id: '3', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/3.jpg', titleFa: 'طبیعت منطقه دیلگون - کهگیلویه و بویراحمد (عکس ۳)', titleEn: 'Dilgun Nature - Kohgiluyeh and Boyer-Ahmad (Photo 3)' }
     ];
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -353,6 +382,7 @@
     }
 
     async function renameItem(id) {
+      if (!checkAdminAuth()) return;
       const inputVal = document.getElementById(`input-${id}`).value.trim();
       if (!inputVal) return alert("لطفاً نام جدید را وارد کنید");
 
@@ -365,6 +395,7 @@
     }
 
     function deleteItem(id) {
+      if (!checkAdminAuth()) return;
       if (confirm("آیا از حذف این فایل مطمئن هستید؟")) {
         mediaItems = mediaItems.filter(i => i.id !== id);
         renderMediaItems();
@@ -385,31 +416,35 @@
       });
     }
 
-    // آپلود فایل مستقیم به Supabase با پشتیبانی از تمامی انواع فایل‌ها
     async function uploadFileToSupabase(file) {
-      const fileName = `${Date.now()}_${file.name}`;
-      const bucketName = 'dilgon-image'; 
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
 
       const { data, error } = await supabaseClient.storage
-        .from(bucketName)
+        .from(BUCKET_NAME)
         .upload(fileName, file, { cacheControl: '3600', upsert: false });
 
       if (error) throw new Error(error.message);
 
       const { data: publicUrlData } = supabaseClient.storage
-        .from(bucketName)
+        .from(BUCKET_NAME)
         .getPublicUrl(fileName);
 
       return publicUrlData.publicUrl;
     }
 
     async function handleFileUpload(event, type) {
+      if (!checkAdminAuth()) {
+        event.target.value = '';
+        return;
+      }
+
       const file = event.target.files[0];
       if (!file) return;
 
       const tempId = String(Date.now());
       
-      alert("در حال آپلود فایل به سرور ابری... لطفاً کمی صبر کنید.");
+      alert("در حال آپلود مستقیم فایل به باکت سوپابیس...");
       try {
         const directUrl = await uploadFileToSupabase(file);
         const newItem = {
@@ -421,21 +456,19 @@
         };
         mediaItems.unshift(newItem);
         renderMediaItems();
-        alert("فایل آپلود شد و لینک مستقیم آن قرار گرفت.");
+        alert("فایل با موفقیت آپلود شد و لینک مستقیم سوپابیس تولید گردید.");
       } catch (error) {
-        alert("خطا در آپلود: " + error.message);
+        alert("خطا در آپلود به سوپابیس: " + error.message);
       }
     }
 
-    function openURLModal() { document.getElementById('url-modal').style.display = 'flex'; }
-    function closeURLModal() { document.getElementById('url-modal').style.display = 'none'; }
-    
-    function openAIModal() { 
-      document.getElementById('ai-modal').style.display = 'flex'; 
-      document.getElementById('ai-prompt-input').focus();
+    function openURLModal() { 
+      if (!checkAdminAuth()) return;
+      document.getElementById('url-modal').style.display = 'flex'; 
     }
+    function closeURLModal() { document.getElementById('url-modal').style.display = 'none'; }
+    function openAIModal() { document.getElementById('ai-modal').style.display = 'flex'; document.getElementById('ai-prompt-input').focus(); }
     function closeAIModal() { document.getElementById('ai-modal').style.display = 'none'; }
-    
     function openChatModal() { document.getElementById('chat-modal').style.display = 'flex'; }
     function closeChatModal() { document.getElementById('chat-modal').style.display = 'none'; }
 
@@ -478,41 +511,27 @@
       const cleanPrompt = encodeURIComponent(`high quality realistic nature landscape of ${englishPrompt}, 8k resolution, photorealistic, beautiful lighting`);
       
       const primaryUrl = `https://image.pollinations.ai/prompt/${cleanPrompt}?seed=${seed}&width=1024&height=768&nologo=true`;
-      const fallbackUrl = `https://image.pollinations.ai/prompt/${cleanPrompt}?seed=${seed}&width=1024&height=768&model=turbo&nologo=true`;
-
-      let imgLoaded = false;
+      
       const img = new Image();
-
-      const finishSuccess = (finalSrc) => {
-        if (imgLoaded) return;
-        imgLoaded = true;
+      img.onload = () => {
         resultDiv.innerHTML = "";
         const finalImg = document.createElement('img');
-        finalImg.src = finalSrc;
+        finalImg.src = primaryUrl;
         finalImg.className = "generated-img";
         resultDiv.appendChild(finalImg);
 
         mediaItems.unshift({ 
           id: String(Date.now()), 
           type: 'image', 
-          src: finalSrc, 
+          src: primaryUrl, 
           titleFa: userPrompt, 
           titleEn: englishPrompt 
         });
         renderMediaItems();
         inputEl.value = '';
       };
-
-      img.onload = () => finishSuccess(primaryUrl);
       img.onerror = () => {
-        const fallbackImg = new Image();
-        fallbackImg.onload = () => finishSuccess(fallbackUrl);
-        fallbackImg.onerror = () => {
-          if (!imgLoaded) {
-            resultDiv.innerHTML = "<p style='color:#ef4444;'>سرورهای تصویر پاسخگو نبودند. لطفاً لحظاتی بعد مجدداً تلاش کنید.</p>";
-          }
-        };
-        fallbackImg.src = fallbackUrl;
+        resultDiv.innerHTML = "<p style='color:#ef4444;'>خطا در ساخت تصویر. مجدداً تلاش کنید.</p>";
       };
       img.src = primaryUrl;
     }
@@ -527,22 +546,17 @@
       resultDiv.innerText = await translateTextDirect(text, targetLang);
     }
 
-    // قابلیت تلفظ صوتی متن ترجمه‌شده
     function playTextToSpeech() {
       const text = document.getElementById('translation-result').innerText;
       const targetLang = document.getElementById('trans-target-lang').value;
 
-      if (!text || text === "نتیجه ترجمه..." || text === "در حال ترجمه...") {
-        return alert("متنی برای خواندن وجود ندارد.");
-      }
+      if (!text || text === "نتیجه ترجمه..." || text === "در حال ترجمه...") return alert("متنی برای خواندن وجود ندارد.");
 
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = targetLang;
         window.speechSynthesis.speak(utterance);
-      } else {
-        alert("مرورگر شما از قابلیت تلفظ صوتی پشتیبانی نمی‌کند.");
       }
     }
   </script>
