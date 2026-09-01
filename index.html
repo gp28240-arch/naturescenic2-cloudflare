@@ -81,7 +81,7 @@
 
     .translation-header { display: flex; justify-content: space-between; align-items: center; margin-top: 5px; }
     .translation-result { min-height: 100px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 15px; color: #38bdf8; font-size: 1rem; line-height: 1.6; white-space: pre-wrap; }
-    .speaker-btn { background: #38bdf8; border: none; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: background 0.2s; }
+    .speaker-btn { background: #38bdf8; border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; transition: background 0.2s; }
     .speaker-btn:hover { background: #0284c7; }
 
     .generated-img-container { width: 100%; min-height: 300px; display: flex; align-items: center; justify-content: center; background: #0f172a; border-radius: 8px; overflow: hidden; border: 1px solid #334155; }
@@ -165,18 +165,117 @@
   <!-- Modal Translator -->
   <div class="modal-overlay" id="chat-modal">
     <div class="modal-content">
-      <h3 id="modal-trans-title">🌐 مترجم پیشرفته و دقیق زبان‌ها</h3>
+      <h3 id="modal-trans-title">🌐 مترجم پیشرفته و جامع تمام زبان‌های دنیا</h3>
       <textarea id="trans-text-input" placeholder="متن خود را اینجا بنویسید..."></textarea>
+      
+      <!-- لیست جامع و کامل زبان‌های دنیا -->
       <select id="trans-target-lang">
-        <option value="fa">فارسی (Persian)</option>
-        <option value="en" selected>انگلیسی (English)</option>
+        <option value="fa" selected>فارسی (Persian)</option>
+        <option value="en">انگلیسی (English)</option>
         <option value="ar">عربی (Arabic)</option>
         <option value="fr">فرانسوی (French)</option>
         <option value="de">آلمانی (German)</option>
         <option value="es">اسپانیایی (Spanish)</option>
-        <option value="tr">ترکی (Turkish)</option>
+        <option value="tr">ترکی استانبولی (Turkish)</option>
         <option value="ru">روسی (Russian)</option>
+        <option value="zh-CN">چینی ساده‌شده (Chinese Simplified)</option>
+        <option value="zh-TW">چینی سنتی (Chinese Traditional)</option>
+        <option value="ja">ژاپنی (Japanese)</option>
+        <option value="ko">کره‌ای (Korean)</option>
+        <option value="it">ایتالیایی (Italian)</option>
+        <option value="pt">پرتغالی (Portuguese)</option>
+        <option value="hi">هندی (Hindi)</option>
+        <option value="ur">اردو (Urdu)</option>
+        <option value="nl">هلندی (Dutch)</option>
+        <option value="sv">سوئدی (Swedish)</option>
+        <option value="no">نروژی (Norwegian)</option>
+        <option value="da">دانمارکی (Danish)</option>
+        <option value="fi">فنلاندی (Finnish)</option>
+        <option value="pl">لهستانی (Polish)</option>
+        <option value="ro">رومانیایی (Romanian)</option>
+        <option value="el">یوانی (Greek)</option>
+        <option value="hu">مجارستانی (Hungarian)</option>
+        <option value="cs">چکی (Czech)</option>
+        <option value="sk">اسلواکی (Slovak)</option>
+        <option value="uk">اوکراینی (Ukrainian)</option>
+
+        <option value="az">آذربایجانی (Azerbaijani)</option>
+        <option value="ku">کردی (Kurdish - Kurmanji)</option>
+        <option value="ckb">کردی سورانی (Kurdish - Sorani)</option>
+        <option value="ps">پشتو (Pashto)</option>
+        <option value="hy">ارمنی (Armenian)</option>
+        <option value="ka">گرجی (Georgian)</option>
+        <option value="th">تایلندی (Thai)</option>
+        <option value="vi">ویتنامی (Vietnamese)</option>
+        <option value="id">اندونزیایی (Indonesian)</option>
+        <option value="ms">مالزیایی (Malay)</option>
+        <option value="fil">فیلیپینی (Filipino/Tagalog)</option>
+        <option value="he">عبری (Hebrew)</option>
+        <option value="bn">بنگالی (Bengali)</option>
+        <option value="pa">پنجابی (Punjabi)</option>
+        <option value="ta">تامیل (Tamil)</option>
+
+        <option value="af">آفریکانس (Afrikaans)</option>
+        <option value="sq">آلبانیایی (Albanian)</option>
+        <option value="am">امهریک (Amharic)</option>
+        <option value="eu">باسکی (Basque)</option>
+        <option value="be">بلاروسی (Belarusian)</option>
+        <option value="bs">بوسنیایی (Bosnian)</option>
+        <option value="bg">بلغاری (Bulgarian)</option>
+        <option value="ca">کاتالان (Catalan)</option>
+        <option value="hr">کرواتی (Croatian)</option>
+        <option value="eo">اسپرانتو (Esperanto)</option>
+        <option value="et">استونیایی (Estonian)</option>
+        <option value="gl">گالیسیایی (Galician)</option>
+        <option value="gu">گجراتی (Gujarati)</option>
+        <option value="ha">هاوسا (Hausa)</option>
+        <option value="haw">هاوایی (Hawaiian)</option>
+        <option value="is">ایسلندی (Icelandic)</option>
+        <option value="ig">ایگبو (Igbo)</option>
+        <option value="ga">ایرلندی (Irish)</option>
+        <option value="jw">جاوه‌ای (Javanese)</option>
+        <option value="kn">کانارا (Kannada)</option>
+        <option value="kk">قزاقی (Kazakh)</option>
+        <option value="km">خمر (Khmer)</option>
+        <option value="ky">قرقیزی (Kirghiz)</option>
+        <option value="lo">لاو (Lao)</option>
+        <option value="la">لاتین (Latin)</option>
+        <option value="lv">لتونیایی (Latvian)</option>
+        <option value="lt">لیتوانیایی (Lithuanian)</option>
+        <option value="lb">لوکزامبورگی (Luxembourgish)</option>
+        <option value="mk">مقدونی (Macedonian)</option>
+        <option value="mg">مالاگاسی (Malagasy)</option>
+
+        <option value="ml">مالایالام (Malayalam)</option>
+        <option value="mt">مالتی (Maltese)</option>
+        <option value="mi">مائوری (Maori)</option>
+        <option value="mr">مراتی (Marathi)</option>
+        <option value="mn">مغولی (Mongolian)</option>
+        <option value="my">میانماری/بورمی (Burmese)</option>
+        <option value="ne">نپالی (Nepali)</option>
+        <option value="sm">ساموآیی (Samoan)</option>
+        <option value="gd">اسکاتلندی (Scottish Gaelic)</option>
+
+        <option value="sr">صربی (Serbian)</option>
+        <option value="st">سوتو (Sesotho)</option>
+        <option value="sn">شونا (Shona)</option>
+        <option value="sd">سندی (Sindhi)</option>
+        <option value="si">سینهالی (Sinhala)</option>
+        <option value="sl">اسلوونیایی (Slovenian)</option>
+        <option value="so">سومالیایی (Somali)</option>
+        <option value="su">سوندانسی (Sundanese)</option>
+        <option value="sw">سواحیلی (Swahili)</option>
+        <option value="tg">تاجیکی (Tajik)</option>
+        <option value="te">تلوگو (Telugu)</option>
+        <option value="uz">ازبکی (Uzbek)</option>
+        <option value="cy">ولزی (Welsh)</option>
+
+        <option value="xh">خوسا (Xhosa)</option>
+        <option value="yi">یدیش (Yiddish)</option>
+        <option value="yo">یوروبا (Yoruba)</option>
+        <option value="zu">زولو (Zulu)</option>
       </select>
+      
       <button class="btn-action btn-rename" onclick="sendTranslationRequest()">ترجمه کن / Translate</button>
       
       <div class="translation-header">
@@ -379,25 +478,30 @@
       }
     }
 
-    // موتور اختصاصی و مقاوم ترجمه جهت کارکرد روان در WebView اپلیکیشن گوشی
+    // ==========================================
+    // سیستم ترجمه استاندارد گوگل (بدون فینگلیش)
+    // ==========================================
     async function translateTextDirect(text, targetLangCode) {
       if (!text || text.trim() === '') return '';
       try {
         const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLangCode}&dt=t&q=${encodeURIComponent(text)}`;
         const response = await fetch(url);
-        if(!response.ok) throw new Error('API Primary Error');
+        if (!response.ok) throw new Error('Primary Error');
         const data = await response.json();
+        
         let translatedText = '';
         if (data && data[0]) {
-          data[0].forEach(item => { if (item[0]) translatedText += item[0]; });
+          data[0].forEach(item => { 
+            if (item && item[0]) translatedText += item[0]; 
+          });
         }
-        return translatedText || text;
+        return translatedText.trim() || text;
       } catch (e) {
         try {
           const fallbackUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=autodetect|${targetLangCode}`;
           const fbResponse = await fetch(fallbackUrl);
           const fbData = await fbResponse.json();
-          if(fbData && fbData.responseData && fbData.responseData.translatedText) {
+          if (fbData && fbData.responseData && fbData.responseData.translatedText) {
             return fbData.responseData.translatedText;
           }
         } catch(err) {
@@ -423,14 +527,51 @@
       resultDiv.innerText = translated;
     }
 
+    // ==========================================
+    // سیستم پخش صوتی چندگانه (مخصوص اپلیکیشن و وب)
+    // ==========================================
+    let currentAudioPlayer = null;
+
     function playTextToSpeech() {
       const text = document.getElementById('translation-result').innerText;
       if (!text || text === "نتیجه ترجمه..." || text.includes("در حال ترجمه")) return;
       
-      const utterance = new SpeechSynthesisUtterance(text);
       const targetLang = document.getElementById('trans-target-lang').value;
-      utterance.lang = targetLang === 'fa' ? 'fa-IR' : targetLang === 'en' ? 'en-US' : targetLang;
-      window.speechSynthesis.speak(utterance);
+
+      // روش اول: استفاده از SpeechSynthesis استاندارد مرورگر
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel(); // متوقف کردن پخش‌های قبلی
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = targetLang;
+        utterance.rate = 0.9;
+        
+        let hasVoice = false;
+        const voices = window.speechSynthesis.getVoices();
+        if (voices.length > 0) {
+          const matchingVoice = voices.find(v => v.lang.startsWith(targetLang));
+          if (matchingVoice) {
+            utterance.voice = matchingVoice;
+            hasVoice = true;
+          }
+        }
+
+        if (hasVoice) {
+          window.speechSynthesis.speak(utterance);
+          return;
+        }
+      }
+
+      // روش دوم (رزرو مطمئن برای گوشی‌ها): پخش صوتی مستقیم از آنلاین گوگل
+      if (currentAudioPlayer) {
+        currentAudioPlayer.pause();
+      }
+
+      const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=${targetLang}&client=tw-ob`;
+      currentAudioPlayer = new Audio(ttsUrl);
+      currentAudioPlayer.play().catch(err => {
+        console.error("خطا در پخش صوتی آنلاین:", err);
+        alert("پخش صوتی در این دستگاه پشتیبانی نمیشود یا نیازمند مجوز صدا است.");
+      });
     }
 
     async function renameItem(id) {
@@ -550,7 +691,6 @@
       closeURLModal();
     }
 
-    // تابع هوشمند ساخت تصویر با ترجمه خودکار به انگلیسی و هندلینگ خطای سرور
     async function submitAIGeneration() {
       const inputEl = document.getElementById('ai-prompt-input');
       const userPrompt = inputEl.value.trim();
@@ -585,7 +725,6 @@
         };
 
         img.onerror = () => {
-          // در صورت بروز خطای سرور در سرویس اصلی، از موتور تصویرساز رزرو استفاده می‌کند
           const fallbackUrl = `https://picsum.photos/1024/768?random=${seed}`;
           resultDiv.innerHTML = "";
           const finalImg = document.createElement('img');
