@@ -80,9 +80,9 @@
     .modal-content textarea { height: 120px; resize: vertical; }
 
     .translation-header { display: flex; justify-content: space-between; align-items: center; margin-top: 5px; }
-    .translation-result { min-height: 100px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 15px; color: #38bdf8; font-size: 1rem; line-height: 1.6; white-space: pre-wrap; }
-    .speaker-btn { background: #38bdf8; border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; transition: background 0.2s; }
-    .speaker-btn:hover { background: #0284c7; }
+    .translation-result { min-height: 100px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 15px; color: #38bdf8; font-size: 1rem; line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
+    .speaker-btn { background: #38bdf8; border: none; border-radius: 50%; width: 42px; height: 42px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; transition: background 0.2s; color: #0f172a; }
+    .speaker-btn:hover { background: #0284c7; color: #fff; }
 
     .generated-img-container { width: 100%; min-height: 300px; display: flex; align-items: center; justify-content: center; background: #0f172a; border-radius: 8px; overflow: hidden; border: 1px solid #334155; }
     .generated-img { width: 100%; max-height: 500px; object-fit: contain; }
@@ -169,8 +169,8 @@
       <textarea id="trans-text-input" placeholder="متن خود را اینجا بنویسید..."></textarea>
       
       <select id="trans-target-lang">
-        <option value="fa" selected>فارسی (Persian)</option>
-        <option value="en">انگلیسی (English)</option>
+        <option value="en" selected>انگلیسی (English)</option>
+        <option value="fa">فارسی (Persian)</option>
         <option value="ar">عربی (Arabic)</option>
         <option value="fr">فرانسوی (French)</option>
         <option value="de">آلمانی (German)</option>
@@ -178,7 +178,6 @@
         <option value="tr">ترکی استانبولی (Turkish)</option>
         <option value="ru">روسی (Russian)</option>
         <option value="zh-CN">چینی ساده‌شده (Chinese Simplified)</option>
-        <option value="zh-TW">چینی سنتی (Chinese Traditional)</option>
         <option value="ja">ژاپنی (Japanese)</option>
         <option value="ko">کره‌ای (Korean)</option>
         <option value="it">ایتالیایی (Italian)</option>
@@ -191,21 +190,10 @@
         <option value="da">دانمارکی (Danish)</option>
         <option value="fi">فنلاندی (Finnish)</option>
         <option value="pl">لهستانی (Polish)</option>
-        <option value="ro">رومانیایی (Romanian)</option>
-        <option value="el">یوانی (Greek)</option>
-        <option value="hu">مجارستانی (Hungarian)</option>
-        <option value="cs">چکی (Czech)</option>
-        <option value="sk">اسلواکی (Slovak)</option>
         <option value="uk">اوکراینی (Ukrainian)</option>
         <option value="az">آذربایجانی (Azerbaijani)</option>
         <option value="ku">کردی (Kurdish)</option>
         <option value="ps">پشتو (Pashto)</option>
-        <option value="hy">ارمنی (Armenian)</option>
-        <option value="ka">گرجی (Georgian)</option>
-        <option value="th">تایلندی (Thai)</option>
-        <option value="vi">ویتنامی (Vietnamese)</option>
-        <option value="id">اندونزیایی (Indonesian)</option>
-        <option value="ms">مالزیایی (Malay)</option>
         <option value="he">عبری (Hebrew)</option>
       </select>
       
@@ -407,41 +395,49 @@
       }
     }
 
-    // ==========================================
-    // ⚙️ تابع اصلی و بهینه‌شده ترجمه (اصلاح شده)
-    // ==========================================
+    // ==========================================================
+    // 🌐 سیستم بازنویسی شده ترجمه (بدون فیلتر کلمات و بدون خطا)
+    // ==========================================================
     async function translateTextDirect(text, targetLangCode) {
       if (!text || text.trim() === '') return '';
+      const cleanText = text.trim();
+
+      // اولویت اول: Google Translate API
       try {
-        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLangCode}&dt=t&q=${encodeURIComponent(text)}`;
+        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLangCode}&dt=t&q=${encodeURIComponent(cleanText)}`;
         const response = await fetch(url);
-        if (!response.ok) throw new Error('Google Translate API Error');
-        const data = await response.json();
-        
-        let translatedText = '';
-        if (data && data[0]) {
-          data[0].forEach(item => { 
-            if (item && item[0]) translatedText += item[0]; 
-          });
+        if (response.ok) {
+          const data = await response.json();
+          let translatedText = '';
+          if (data && data[0]) {
+            data[0].forEach(item => { if (item && item[0]) translatedText += item[0]; });
+          }
+          if (translatedText.trim() && translatedText.trim() !== cleanText) {
+            return translatedText.trim();
+          }
         }
-        return translatedText.trim() || text;
       } catch (e) {
-        // روش دوم (Fallback API)
-        try {
-          const fallbackUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=autodetect|${targetLangCode}`;
-          const fbResponse = await fetch(fallbackUrl);
-          const fbData = await fbResponse.json();
+        console.warn("گوگل ریسپانس نداد، سوئیچ به سرور دوم...");
+      }
+
+      // اولویت دوم (موتور پشتیبان مستقیم بدون سانسور)
+      try {
+        const fbUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(cleanText)}&langpair=autodetect|${targetLangCode}`;
+        const fbRes = await fetch(fbUrl);
+        if (fbRes.ok) {
+          const fbData = await fbRes.json();
           if (fbData && fbData.responseData && fbData.responseData.translatedText) {
             return fbData.responseData.translatedText;
           }
-        } catch(err) {
-          console.error("خطا در ترجمه:", err);
         }
-        return text;
+      } catch (err) {
+        console.error("خطای موتور دوم:", err);
       }
+
+      return cleanText;
     }
 
-    // درخواست ترجمه در مدال
+    // ارسال درخواست ترجمه
     async function sendTranslationRequest() {
       const inputEl = document.getElementById('trans-text-input');
       const text = inputEl.value.trim();
@@ -453,26 +449,50 @@
         return;
       }
 
-      resultEl.innerText = "در حال ترجمه...";
+      resultEl.innerText = "⏳ در حال ترجمه...";
       const translated = await translateTextDirect(text, targetLang);
       resultEl.innerText = translated;
     }
 
-    // پخش صوتی متن ترجمه‌شده
+    // ==========================================================
+    // 🔊 سیستم اصلاح شده و استاندارد خواندن صوتی (TTS)
+    // ==========================================================
     function playTextToSpeech() {
       const resultText = document.getElementById('translation-result').innerText;
-      if (!resultText || resultText === "نتیجه ترجمه..." || resultText === "در حال ترجمه...") {
+      if (!resultText || resultText === "نتیجه ترجمه..." || resultText === "⏳ در حال ترجمه...") {
         alert("متنی برای پخش وجود ندارد.");
         return;
       }
+
+      if (!('speechSynthesis' in window)) {
+        alert("مرورگر شما از قابلیت خواندن صوتی پشتیبانی نمی‌کند.");
+        return;
+      }
+
+      window.speechSynthesis.cancel(); // توقف صداهای قبلی
+
       const targetLang = document.getElementById('trans-target-lang').value;
       const utterance = new SpeechSynthesisUtterance(resultText);
-      utterance.lang = targetLang;
+
+      // نگاشت دقیق زبان‌ها به کدهای بین‌المللی جهت پخش در گوشی و لپ‌تاپ
+      const langMap = {
+        'fa': 'fa-IR', 'en': 'en-US', 'ar': 'ar-SA', 'fr': 'fr-FR',
+        'de': 'de-DE', 'es': 'es-ES', 'tr': 'tr-TR', 'ru': 'ru-RU',
+        'zh-CN': 'zh-CN', 'ja': 'ja-JP', 'ko': 'ko-KR', 'it': 'it-IT',
+        'pt': 'pt-PT', 'hi': 'hi-IN', 'ur': 'ur-PK', 'nl': 'nl-NL',
+        'sv': 'sv-SE', 'no': 'no-NO', 'da': 'da-DK', 'fi': 'fi-FI',
+        'pl': 'pl-PL', 'uk': 'uk-UA', 'az': 'az-AZ', 'he': 'he-IL'
+      };
+
+      utterance.lang = langMap[targetLang] || targetLang;
+      utterance.rate = 0.9; // سرعت مناسب
+      utterance.pitch = 1.0;
+
       window.speechSynthesis.speak(utterance);
     }
 
     // ==========================================
-    // آپلود فایل
+    // مدیریت فایل‌ها و مدال‌ها
     // ==========================================
     async function handleFileUpload(event, type) {
       const file = event.target.files[0];
