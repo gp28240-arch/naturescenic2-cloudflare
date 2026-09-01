@@ -3,6 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- جلوگیری از ذخیره کش در گوشی و مرورگر جهت به‌روزرسانی آنی -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  
   <title>naturescenic2-ai | دستیار اختصاصی طبیعت</title>
 
   <!-- کتابخانه رسمی Supabase -->
@@ -395,9 +400,6 @@
       }
     }
 
-    // ==========================================================
-    // 🌐 موتور ترجمه گوگل دقیق و بدون پیغام خطا
-    // ==========================================================
     async function translateTextDirect(text, targetLangCode) {
       if (!text || text.trim() === '') return '';
       const cleanText = text.trim();
@@ -440,9 +442,6 @@
       resultEl.innerText = translated;
     }
 
-    // ==========================================================
-    // 🔊 سیستم پخش صوتی (TTS)
-    // ==========================================================
     function playTextToSpeech() {
       const resultText = document.getElementById('translation-result').innerText;
       if (!resultText || resultText === "نتیجه ترجمه..." || resultText === "⏳ در حال ترجمه...") {
@@ -476,9 +475,6 @@
       window.speechSynthesis.speak(utterance);
     }
 
-    // ==========================================
-    // مدیریت فایل‌ها و مدال‌ها
-    // ==========================================
     async function handleFileUpload(event, type) {
       const file = event.target.files[0];
       if (!file) return;
@@ -566,18 +562,65 @@
     function openURLModal() { document.getElementById('url-modal').style.display = 'flex'; }
     function closeURLModal() { document.getElementById('url-modal').style.display = 'none'; }
 
-    async function addURLMedia() {
-      const url = document.getElementById('url-input').value.trim();
-      const type = document.getElementById('url-type-select').value;
-      const titleFa = document.getElementById('url-title-input').value.trim() || 'فایل لینک‌شده';
+    function handleAIKeyDown(e) {
+      if (e.key === 'Enter') submitAIGeneration();
+    }
 
-      if (!url) {
-        alert("لطفاً آدرس لینک را وارد کنید.");
+    async function submitAIGeneration() {
+      const promptInput = document.getElementById('ai-prompt-input').value.trim();
+      const resultContainer = document.getElementById('ai-image-result');
+
+      if (!promptInput) {
+        alert("لطفاً متنی برای ساخت تصویر وارد کنید.");
         return;
       }
 
-      const newId = 'url_' + Date.now();
+      resultContainer.innerHTML = `<p style="color:#38bdf8;">⏳ در حال ترجمه متن و تولید تصویر با هوش مصنوعی... لطفاً چند ثانیه صبر کنید.</p>`;
+
+      try {
+        const translatedPrompt = await translateTextDirect(promptInput, 'en');
+        const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(translatedPrompt)}?width=1024&height=768&nologo=true&seed=${Math.floor(Math.random() * 1000000)}`;
+
+        const img = new Image();
+        img.src = imageUrl;
+        img.className = 'generated-img';
+        img.onload = async () => {
+          resultContainer.innerHTML = '';
+          resultContainer.appendChild(img);
+
+          const newId = 'ai_' + Date.now();
+          const titleEn = translatedPrompt;
+
+          mediaItems.unshift({
+            id: newId,
+            type: 'image',
+            src: imageUrl,
+            titleFa: promptInput,
+            titleEn: titleEn
+          });
+
+          renderMediaItems();
+        };
+        img.onerror = () => {
+          resultContainer.innerHTML = `<p style="color:#ef4444;">خطا در دریافت تصویر. لطفاً مجدداً تلاش کنید.</p>`;
+        };
+      } catch (err) {
+        resultContainer.innerHTML = `<p style="color:#ef4444;">بروز خطا در پردازش درخواست.</p>`;
+      }
+    }
+
+    async function addURLMedia() {
+      const url = document.getElementById('url-input').value.trim();
+      const type = document.getElementById('url-type-select').value;
+      const titleFa = document.getElementById('url-title-input').value.trim() || 'فایل از لینک مستقیم';
+
+      if (!url) {
+        alert("لطفاً لینک مستقیم را وارد کنید.");
+        return;
+      }
+
       const titleEn = await translateTextDirect(titleFa, 'en');
+      const newId = 'url_' + Date.now();
 
       mediaItems.unshift({
         id: newId,
@@ -591,46 +634,6 @@
       closeURLModal();
       document.getElementById('url-input').value = '';
       document.getElementById('url-title-input').value = '';
-    }
-
-    function handleAIKeyDown(e) {
-      if (e.key === 'Enter') submitAIGeneration();
-    }
-
-    async function submitAIGeneration() {
-      const promptText = document.getElementById('ai-prompt-input').value.trim();
-      const resultContainer = document.getElementById('ai-image-result');
-
-      if (!promptText) {
-        alert("لطفاً توصیفی برای ساخت تصویر بنویسید.");
-        return;
-      }
-
-      resultContainer.innerHTML = `<p style="color:#a855f7; font-size:1.1rem;">در حال ترجمه توصیف و ساخت تصویر توسط Pollinations AI...</p>`;
-
-      const englishPrompt = await translateTextDirect(promptText, 'en');
-      const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(englishPrompt)}?width=1024&height=768&seed=${Math.floor(Math.random() * 1000000)}&nologo=true`;
-
-      resultContainer.innerHTML = `
-        <div style="display:flex; flex-direction:column; align-items:center; gap:10px; width:100%;">
-          <img src="${imageUrl}" class="generated-img" alt="${promptText}" id="current-gen-img">
-          <button class="btn-action btn-rename" style="margin-top:10px;" onclick="addGeneratedToGrid('${imageUrl}', '${promptText.replace(/'/g, "\\'")}', '${englishPrompt.replace(/'/g, "\\'")}')">➕ افزودن تصویر به لیست اصلی</button>
-        </div>
-      `;
-    }
-
-    function addGeneratedToGrid(url, titleFa, titleEn) {
-      const newId = 'ai_' + Date.now();
-      mediaItems.unshift({
-        id: newId,
-        type: 'image',
-        src: url,
-        titleFa: titleFa,
-        titleEn: titleEn
-      });
-      renderMediaItems();
-      closeAIModal();
-      alert("تصویر هوش مصنوعی به لیست اضافه شد!");
     }
   </script>
 </body>
