@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>naturescenic2-ai | دستیار اختصاصی طبیعت</title>
 
+  <!-- آیکون‌های استاندارد مرورگر و PWA -->
+  <link rel="icon" type="image/png" sizes="192x192" href="https://lh3.googleusercontent.com/d/1EZf35v8476qtDC_rTS_h-6-_zIq0RNTh=w512">
+  <link rel="icon" type="image/png" sizes="512x512" href="https://lh3.googleusercontent.com/d/1EZf35v8476qtDC_rTS_h-6-_zIq0RNTh=w512">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://lh3.googleusercontent.com/d/1EZf35v8476qtDC_rTS_h-6-_zIq0RNTh=w512">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0f172a">
+
   <!-- کتابخانه رسمی Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -14,24 +21,21 @@
 
     .main-header { display: flex; justify-content: space-between; align-items: center; background: #1e293b; padding: 15px 25px; border-radius: 12px; border: 1px solid #334155; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
     .header-brand { display: flex; align-items: center; gap: 15px; }
-    .site-logo { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 2px solid #38bdf8; box-shadow: 0 0 12px rgba(56, 189, 248, 0.4); transition: transform 0.3s ease; }
-    .site-logo:hover { transform: scale(1.08); }
-    .yt-logo-btn { display: flex; align-items: center; gap: 12px; background-color: #cc0000; color: #ffffff; padding: 10px 20px; border-radius: 10px; text-decoration: none; font-weight: bold; box-shadow: 0 4px 12px rgba(204, 0, 0, 0.4); transition: all 0.3s ease; }
-    .yt-logo-btn:hover { background-color: #ff0000; transform: translateY(-2px); }
+    .site-logo { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 2px solid #38bdf8; box-shadow: 0 0 12px rgba(56, 189, 248, 0.4); }
+    .yt-logo-btn { display: flex; align-items: center; gap: 12px; background-color: #cc0000; color: #ffffff; padding: 10px 20px; border-radius: 10px; text-decoration: none; font-weight: bold; }
     .yt-icon { width: 28px; height: 28px; fill: white; }
-    .header-titles { text-align: right; }
     .header-titles h2 { color: #38bdf8; font-size: 1.5rem; }
     .header-titles p { font-size: 0.95rem; color: #94a3b8; }
 
-    .translate-section { background: #1e293b; padding: 12px 20px; border-radius: 10px; border: 2px solid #22c55e; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2); }
+    .translate-section { background: #1e293b; padding: 12px 20px; border-radius: 10px; border: 2px solid #22c55e; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
     .translate-title { font-weight: bold; color: #4ade80; }
 
     .control-panel { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; align-items: center; }
-    .btn { font-weight: bold; background-color: #1e293b; color: #ffffff; padding: 12px 20px; border-radius: 8px; border: 2px solid #38bdf8; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
+    .btn { font-weight: bold; background-color: #1e293b; color: #ffffff; padding: 12px 20px; border-radius: 8px; border: 2px solid #38bdf8; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
     .btn:hover { background-color: #38bdf8; color: #0f172a; }
     .btn-lang { border-color: #f59e0b; color: #fbbf24; }
     .btn-app { border-color: #10b981; color: #34d399; }
-    .btn-app:hover { background-color: #10b981; color: #0f172a; }
+    .btn-url { border-color: #eab308; color: #fef08a; }
 
     .btn-ai-gemini, .btn-chat-animated { 
       border-color: #a855f7; 
@@ -40,72 +44,38 @@
       font-size: 1.1rem;
       padding: 14px 24px;
       border-radius: 12px;
-      box-shadow: 0 6px 20px rgba(168, 85, 247, 0.5);
-      animation: pulse 2s infinite;
+      font-weight: bold;
       cursor: pointer;
+      border: none;
     }
-    .btn-ai-gemini:hover, .btn-chat-animated:hover { background: linear-gradient(135deg, #9333ea, #c084fc); color: #ffffff; transform: scale(1.05); }
-
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.7); }
-      70% { box-shadow: 0 0 0 15px rgba(168, 85, 247, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0); }
-    }
-
-    .btn-url { border-color: #eab308; color: #fef08a; }
 
     .filter-menu { display: flex; gap: 10px; margin-bottom: 20px; background: #1e293b; padding: 10px; border-radius: 8px; border: 1px solid #334155; }
     .filter-btn { background: #0f172a; color: #94a3b8; border: 1px solid #475569; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; }
     .filter-btn.active { background: #38bdf8; color: #0f172a; border-color: #38bdf8; }
 
     .media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; }
-    .media-card { background: #1e293b; border-radius: 12px; overflow: hidden; border: 1px solid #334155; display: flex; flex-direction: column; box-shadow: 0 4px 15px rgba(0,0,0,0.4); position: relative; }
-    .media-card img, .media-card video, .media-card iframe { width: 100%; height: 240px; object-fit: cover; background-color: #0f172a; display: block; border: none; }
+    .media-card { background: #1e293b; border-radius: 12px; overflow: hidden; border: 1px solid #334155; display: flex; flex-direction: column; }
+    .media-card img, .media-card video { width: 100%; height: 240px; object-fit: cover; }
     .media-card audio { width: 100%; margin-top: 20px; padding: 10px; }
-    .card-body { padding: 15px; display: flex; flex-direction: column; gap: 10px; flex-grow: 1; }
-    .card-title-fa { font-weight: bold; color: #f8fafc; font-size: 1rem; text-align: right; }
-    .card-title-en { font-size: 0.85rem; color: #94a3b8; direction: ltr; text-align: right; }
-    .rename-box { display: flex; gap: 5px; margin-top: auto; }
-    .rename-input { flex: 1; padding: 8px 10px; border-radius: 6px; border: 1px solid #475569; background: #0f172a; color: #fff; font-size: 0.85rem; text-align: right; }
-    .btn-action { padding: 8px 14px; border-radius: 6px; border: none; cursor: pointer; font-weight: bold; font-size: 0.85rem; }
-    .btn-rename { background-color: #0284c7; color: white; }
-    .btn-delete { background-color: #dc2626; color: white; width: 100%; margin-top: 5px; }
-    .btn-download { background-color: #22c55e; color: white; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 5px; margin-top: 5px; width: 100%; text-align: center; }
+    .card-body { padding: 15px; display: flex; flex-direction: column; gap: 10px; }
 
     .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
-    .modal-content { background: #1e293b; padding: 25px; border-radius: 12px; border: 2px solid #a855f7; width: 95%; max-width: 800px; max-height: 90vh; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; direction: rtl; text-align: right; }
-    .gemini-modal-content { border: 3px solid #c084fc; box-shadow: 0 0 35px rgba(168, 85, 247, 0.4); padding: 35px; }
-    .gemini-modal-content h3 { font-size: 1.8rem; color: #c084fc; text-align: center; }
-    .gemini-modal-content input { font-size: 1.1rem; padding: 16px; border: 2px solid #a855f7; }
-    .modal-content input, .modal-content select, .modal-content textarea { padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; width: 100%; font-size: 0.95rem; text-align: right; direction: rtl; }
+    .modal-content { background: #1e293b; padding: 25px; border-radius: 12px; border: 2px solid #a855f7; width: 95%; max-width: 800px; max-height: 90vh; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+    .modal-content input, .modal-content select, .modal-content textarea { padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; width: 100%; font-size: 0.95rem; }
     .modal-content textarea { height: 120px; resize: vertical; }
 
-    .lang-select-container { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-    .lang-select-container select { flex: 1; min-width: 140px; }
+    .btn-action { padding: 10px 18px; border-radius: 6px; border: none; cursor: pointer; font-weight: bold; }
+    .btn-rename { background-color: #0284c7; color: white; }
+    .btn-delete { background-color: #dc2626; color: white; }
 
-    .translation-header { display: flex; justify-content: space-between; align-items: center; margin-top: 5px; }
-    .translation-result { min-height: 100px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 15px; color: #38bdf8; font-size: 1rem; line-height: 1.6; white-space: pre-wrap; position: relative; text-align: right; direction: rtl; }
-    .speaker-btn { background: #22c55e; color: white; border: none; border-radius: 50px; padding: 8px 16px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-weight: bold; font-size: 0.9rem; transition: background 0.2s; }
-    .speaker-btn:hover { background: #16a34a; }
-
-    .generated-img-container { width: 100%; min-height: 300px; display: flex; align-items: center; justify-content: center; background: #0f172a; border-radius: 8px; overflow: hidden; border: 1px solid #334155; }
-    .generated-img { width: 100%; max-height: 500px; object-fit: contain; }
+    .generated-img-container { width: 100%; min-height: 250px; display: flex; align-items: center; justify-content: center; background: #0f172a; border-radius: 8px; border: 1px solid #334155; margin-top: 10px; }
+    .generated-img { width: 100%; max-height: 450px; object-fit: contain; }
   </style>
-
-  <!-- تنظیمات PWA (قابلیت نصب روی گوشی) -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#0f172a">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="NatureScenic2">
-  <link rel="apple-touch-icon" href="https://lh3.googleusercontent.com/d/1EZf35v8476qtDC_rTS_h-6-_zIq0RNTh">
 
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-          .then(reg => console.log('PWA Service Worker ثبت شد:', reg))
-          .catch(err => console.log('خطا در ثبت Service Worker:', err));
+        navigator.serviceWorker.register('./sw.js').catch(err => console.log(err));
       });
     }
   </script>
@@ -114,152 +84,106 @@
 
   <header class="main-header">
     <div class="header-brand">
-      <img src="https://lh3.googleusercontent.com/d/1EZf35v8476qtDC_rTS_h-6-_zIq0RNTh" alt="naturescenic2 logo" class="site-logo">
+      <img src="https://lh3.googleusercontent.com/d/1EZf35v8476qtDC_rTS_h-6-_zIq0RNTh=w512" alt="logo" class="site-logo">
       <div class="header-titles">
         <h2>naturescenic2-ai</h2>
-        <p id="sub-header">طبیعت ایران</p>
+        <p>طبیعت ایران</p>
       </div>
     </div>
 
     <a href="https://youtube.com/@naturescenic2" target="_blank" class="yt-logo-btn">
-      <svg class="yt-icon" viewBox="0 0 24 24">
-        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-      </svg>
+      <svg class="yt-icon" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
       <span>naturescenic2 @ YouTube</span>
     </a>
   </header>
 
   <div class="translate-section">
-    <span class="translate-title" id="lbl-quick-trans">🌐 مترجم سریع صفحه / Quick Translator:</span>
+    <span class="translate-title">🌐 مترجم سریع صفحه:</span>
     <div id="google_translate_element"></div>
   </div>
 
   <div class="control-panel">
-    <button class="btn btn-lang" id="toggle-lang-btn" onclick="toggleLanguage()">🌐 Switch to English / تغییر زبان</button>
-    
-    <a href="https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/NatureScenic2-ai/app-release.apk" class="btn btn-app" id="btn-download-app" onclick="handleAppButtonClick(event)">📲 دانلود اپلیکیشن / Download App</a>
+    <button class="btn btn-lang" onclick="toggleLanguage()">🌐 Switch to English</button>
+    <a href="https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/NatureScenic2-ai/app-release.apk" class="btn btn-app">📲 دانلود اپلیکیشن</a>
 
-    <label class="btn" id="lbl-upload-img">
-      📷 آپلود عکس / Wallpaper
-      <input type="file" id="upload-image" accept="image/*" hidden onchange="handleFileUpload(event, 'image')">
-    </label>
+    <label class="btn">📷 آپلود عکس <input type="file" hidden accept="image/*" onchange="handleFileUpload(event, 'image')"></label>
+    <label class="btn">🎥 آپلود ویدیو <input type="file" hidden accept="video/*" onchange="handleFileUpload(event, 'video')"></label>
+    <label class="btn">🎵 آپلود صدا <input type="file" hidden accept="audio/*" onchange="handleFileUpload(event, 'audio')"></label>
 
-    <label class="btn" id="lbl-upload-video">
-      🎥 آپلود ویدیو / Video
-      <input type="file" id="upload-video" accept="video/*" hidden onchange="handleFileUpload(event, 'video')">
-    </label>
-
-    <label class="btn" id="lbl-upload-audio">
-      🎵 آپلود صدا / Audio
-      <input type="file" id="upload-audio" accept="audio/*" hidden onchange="handleFileUpload(event, 'audio')">
-    </label>
-
-    <button class="btn btn-url" id="btn-upload-url" onclick="openURLModal()">🌐 آپلود از لینک / Upload via URL</button>
-    <button class="btn-ai-gemini" id="btn-ai-img" onclick="openAIModal()">✨ ساخت عکس با هوش مصنوعی GEMINI ✨</button>
-    <button class="btn-chat-animated" id="btn-translate-menu" onclick="openChatModal()">🌐 ترجمه متن جهانی / Universal Translator</button>
+    <button class="btn btn-url" onclick="openModal('url-modal')">🌐 آپلود از لینک</button>
+    <button class="btn-ai-gemini" onclick="openModal('ai-modal')">✨ ساخت عکس AI ✨</button>
+    <button class="btn-chat-animated" onclick="openModal('chat-modal')">🌐 مترجم متن جهانی</button>
   </div>
 
   <div class="filter-menu">
-    <button class="filter-btn active" id="filter-all" onclick="filterMedia('all', this)">همه / All</button>
-    <button class="filter-btn" id="filter-img" onclick="filterMedia('image', this)">🖼️ فقط عکس‌ها / Images Only</button>
-    <button class="filter-btn" id="filter-vid" onclick="filterMedia('video', this)">🎥 فقط ویدیوها / Videos Only</button>
-    <button class="filter-btn" id="filter-aud" onclick="filterMedia('audio', this)">🎵 فقط صداها / Audio Only</button>
+    <button class="filter-btn active" onclick="filterMedia('all', this)">همه</button>
+    <button class="filter-btn" onclick="filterMedia('image', this)">🖼️ عکس‌ها</button>
+    <button class="filter-btn" onclick="filterMedia('video', this)">🎥 ویدیوها</button>
+    <button class="filter-btn" onclick="filterMedia('audio', this)">🎵 صداها</button>
   </div>
 
   <div class="media-grid" id="media-grid"></div>
 
-  <!-- Modal GEMINI -->
+  <!-- مودال ساخت تصویر -->
   <div class="modal-overlay" id="ai-modal">
-    <div class="modal-content gemini-modal-content">
-      <h3 id="modal-ai-title">✨ ساخت تصویر با هوش مصنوعی GEMINI ✨</h3>
-      <p id="modal-ai-desc" style="font-size:1rem; color:#cbd5e1; text-align:center;">توصیف تصویر را بنویسید؛ سیستم هوشمند آن را به انگلیسی ترجمه کرده و تصویر را می‌سازد:</p>
-      <input type="text" id="ai-prompt-input" placeholder="مثال: رودخانه خروشان، درختان سرسبز..." onkeydown="handleAIKeyDown(event)">
+    <div class="modal-content">
+      <h3 style="color:#c084fc; text-align:center;">✨ ساخت تصویر با هوش مصنوعی ✨</h3>
+      <input type="text" id="ai-prompt-input" placeholder="توصیف تصویر (مثلاً: طبیعت سرسبز چرام با چشمه آب)...">
       <div class="generated-img-container" id="ai-image-result">
-        <p style="color:#64748b; font-size:1.1rem;">تصویر ساخته شده توسط Gemini اینجا نمایش داده می‌شود</p>
+        <p style="color:#64748b;">تصویر ساخته شده اینجا نمایش داده می‌شود</p>
       </div>
-      <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap; margin-top:10px;">
-        <button class="btn-action btn-delete" style="width:auto; padding: 12px 24px; font-size:1rem;" onclick="closeAIModal()">بستن / Close</button>
-        <button class="btn-action btn-rename" style="background:#a855f7; padding: 12px 30px; font-size:1.1rem;" onclick="submitAIGeneration()">✨ تولید تصویر با Gemini</button>
+      <div style="display:flex; gap:10px; justify-content:center; margin-top:10px;">
+        <button class="btn-action btn-delete" onclick="closeModal('ai-modal')">بستن</button>
+        <button class="btn-action btn-rename" style="background:#a855f7;" onclick="submitAIGeneration()">✨ ساخت تصویر</button>
       </div>
     </div>
   </div>
 
-  <!-- Modal Translator -->
+  <!-- مودال مترجم -->
   <div class="modal-overlay" id="chat-modal">
     <div class="modal-content">
-      <h3 id="modal-trans-title">🌐 مترجم پیشرفته تمام زبان‌های جهان</h3>
-      
-      <div class="lang-select-container">
+      <h3>🌐 مترجم متن اختصاصی</h3>
+      <div style="display:flex; gap:10px;">
         <select id="trans-source-lang">
-          <option value="auto" selected>تشخیص خودکار (Auto Detect)</option>
-          <option value="fa">ایران - فارسی (Persian)</option>
-          <option value="en">امریکا/انگلیس - انگلیسی (English)</option>
-          <option value="ar">عربستان/عرب‌زبانان - عربی (Arabic)</option>
-          <option value="tr">ترکیه - ترکی (Turkish)</option>
-          <option value="fr">فرانسه - فرانسوی (French)</option>
-          <option value="de">آلمان - آلمانی (German)</option>
-          <option value="es">اسپانیا - اسپانیایی (Spanish)</option>
-          <option value="it">ایتالیا - ایتالیایی (Italian)</option>
-          <option value="ru">روسیه - روسی (Russian)</option>
-          <option value="zh-CN">چین - چینی (Chinese)</option>
-          <option value="ja">ژاپن - ژاپنی (Japanese)</option>
-          <option value="ko">کره جنوبی - کره‌ای (Korean)</option>
-          <option value="hi">هند - هندی (Hindi)</option>
-          <option value="ur">پاکستان - اردو (Urdu)</option>
+          <option value="auto">تشخیص خودکار</option>
+          <option value="fa">فارسی</option>
+          <option value="en">English</option>
+          <option value="ar">العربية</option>
         </select>
-
-        <span style="font-weight:bold; color:#38bdf8;">➔</span>
-
         <select id="trans-target-lang">
-          <option value="en" selected>امریکا/انگلیس - انگلیسی (English)</option>
-          <option value="fa">ایران - فارسی (Persian)</option>
-          <option value="ar">عربستان/عرب‌زبانان - عربی (Arabic)</option>
-          <option value="tr">ترکیه - ترکی (Turkish)</option>
-          <option value="fr">فرانسه - فرانسوی (French)</option>
-          <option value="de">آلمان - آلمانی (German)</option>
-          <option value="es">اسپانیا - اسپانیایی (Spanish)</option>
+          <option value="en">English</option>
+          <option value="fa">فارسی</option>
+          <option value="ar">العربية</option>
         </select>
       </div>
-
-      <textarea id="trans-text-input" placeholder="متن خود را اینجا بنویسید..."></textarea>
-
-      <button class="btn-action btn-rename" onclick="sendTranslationRequest()">ترجمه کن / Translate</button>
-      
-      <div class="translation-header">
-        <span style="color:#94a3b8; font-size:0.9rem;">نتیجه ترجمه:</span>
-        <button class="speaker-btn" onclick="playTextToSpeech()">🔊 تلفظ صوتی</button>
-      </div>
-
-      <div class="translation-result" id="translation-result">نتیجه ترجمه اینجا نمایش داده می‌شود...</div>
-      
-      <button class="btn-action btn-delete" style="width:auto; align-self:flex-end;" onclick="closeChatModal()">بستن / Close</button>
+      <textarea id="trans-text-input" placeholder="متن مورد نظر را وارد کنید..."></textarea>
+      <button class="btn-action btn-rename" onclick="sendTranslationRequest()">ترجمه کن</button>
+      <div id="translation-result" style="background:#0f172a; padding:15px; border-radius:8px; min-height:80px; color:#38bdf8;">نتیجه ترجمه...</div>
+      <button class="btn-action btn-delete" style="width:auto; align-self:flex-end;" onclick="closeModal('chat-modal')">بستن</button>
     </div>
   </div>
 
-  <!-- Modal URL -->
+  <!-- مودال URL -->
   <div class="modal-overlay" id="url-modal">
     <div class="modal-content">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h3>🌐 آپلود مستقیم فایل از لینک اینترنتی</h3>
-        <button class="btn-action" style="background: #f59e0b; color: #000;" onclick="changeAdminPassword()">🔑 تغییر رمز عبور مدیر</button>
-      </div>
-      <input type="url" id="url-input" placeholder="لینک مستقیم تصویر، ویدیو یا یوتیوب">
+      <h3>🌐 افزودن فایل از لینک</h3>
+      <input type="url" id="url-input" placeholder="لینک مستقیم فایل...">
       <select id="url-type-select">
-        <option value="image">تصویر (Image)</option>
-        <option value="video">ویدیو (Video)</option>
-        <option value="audio">صدا (Audio)</option>
+        <option value="image">عکس</option>
+        <option value="video">ویدیو</option>
+        <option value="audio">صدا</option>
       </select>
-      <input type="text" id="url-title-input" placeholder="عنوان فایل (به فارسی)...">
+      <input type="text" id="url-title-input" placeholder="عنوان فایل...">
       <div style="display:flex; gap:10px; justify-content:flex-end;">
-        <button class="btn-action btn-delete" style="width:auto; margin:0;" onclick="closeURLModal()">انصراف</button>
-        <button class="btn-action btn-rename" onclick="addURLMedia()">افزودن و نمایش</button>
+        <button class="btn-action btn-delete" onclick="closeModal('url-modal')">انصراف</button>
+        <button class="btn-action btn-rename" onclick="addURLMedia()">افزودن</button>
       </div>
     </div>
   </div>
 
   <script type="text/javascript">
     function googleTranslateElementInit() {
-      new google.translate.TranslateElement({ pageLanguage: 'fa', layout: google.translate.TranslateElement.InlineLayout.SIMPLE }, 'google_translate_element');
+      new google.translate.TranslateElement({ pageLanguage: 'fa' }, 'google_translate_element');
     }
   </script>
   <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
@@ -268,285 +192,76 @@
     const SUPABASE_URL = "https://xvkbwsejloapnkjgrjde.supabase.co";
     const SUPABASE_KEY = "sb_publishable_PjBM2rAkc1U3WyrXhVfPCQ_5qrIs_da"; 
     const BUCKET_NAME = "dilgon-image";
-
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    function getAdminPassword() {
-      return localStorage.getItem('app_admin_pass') || '1234';
-    }
-
-    function checkAdminAuth() {
-      const inputPass = prompt("لطفاً رمز عبور مدیر را وارد کنید:");
-      if (inputPass === getAdminPassword()) {
-        return true;
-      } else if (inputPass !== null) {
-        alert("رمز عبور اشتباه است! دسترسی امکان‌پذیر نیست.");
-      }
-      return false;
-    }
-
-    function changeAdminPassword() {
-      const currentPass = prompt("رمز عبور فعلی را وارد کنید:");
-      if (currentPass === getAdminPassword()) {
-        const newPass = prompt("رمز عبور جدید را وارد کنید:");
-        if (newPass && newPass.trim() !== "") {
-          localStorage.setItem('app_admin_pass', newPass.trim());
-          alert("رمز عبور با موفقیت تغییر یافت.");
-        } else {
-          alert("رمز عبور نمی‌تواند خالی باشد.");
-        }
-      } else if (currentPass !== null) {
-        alert("رمز عبور فعلی نادرست است!");
-      }
-    }
-
-    function handleAppButtonClick(e) {
-      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-      if (isMobile) {
-        e.preventDefault();
-        window.open(window.location.href, '_blank');
-      }
-    }
-
-    let currentLang = 'fa';
-
     let mediaItems = [
-      { id: 'c1', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/1.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۱)', titleEn: 'Belqis Spring Choram (Photo 1)' },
-      { id: 'c2', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/2.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۲)', titleEn: 'Belqis Spring Choram (Photo 2)' },
-      { id: 'c3', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/3.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۳)', titleEn: 'Belqis Spring Choram (Photo 3)' },
-      { id: 'c4', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/4.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۴)', titleEn: 'Belqis Spring Choram (Photo 4)' },
-      { id: 'c5', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/5.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۵)', titleEn: 'Belqis Spring Choram (Photo 5)' },
-      { id: 'c6', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/6.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۶)', titleEn: 'Belqis Spring Choram (Photo 6)' },
-
-      { id: 'd1', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/1.JPG', titleFa: 'طبیعت دیلگون (عکس ۱)', titleEn: 'Dilgun Nature (Photo 1)' },
-      { id: 'd2', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/2.JPG', titleFa: 'طبیعت دیلگون (عکس ۲)', titleEn: 'Dilgun Nature (Photo 2)' },
-      { id: 'd3', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/3.JPG', titleFa: 'طبیعت دیلگون (عکس ۳)', titleEn: 'Dilgun Nature (Photo 3)' },
-      { id: 'd4', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/4.JPG', titleFa: 'طبیعت دیلگون (عکس ۴)', titleEn: 'Dilgun Nature (Photo 4)' },
-      { id: 'd5', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/5.JPG', titleFa: 'طبیعت دیلگون (عکس ۵)', titleEn: 'Dilgun Nature (Photo 5)' },
-      { id: 'd7', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/7.JPG', titleFa: 'طبیعت دیلگون (عکس ۷)', titleEn: 'Dilgun Nature (Photo 7)' },
-      { id: 'd8', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/8.JPG', titleFa: 'طبیعت دیلگون (عکس ۸)', titleEn: 'Dilgun Nature (Photo 8)' },
-      { id: 'd9', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/9.JPG', titleFa: 'طبیعت دیلگون (عکس ۹)', titleEn: 'Dilgun Nature (Photo 9)' }
+      { id: 'c1', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/1.JPG', titleFa: 'چشمه بلقیس چرام (۱)' },
+      { id: 'd1', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/1.JPG', titleFa: 'طبیعت دیلگون (۱)' }
     ];
 
-    // --- توابع ساخت تصویر هوش مصنوعی (GEMINI/Pollinations) ---
-    function openAIModal() {
-      document.getElementById('ai-modal').style.display = 'flex';
-    }
+    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-    function closeAIModal() {
-      document.getElementById('ai-modal').style.display = 'none';
-    }
-
-    function handleAIKeyDown(event) {
-      if (event.key === 'Enter') {
-        submitAIGeneration();
-      }
-    }
-
+    // --- ساخت تصویر AI ---
     async function submitAIGeneration() {
-      const promptInput = document.getElementById('ai-prompt-input');
+      const prompt = document.getElementById('ai-prompt-input').value.trim();
       const resultBox = document.getElementById('ai-image-result');
-      const userPrompt = promptInput.value.trim();
 
-      if (!userPrompt) {
-        alert('لطفاً توصیف تصویر را وارد کنید.');
-        return;
-      }
+      if (!prompt) { alert('لطفاً توصیفی بنویسید'); return; }
 
-      resultBox.innerHTML = `
-        <div style="text-align: center; color: #a855f7; padding: 20px;">
-          <p style="font-size: 1.2rem; font-weight: bold;">✨ در حال ساخت تصویر... لطفاً شکیبا باشید ✨</p>
-          <p style="font-size: 0.9rem; color: #94a3b8; margin-top: 8px;">(در صورت عدم دریافت تصویر، فیلترشکن خود را روشن بررسی کنید)</p>
-        </div>
-      `;
+      resultBox.innerHTML = `<p style="color:#a855f7;">✨ در حال ساخت تصویر... لطفاً شکیبا باشید ✨</p>`;
 
       try {
-        const transUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q=${encodeURIComponent(userPrompt)}`;
-        const transRes = await fetch(transUrl);
+        const transRes = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q=${encodeURIComponent(prompt)}`);
         const transData = await transRes.json();
-        const englishPrompt = transData[0][0][0] || userPrompt;
+        const enPrompt = transData[0][0][0] || prompt;
 
-        const seed = Math.floor(Math.random() * 1000000);
-        const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(englishPrompt)}?width=1024&height=576&seed=${seed}&model=flux&nologo=true`;
+        const seed = Math.floor(Math.random() * 100000);
+        const imgUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(enPrompt)}?width=1024&height=576&seed=${seed}&model=flux&nologo=true`;
 
-        const imgCheck = new Image();
-        imgCheck.src = imageUrl;
-
-        imgCheck.onload = () => {
-          resultBox.innerHTML = `
-            <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%;">
-              <img src="${imageUrl}" alt="${userPrompt}" class="generated-img" style="border-radius: 8px; max-height: 450px; width: 100%; object-fit: contain;">
-              <a href="${imageUrl}" target="_blank" download="nature-ai.jpg" class="btn btn-app" style="margin-top: 10px; text-decoration: none;">📥 دانلود تصویر با کیفیت اصلی</a>
-            </div>
-          `;
+        const img = new Image();
+        img.src = imgUrl;
+        img.onload = () => {
+          resultBox.innerHTML = `<img src="${imgUrl}" class="generated-img"><br><a href="${imgUrl}" target="_blank" download class="btn" style="margin-top:10px;">📥 دانلود تصویر</a>`;
         };
-
-        imgCheck.onerror = () => {
-          resultBox.innerHTML = `
-            <div style="text-align: center; color: #ef4444; padding: 20px;">
-              <p>❌ خطا در دریافت تصویر از سرور هوش مصنوعی.</p>
-              <p style="font-size: 0.85rem; color: #94a3b8; margin-top: 5px;">لطفاً اتصال فیلترشکن خود را بررسی کرده و مجدداً تلاش کنید.</p>
-            </div>
-          `;
-        };
-
-      } catch (err) {
-        console.error(err);
-        resultBox.innerHTML = `
-          <div style="text-align: center; color: #ef4444; padding: 20px;">
-            <p>❌ خطا در ارتباط با سرور.</p>
-            <p style="font-size: 0.85rem; color: #94a3b8; margin-top: 5px;">بررسی کنید که اینترنت یا فیلترشکن متصل باشد.</p>
-          </div>
-        `;
+        img.onerror = () => { resultBox.innerHTML = `<p style="color:#ef4444;">❌ خطا در دریافت تصویر. فیلترشکن را بررسی کنید.</p>`; };
+      } catch (e) {
+        resultBox.innerHTML = `<p style="color:#ef4444;">❌ خطا در برقراری ارتباط.</p>`;
       }
     }
 
-    // --- توابع چت/مترجم ---
-    function openChatModal() { document.getElementById('chat-modal').style.display = 'flex'; }
-    function closeChatModal() { document.getElementById('chat-modal').style.display = 'none'; }
-    
+    // --- بخش مترجم ---
     async function sendTranslationRequest() {
       const src = document.getElementById('trans-source-lang').value;
       const tgt = document.getElementById('trans-target-lang').value;
       const text = document.getElementById('trans-text-input').value.trim();
       const resBox = document.getElementById('translation-result');
 
-      if (!text) { alert('لطفاً متنی وارد کنید'); return; }
-
+      if (!text) return;
       resBox.innerText = "در حال ترجمه...";
+
       try {
-        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${src}&tl=${tgt}&dt=t&q=${encodeURIComponent(text)}`;
-        const res = await fetch(url);
+        const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${src}&tl=${tgt}&dt=t&q=${encodeURIComponent(text)}`);
         const data = await res.json();
-        let translatedText = "";
-        data[0].forEach(item => { if (item[0]) translatedText += item[0]; });
-        resBox.innerText = translatedText || "خطا در دریافت ترجمه";
+        let out = "";
+        data[0].forEach(i => { if (i[0]) out += i[0]; });
+        resBox.innerText = out;
       } catch (e) {
-        resBox.innerText = "خطا در ترجمه. لطفاً اتصال اینترنت خود را بررسی کنید.";
+        resBox.innerText = "خطا در انجام ترجمه.";
       }
     }
 
-    function playTextToSpeech() {
-      const text = document.getElementById('translation-result').innerText;
-      if (!text || text.includes("در حال ترجمه...") || text.includes("خطا")) return;
-      const tgt = document.getElementById('trans-target-lang').value;
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = tgt;
-      window.speechSynthesis.speak(utterance);
-    }
-
-    // --- توابع آپلود و URL ---
-    function openURLModal() { document.getElementById('url-modal').style.display = 'flex'; }
-    function closeURLModal() { document.getElementById('url-modal').style.display = 'none'; }
-
-    function addURLMedia() {
-      const url = document.getElementById('url-input').value.trim();
-      const type = document.getElementById('url-type-select').value;
-      const title = document.getElementById('url-title-input').value.trim() || 'رسانه جدید';
-
-      if (!url) { alert('لطفاً لینک را وارد کنید'); return; }
-
-      const newItem = {
-        id: 'u_' + Date.now(),
-        type: type,
-        src: url,
-        titleFa: title,
-        titleEn: title
-      };
-
-      mediaItems.unshift(newItem);
-      renderGrid('all');
-      closeURLModal();
-      document.getElementById('url-input').value = '';
-      document.getElementById('url-title-input').value = '';
-    }
-
-    async function handleFileUpload(event, type) {
-      if (!checkAdminAuth()) return;
-
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const fileName = Date.now() + '_' + file.name;
-      alert("در حال آپلود فایل... لطفاً منتظر بمانید.");
-
-      const { data, error } = await supabaseClient.storage.from(BUCKET_NAME).upload(fileName, file);
-
-      if (error) {
-        alert("خطا در آپلود: " + error.message);
-        return;
-      }
-
-      const { data: publicUrlData } = supabaseClient.storage.from(BUCKET_NAME).getPublicUrl(fileName);
-      const publicUrl = publicUrlData.publicUrl;
-
-      const newItem = {
-        id: 's_' + Date.now(),
-        type: type,
-        src: publicUrl,
-        titleFa: file.name,
-        titleEn: file.name
-      };
-
-      mediaItems.unshift(newItem);
-      renderGrid('all');
-      alert("فایل با موفقیت آپلود شد!");
-    }
-
-    // --- نمایش و فیلتر رسانه‌ها ---
+    // --- رندر کارت‌ها ---
     function renderGrid(filter = 'all') {
       const grid = document.getElementById('media-grid');
       grid.innerHTML = '';
-
-      const items = mediaItems.filter(item => filter === 'all' || item.type === filter);
-
-      items.forEach(item => {
+      mediaItems.filter(i => filter === 'all' || i.type === filter).forEach(item => {
         const card = document.createElement('div');
         card.className = 'media-card';
-
-        let mediaTag = '';
-        if (item.type === 'image') {
-          mediaTag = `<img src="${item.src}" alt="${item.titleFa}" loading="lazy">`;
-        } else if (item.type === 'video') {
-          mediaTag = `<video src="${item.src}" controls></video>`;
-        } else if (item.type === 'audio') {
-          mediaTag = `<audio src="${item.src}" controls></audio>`;
-        }
-
-        card.innerHTML = `
-          ${mediaTag}
-          <div class="card-body">
-            <div class="card-title-fa">${item.titleFa}</div>
-            <div class="card-title-en">${item.titleEn}</div>
-            <div class="rename-box">
-              <input type="text" class="rename-input" id="input-${item.id}" placeholder="نام جدید...">
-              <button class="btn-action btn-rename" onclick="renameMedia('${item.id}')">تغییر</button>
-            </div>
-            <a href="${item.src}" download target="_blank" class="btn-action btn-download">📥 دانلود</a>
-            <button class="btn-action btn-delete" onclick="deleteMedia('${item.id}')">حذف</button>
-          </div>
-        `;
+        let mediaTag = item.type === 'image' ? `<img src="${item.src}">` : item.type === 'video' ? `<video src="${item.src}" controls></video>` : `<audio src="${item.src}" controls></audio>`;
+        card.innerHTML = `${mediaTag}<div class="card-body"><b>${item.titleFa}</b><a href="${item.src}" download target="_blank" class="btn-action btn-rename" style="text-align:center; text-decoration:none;">دانلود</a></div>`;
         grid.appendChild(card);
       });
-    }
-
-    function renameMedia(id) {
-      if (!checkAdminAuth()) return;
-      const input = document.getElementById(`input-${id}`);
-      if (!input || !input.value.trim()) return;
-      const val = input.value.trim();
-      const item = mediaItems.find(i => i.id === id);
-      if (item) {
-        item.titleFa = val;
-        item.titleEn = val;
-        renderGrid();
-      }
-    }
-
-    function deleteMedia(id) {
-      if (!checkAdminAuth()) return;
-      mediaItems = mediaItems.filter(i => i.id !== id);
-      renderGrid();
     }
 
     function filterMedia(type, btn) {
@@ -555,12 +270,6 @@
       renderGrid(type);
     }
 
-    function toggleLanguage() {
-      currentLang = currentLang === 'fa' ? 'en' : 'fa';
-      document.getElementById('toggle-lang-btn').innerText = currentLang === 'fa' ? '🌐 Switch to English / تغییر زبان' : '🌐 تغییر به فارسی';
-    }
-
-    // مقداردهی اولیه
     renderGrid();
   </script>
 </body>
