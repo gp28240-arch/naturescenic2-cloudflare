@@ -91,7 +91,6 @@
     .generated-img-container { width: 100%; min-height: 300px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #0f172a; border-radius: 8px; overflow: hidden; border: 1px solid #334155; padding: 10px; }
     .generated-img { width: 100%; max-height: 500px; object-fit: contain; border-radius: 8px; }
 
-    /* استایل کادر ترجمه همزمان داخل مدال هوش مصنوعی */
     .ai-translator-box {
       background: #0f172a;
       border: 1px solid #38bdf8;
@@ -162,7 +161,7 @@
 
   <div class="media-grid" id="media-grid"></div>
 
-  <!-- Modal GEMINI همراه با کادر گوگل ترنسلیت و دکمه جاگذاری -->
+  <!-- Modal GEMINI -->
   <div class="modal-overlay" id="ai-modal">
     <div class="modal-content gemini-modal-content">
       <h3 id="modal-ai-title">✨ ساخت تصویر با هوش مصنوعی GEMINI ✨</h3>
@@ -511,7 +510,7 @@
       if (e.key === 'Enter') submitAIGeneration();
     }
 
-    // تابع ترجمه همزمان متن فارسی به انگلیسی و جایگذاری آن در کادر اصلی
+    // تابع ترجمه همزمان متن فارسی به انگلیسی و الصاق دستورالعمل ثابت به ابتدای متن
     async function translateFaToEnPrompt() {
       const faText = document.getElementById('fa-prompt-input').value.trim();
       if (!faText) {
@@ -534,26 +533,24 @@
           });
         }
 
+        // افزودن مستقیم دستورالعمل ثابت پیش‌فرض به ابتدای متن ترجمه‌شده داخل کادر اصلی پرامپت
         if (translatedText) {
-          enInput.value = translatedText;
+          enInput.value = SYSTEM_PROMPT_PREFIX + translatedText;
         } else {
-          enInput.value = faText;
+          enInput.value = SYSTEM_PROMPT_PREFIX + faText;
         }
       } catch (e) {
         console.warn("خطا در ترجمه همزمان، استفاده از خود متن...");
-        enInput.value = faText;
+        enInput.value = SYSTEM_PROMPT_PREFIX + faText;
       }
     }
 
     async function submitAIGeneration() {
-      const rawPrompt = document.getElementById('ai-prompt-input').value.trim();
-      if (!rawPrompt) {
+      const fullPrompt = document.getElementById('ai-prompt-input').value.trim();
+      if (!fullPrompt) {
         alert("لطفاً توصیف تصویر را بنویسید.");
         return;
       }
-
-      // ترکیب دستورالعمل ثابت پیش‌فرض به ابتدای پرامپت
-      const fullPrompt = SYSTEM_PROMPT_PREFIX + rawPrompt;
 
       const resBox = document.getElementById('ai-image-result');
       resBox.innerHTML = '<p style="color:#a855f7; font-weight:bold;">در حال ساخت تصویر با Gemini... لطفاً شکیبا باشید.</p>';
@@ -563,7 +560,7 @@
 
       const img = new Image();
       img.className = 'generated-img';
-      img.alt = rawPrompt;
+      img.alt = fullPrompt;
 
       img.onload = () => {
         resBox.innerHTML = '';
@@ -579,8 +576,8 @@
             id: 'ai_' + Date.now(),
             type: 'image',
             src: imageUrl,
-            titleFa: rawPrompt,
-            titleEn: rawPrompt
+            titleFa: fullPrompt,
+            titleEn: fullPrompt
           });
           renderMediaItems();
           closeAIModal();
