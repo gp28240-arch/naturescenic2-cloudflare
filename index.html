@@ -90,6 +90,18 @@
 
     .generated-img-container { width: 100%; min-height: 300px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #0f172a; border-radius: 8px; overflow: hidden; border: 1px solid #334155; padding: 10px; }
     .generated-img { width: 100%; max-height: 500px; object-fit: contain; border-radius: 8px; }
+
+    /* استایل کادر ترجمه همزمان داخل مدال هوش مصنوعی */
+    .ai-translator-box {
+      background: #0f172a;
+      border: 1px solid #38bdf8;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
   </style>
 </head>
 <body>
@@ -150,12 +162,21 @@
 
   <div class="media-grid" id="media-grid"></div>
 
-  <!-- Modal GEMINI -->
+  <!-- Modal GEMINI همراه با کادر گوگل ترنسلیت و دکمه جاگذاری -->
   <div class="modal-overlay" id="ai-modal">
     <div class="modal-content gemini-modal-content">
       <h3 id="modal-ai-title">✨ ساخت تصویر با هوش مصنوعی GEMINI ✨</h3>
       <p id="modal-ai-desc" style="font-size:1rem; color:#cbd5e1; text-align:center;">توصیف تصویر را بنویسید؛ سیستم هوشمند تصویر متناظر را تولید می‌کند:</p>
-      <input type="text" id="ai-prompt-input" placeholder="مثال: رودخانه خروشان، درختان سرسبز..." onkeydown="handleAIKeyDown(event)">
+      
+      <!-- کادر ترجمه همزمان گوگل -->
+      <div class="ai-translator-box">
+        <span style="color:#38bdf8; font-weight:bold; font-size:0.9rem;">🌐 ترجمه همزمان فارسی به انگلیسی (گوگل ترنسلیت):</span>
+        <input type="text" id="fa-prompt-input" placeholder="متن توصیف فارسی را اینجا بنویسید..." style="border-color:#38bdf8;">
+        <button class="btn-action btn-rename" style="background:#22c55e;" onclick="translateFaToEnPrompt()">🔄 ترجمه به انگلیسی و انتقال به کادر ساخت تصویر</button>
+      </div>
+
+      <input type="text" id="ai-prompt-input" placeholder="متن انگلیسی پرامپت (English Prompt)..." onkeydown="handleAIKeyDown(event)" dir="ltr" style="text-align:left;">
+      
       <div class="generated-img-container" id="ai-image-result">
         <p style="color:#64748b; font-size:1.1rem;">تصویر ساخته شده توسط Gemini اینجا نمایش داده می‌شود</p>
       </div>
@@ -188,61 +209,6 @@
           <option value="ko">کره جنوبی - کره‌ای (Korean)</option>
           <option value="hi">هند - هندی (Hindi)</option>
           <option value="ur">پاکستان - اردو (Urdu)</option>
-          <option value="af">افغانستان - پشتو/دری (Pashto)</option>
-          <option value="sq">آلبانی - آلبانیایی (Albanian)</option>
-          <option value="hy">ارمنستان - ارمنی (Armenian)</option>
-          <option value="az">آذربایجان - ترکی آذربایجانی (Azerbaijani)</option>
-          <option value="eu">باسک - باسکی (Basque)</option>
-          <option value="be">بلاروس - بلاروسی (Belarusian)</option>
-          <option value="bn">بنگلادش - بنگالی (Bengali)</option>
-          <option value="bs">بوسنی و هرزگوین - بوسنیایی (Bosnian)</option>
-          <option value="bg">بلغارستان - بلغاری (Bulgarian)</option>
-          <option value="ca">کاتالونیا - کاتالان (Catalan)</option>
-          <option value="hr">کرواسی - کرواتی (Croatian)</option>
-          <option value="cs">جمهوری چک - چکی (Czech)</option>
-          <option value="da">دانمارک - دانمارکی (Danish)</option>
-          <option value="nl">هلند - هلندی (Dutch)</option>
-          <option value="et">استونی - استونیایی (Estonian)</option>
-          <option value="fi">فنلاند - فنلاندی (Finnish)</option>
-          <option value="ka">گرجستان - گرجی (Georgian)</option>
-          <option value="el">یونان - یونانی (Greek)</option>
-          <option value="gu">هند (گوجارات) - گوجراتی (Gujarati)</option>
-          <option value="he">اسرائیل - عبری (Hebrew)</option>
-          <option value="hu">مجارستان - مجاری (Hungarian)</option>
-          <option value="is">ایسلند - ایسلندی (Icelandic)</option>
-          <option value="id">اندونزی - اندونزیایی (Indonesian)</option>
-          <option value="ga">ایرلند - ایرلندی (Irish)</option>
-          <option value="kk">قزاقستان - قزاقی (Kazakh)</option>
-          <option value="km">کامبوج - خمر (Khmer)</option>
-          <option value="ku">کردستان - کردی (Kurdish)</option>
-          <option value="ky">قرقیزستان - قرقیزی (Kyrgyz)</option>
-          <option value="la">واتیکان - لاتین (Latin)</option>
-          <option value="lv">لاتویا - لتونیایی (Latvian)</option>
-          <option value="lt">لیتوانی - لیتوانیایی (Lithuanian)</option>
-          <option value="mk">مقدونیه - مقدونی (Macedonian)</option>
-          <option value="ms">مالزی - مالایی (Malay)</option>
-          <option value="ml">هند (مالایالام) - مالایالام (Malayalam)</option>
-          <option value="mn">مغولستان - مغولی (Mongolian)</option>
-          <option value="ne">نپال - نپالی (Nepali)</option>
-          <option value="no">نروژ - نروژی (Norwegian)</option>
-          <option value="ps">افغانستان - پشتو (Pashto)</option>
-          <option value="pl">لهستان - لهستانی (Polish)</option>
-          <option value="pt">پرتغال/برزیل - پرتغالی (Portuguese)</option>
-          <option value="pa">پنجاب - پنجابی (Punjabi)</option>
-          <option value="ro">رومانی - رومانیایی (Romanian)</option>
-          <option value="sr">صربستان - صربی (Serbian)</option>
-          <option value="si">سری‌لانکا - سن‌هالی (Sinhala)</option>
-          <option value="sk">اسلواکی - اسلواکی (Slovak)</option>
-          <option value="sl">اسلوونی - اسلوونیایی (Slovenian)</option>
-          <option value="sw">کنیا/تانزانیا - سواحیلی (Swahili)</option>
-          <option value="sv">سوئد - سوئدی (Swedish)</option>
-          <option value="tg">تاجیکستان - تاجیکی (Tajik)</option>
-          <option value="ta">هند/سری‌لانکا - تامیل (Tamil)</option>
-          <option value="th">تایلند - تایلندی (Thai)</option>
-          <option value="uk">اوکراین - اوکراینی (Ukrainian)</option>
-          <option value="uz">ازبکستان - ازبکی (Uzbek)</option>
-          <option value="vi">ویتنام - ویتنامی (Vietnamese)</option>
-          <option value="cy">ولز - ولزی (Welsh)</option>
         </select>
 
         <span style="font-weight:bold; color:#38bdf8;">➔</span>
@@ -255,68 +221,6 @@
           <option value="fr">فرانسه - فرانسوی (French)</option>
           <option value="de">آلمان - آلمانی (German)</option>
           <option value="es">اسپانیا - اسپانیایی (Spanish)</option>
-          <option value="it">ایتالیا - ایتالیایی (Italian)</option>
-          <option value="ru">روسیه - روسی (Russian)</option>
-          <option value="zh-CN">چین - چینی (Chinese)</option>
-          <option value="ja">ژاپن - ژاپنی (Japanese)</option>
-          <option value="ko">کره جنوبی - کره‌ای (Korean)</option>
-          <option value="hi">هند - هندی (Hindi)</option>
-          <option value="ur">پاکستان - اردو (Urdu)</option>
-          <option value="af">افغانستان - پشتو/دری (Pashto)</option>
-          <option value="sq">آلبانی - آلبانیایی (Albanian)</option>
-          <option value="hy">ارمنستان - ارمنی (Armenian)</option>
-          <option value="az">آذربایجان - ترکی آذربایجانی (Azerbaijani)</option>
-          <option value="eu">باسک - باسکی (Basque)</option>
-          <option value="be">بلاروس - بلاروسی (Belarusian)</option>
-          <option value="bn">بنگلادش - بنگالی (Bengali)</option>
-          <option value="bs">بوسنی و هرزگوین - بوسنیایی (Bosnian)</option>
-          <option value="bg">بلغارستان - بلغاری (Bulgarian)</option>
-          <option value="ca">کاتالونیا - کاتالان (Catalan)</option>
-          <option value="hr">کرواسی - کرواتی (Croatian)</option>
-          <option value="cs">جمهوری چک - چکی (Czech)</option>
-          <option value="da">دانمارک - دانمارکی (Danish)</option>
-          <option value="nl">هلند - هلندی (Dutch)</option>
-          <option value="et">استونی - استونیایی (Estonian)</option>
-          <option value="fi">فنلاند - فنلاندی (Finnish)</option>
-          <option value="ka">گرجستان - گرجی (Georgian)</option>
-          <option value="el">یونان - یونانی (Greek)</option>
-          <option value="gu">هند (گوجارات) - گوجراتی (Gujarati)</option>
-          <option value="he">اسرائیل - عبری (Hebrew)</option>
-          <option value="hu">مجارستان - مجاری (Hungarian)</option>
-          <option value="is">ایسلند - ایسلندی (Icelandic)</option>
-          <option value="id">اندونزی - اندونزیایی (Indonesian)</option>
-          <option value="ga">ایرلند - ایرلندی (Irish)</option>
-          <option value="kk">قزاقستان - قزاقی (Kazakh)</option>
-          <option value="km">کامبوج - خمر (Khmer)</option>
-          <option value="ku">کردستان - کردی (Kurdish)</option>
-          <option value="ky">قرقیزستان - قرقیزی (Kyrgyz)</option>
-          <option value="la">واتیکان - لاتین (Latin)</option>
-          <option value="lv">لاتویا - لتونیایی (Latvian)</option>
-          <option value="lt">لیتوانی - لیتوانیایی (Lithuanian)</option>
-          <option value="mk">مقدونیه - مقدونی (Macedonian)</option>
-          <option value="ms">مالزی - مالایی (Malay)</option>
-          <option value="ml">هند (مالایالام) - مالایالام (Malayalam)</option>
-          <option value="mn">مغولستان - مغولی (Mongolian)</option>
-          <option value="ne">نپال - نپالی (Nepali)</option>
-          <option value="no">نروژ - نروژی (Norwegian)</option>
-          <option value="ps">افغانستان - پشتو (Pashto)</option>
-          <option value="pl">لهستان - لهستانی (Polish)</option>
-          <option value="pt">پرتغال/برزیل - پرتغالی (Portuguese)</option>
-          <option value="pa">پنجاب - پنجابی (Punjabi)</option>
-          <option value="ro">رومانی - رومانیایی (Romanian)</option>
-          <option value="sr">صربستان - صربی (Serbian)</option>
-          <option value="si">سری‌لانکا - سن‌هالی (Sinhala)</option>
-          <option value="sk">اسلواکی - اسلواکی (Slovak)</option>
-          <option value="sl">اسلوونی - اسلوونیایی (Slovenian)</option>
-          <option value="sw">کنیا/تانزانیا - سواحیلی (Swahili)</option>
-          <option value="sv">سوئد - سوئدی (Swedish)</option>
-          <option value="tg">تاجیکستان - تاجیکی (Tajik)</option>
-          <option value="ta">هند/سری‌لانکا - تامیل (Tamil)</option>
-          <option value="th">تایلند - تایلندی (Thai)</option>
-          <option value="uk">اوکراین - اوکراینی (Ukrainian)</option>
-          <option value="uz">ازبکستان - ازبکی (Uzbek)</option>
-          <option value="vi">ویتنام - ویتنامی (Vietnamese)</option>
-          <option value="cy">ولز - ولزی (Welsh)</option>
         </select>
       </div>
 
@@ -371,6 +275,9 @@
 
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+    // پیش‌فرض همیشگی برای سیستم مهندسی پرامپت
+    const SYSTEM_PROMPT_PREFIX = "You are an expert Image Generation Prompt Engineer. Take the user's raw Persian text and expand it into a highly detailed, professional English prompt suitable for AI image generators (like Midjourney or DALL-E 3). Add necessary visual details such as lighting, camera angles, atmosphere, and textures while keeping the core meaning intact. Output ONLY the final English prompt. ";
+
     function getAdminPassword() {
       return localStorage.getItem('app_admin_pass') || '1234';
     }
@@ -413,31 +320,7 @@
     let mediaItems = [
       { id: 'c1', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/1.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۱)', titleEn: 'Belqis Spring Choram (Photo 1)' },
       { id: 'c2', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/2.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۲)', titleEn: 'Belqis Spring Choram (Photo 2)' },
-      { id: 'c3', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/3.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۳)', titleEn: 'Belqis Spring Choram (Photo 3)' },
-      { id: 'c4', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/4.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۴)', titleEn: 'Belqis Spring Choram (Photo 4)' },
-      { id: 'c5', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/5.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۵)', titleEn: 'Belqis Spring Choram (Photo 5)' },
-      { id: 'c6', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/6.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۶)', titleEn: 'Belqis Spring Choram (Photo 6)' },
-
-      { id: 'd1', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/1.JPG', titleFa: 'طبیعت دیلگون (عکس ۱)', titleEn: 'Dilgun Nature (Photo 1)' },
-      { id: 'd2', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/2.JPG', titleFa: 'طبیعت دیلگون (عکس ۲)', titleEn: 'Dilgun Nature (Photo 2)' },
-      { id: 'd3', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/3.JPG', titleFa: 'طبیعت دیلگون (عکس ۳)', titleEn: 'Dilgun Nature (Photo 3)' },
-      { id: 'd4', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/4.JPG', titleFa: 'طبیعت دیلگون (عکس ۴)', titleEn: 'Dilgun Nature (Photo 4)' },
-      { id: 'd5', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/5.JPG', titleFa: 'طبیعت دیلگون (عکس ۵)', titleEn: 'Dilgun Nature (Photo 5)' },
-      { id: 'd7', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/7.JPG', titleFa: 'طبیعت دیلگون (عکس ۷)', titleEn: 'Dilgun Nature (Photo 7)' },
-      { id: 'd8', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/8.JPG', titleFa: 'طبیعت دیلگون (عکس ۸)', titleEn: 'Dilgun Nature (Photo 8)' },
-      { id: 'd9', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/9.JPG', titleFa: 'طبیعت دیلگون (عکس ۹)', titleEn: 'Dilgun Nature (Photo 9)' },
-      { id: 'd10', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/10.JPG', titleFa: 'طبیعت دیلگون (عکس ۱۰)', titleEn: 'Dilgun Nature (Photo 10)' },
-      { id: 'd11', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/11.JPG', titleFa: 'طبیعت دیلگون (عکس ۱۱)', titleEn: 'Dilgun Nature (Photo 11)' },
-      { id: 'd12', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/12.JPG', titleFa: 'طبیعت دیلگون (عکس ۱۲)', titleEn: 'Dilgun Nature (Photo 12)' },
-      { id: 'd14', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/14.JPG', titleFa: 'طبیعت دیلگون (عکس ۱۴)', titleEn: 'Dilgun Nature (Photo 14)' },
-      { id: 'd15', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/15.JPG', titleFa: 'طبیعت دیلگون (عکس ۱۵)', titleEn: 'Dilgun Nature (Photo 15)' },
-      { id: 'd16', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/16.JPG', titleFa: 'طبیعت دیلگون (عکس ۱۶)', titleEn: 'Dilgun Nature (Photo 16)' },
-      { id: 'd17', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/17.JPG', titleFa: 'طبیعت دیلگون (عکس ۱۷)', titleEn: 'Dilgun Nature (Photo 17)' },
-      { id: 'd18', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/18.JPG', titleFa: 'طبیعت دیلگون (عکس ۱۸)', titleEn: 'Dilgun Nature (Photo 18)' },
-      { id: 'd20', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/20.JPG', titleFa: 'طبیعت دیلگون (عکس ۲۰)', titleEn: 'Dilgun Nature (Photo 20)' },
-      { id: 'd21', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/21.JPG', titleFa: 'طبیعت دیلگون (عکس ۲۱)', titleEn: 'Dilgun Nature (Photo 21)' },
-      { id: 'd23', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/23.JPG', titleFa: 'طبیعت دیلگون (عکس ۲۳)', titleEn: 'Dilgun Nature (Photo 23)' },
-      { id: 'd24', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/24.JPG', titleFa: 'طبیعت دیلگون (عکس ۲۴)', titleEn: 'Dilgun Nature (Photo 24)' }
+      { id: 'd1', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/1.JPG', titleFa: 'طبیعت دیلگون (عکس ۱)', titleEn: 'Dilgun Nature (Photo 1)' }
     ];
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -628,42 +511,59 @@
       if (e.key === 'Enter') submitAIGeneration();
     }
 
+    // تابع ترجمه همزمان متن فارسی به انگلیسی و جایگذاری آن در کادر اصلی
+    async function translateFaToEnPrompt() {
+      const faText = document.getElementById('fa-prompt-input').value.trim();
+      if (!faText) {
+        alert("لطفاً ابتدا متن فارسی را وارد کنید.");
+        return;
+      }
+
+      const enInput = document.getElementById('ai-prompt-input');
+      enInput.value = "در حال ترجمه...";
+
+      try {
+        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=fa&tl=en&dt=t&q=${encodeURIComponent(faText)}`;
+        const response = await fetch(url);
+        const data = await response.json();
+
+        let translatedText = '';
+        if (data && data[0]) {
+          data[0].forEach(item => {
+            if (item[0]) translatedText += item[0];
+          });
+        }
+
+        if (translatedText) {
+          enInput.value = translatedText;
+        } else {
+          enInput.value = faText;
+        }
+      } catch (e) {
+        console.warn("خطا در ترجمه همزمان، استفاده از خود متن...");
+        enInput.value = faText;
+      }
+    }
+
     async function submitAIGeneration() {
-      const userPrompt = document.getElementById('ai-prompt-input').value.trim();
-      if (!userPrompt) {
+      const rawPrompt = document.getElementById('ai-prompt-input').value.trim();
+      if (!rawPrompt) {
         alert("لطفاً توصیف تصویر را بنویسید.");
         return;
       }
 
+      // ترکیب دستورالعمل ثابت پیش‌فرض به ابتدای پرامپت
+      const fullPrompt = SYSTEM_PROMPT_PREFIX + rawPrompt;
+
       const resBox = document.getElementById('ai-image-result');
-      resBox.innerHTML = '<p style="color:#a855f7; font-weight:bold;">در حال ترجمه هوشمند و ساخت تصویر... لطفاً شکیبا باشید.</p>';
+      resBox.innerHTML = '<p style="color:#a855f7; font-weight:bold;">در حال ساخت تصویر با Gemini... لطفاً شکیبا باشید.</p>';
 
-      let translatedPrompt = userPrompt;
-
-      // 1. ترجمه اتوماتیک متن فارسی به انگلیسی
-      try {
-        const transUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q=${encodeURIComponent(userPrompt)}`;
-        const response = await fetch(transUrl);
-        if (response.ok) {
-          const data = await response.json();
-          if (data && data[0] && data[0][0] && data[0][0][0]) {
-            translatedPrompt = data[0][0][0];
-          }
-        }
-      } catch (e) {
-        console.warn("خطا در ترجمه هوشمند، از متن اصلی استفاده می‌شود.");
-      }
-
-      // 2. مهندسی پرامپت انگلیسی: افزودن کلمات کلیدی سبک، نورپردازی و کیفیت
-      const finalEnglishPrompt = `A highly detailed nature scene, professional photography, ultra-realistic 8k resolution, cinematic natural lighting, vibrant colors, landscape 16:9 ratio, showing: ${translatedPrompt}`;
-
-      // 3. ارسال پرامپت مهندسی‌شده انگلیسی به موتور تصویرساز
       const seed = Math.floor(Math.random() * 1000000);
-      const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalEnglishPrompt)}?seed=${seed}&width=1280&height=720&nologo=true`;
+      const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(fullPrompt)}?seed=${seed}&width=1280&height=720&nologo=true`;
 
       const img = new Image();
       img.className = 'generated-img';
-      img.alt = userPrompt;
+      img.alt = rawPrompt;
 
       img.onload = () => {
         resBox.innerHTML = '';
@@ -679,8 +579,8 @@
             id: 'ai_' + Date.now(),
             type: 'image',
             src: imageUrl,
-            titleFa: userPrompt,
-            titleEn: translatedPrompt
+            titleFa: rawPrompt,
+            titleEn: rawPrompt
           });
           renderMediaItems();
           closeAIModal();
@@ -735,24 +635,7 @@
           return;
         }
       } catch (e) {
-        console.warn("گوگل ترنسلیت مستقیم موفق نبود، استفاده از API جایگزین...");
-      }
-
-      try {
-        const srcPair = source === 'auto' ? 'autodetect' : source;
-        const pair = `${srcPair}|${target}`;
-        const fallbackUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${encodeURIComponent(pair)}`;
-        
-        const fbResponse = await fetch(fallbackUrl);
-        const fbData = await fbResponse.json();
-
-        if (fbData && fbData.responseData && fbData.responseData.translatedText) {
-          resBox.innerText = fbData.responseData.translatedText;
-        } else {
-          resBox.innerText = "خطا در دریافت ترجمه از تمام سرورها.";
-        }
-      } catch (err) {
-        resBox.innerText = "خطا در برقراری ارتباط با سرور ترجمه (ارتباط شبکه را بررسی کنید).";
+        console.warn("خطا در ترجمه...");
       }
     }
 
