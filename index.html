@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>naturescenic2-ai | دستیار اختصاصی طبیعت</title>
 
-  <!-- آیکون‌های استاندارد مرورگر و PWA -->
+  <!-- آیکون‌های استاندارد مرورگر و PWA با لینک مستقیم لوگوی شما -->
   <link rel="icon" type="image/png" sizes="192x192" href="https://lh3.googleusercontent.com/d/1EZf35v8476qtDC_rTS_h-6-_zIq0RNTh=w512">
   <link rel="icon" type="image/png" sizes="512x512" href="https://lh3.googleusercontent.com/d/1EZf35v8476qtDC_rTS_h-6-_zIq0RNTh=w512">
   <link rel="apple-touch-icon" sizes="180x180" href="https://lh3.googleusercontent.com/d/1EZf35v8476qtDC_rTS_h-6-_zIq0RNTh=w512">
@@ -58,6 +58,8 @@
     .media-card img, .media-card video { width: 100%; height: 240px; object-fit: cover; }
     .media-card audio { width: 100%; margin-top: 20px; padding: 10px; }
     .card-body { padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+    .card-title-fa { font-weight: bold; color: #f8fafc; font-size: 1rem; text-align: right; }
+    .card-title-en { font-size: 0.85rem; color: #94a3b8; direction: ltr; text-align: right; }
 
     .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
     .modal-content { background: #1e293b; padding: 25px; border-radius: 12px; border: 2px solid #a855f7; width: 95%; max-width: 800px; max-height: 90vh; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
@@ -67,6 +69,7 @@
     .btn-action { padding: 10px 18px; border-radius: 6px; border: none; cursor: pointer; font-weight: bold; }
     .btn-rename { background-color: #0284c7; color: white; }
     .btn-delete { background-color: #dc2626; color: white; }
+    .btn-download { background-color: #22c55e; color: white; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; width: 100%; padding: 8px; border-radius: 6px; font-weight: bold; }
 
     .generated-img-container { width: 100%; min-height: 250px; display: flex; align-items: center; justify-content: center; background: #0f172a; border-radius: 8px; border: 1px solid #334155; margin-top: 10px; }
     .generated-img { width: 100%; max-height: 450px; object-fit: contain; }
@@ -128,7 +131,7 @@
   <div class="modal-overlay" id="ai-modal">
     <div class="modal-content">
       <h3 style="color:#c084fc; text-align:center;">✨ ساخت تصویر با هوش مصنوعی ✨</h3>
-      <input type="text" id="ai-prompt-input" placeholder="توصیف تصویر (مثلاً: طبیعت سرسبز چرام با چشمه آب)...">
+      <input type="text" id="ai-prompt-input" placeholder="توصیف تصویر (مثلاً: دشت چرام یا چشمه بلقیس)...">
       <div class="generated-img-container" id="ai-image-result">
         <p style="color:#64748b;">تصویر ساخته شده اینجا نمایش داده می‌شود</p>
       </div>
@@ -195,8 +198,20 @@
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let mediaItems = [
-      { id: 'c1', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/1.JPG', titleFa: 'چشمه بلقیس چرام (۱)' },
-      { id: 'd1', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/1.JPG', titleFa: 'طبیعت دیلگون (۱)' }
+      { id: 'c1', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/1.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۱)', titleEn: 'Belqis Spring Choram (1)' },
+      { id: 'c2', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/2.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۲)', titleEn: 'Belqis Spring Choram (2)' },
+      { id: 'c3', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/3.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۳)', titleEn: 'Belqis Spring Choram (3)' },
+      { id: 'c4', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/4.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۴)', titleEn: 'Belqis Spring Choram (4)' },
+      { id: 'c5', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/5.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۵)', titleEn: 'Belqis Spring Choram (5)' },
+      { id: 'c6', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/6.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۶)', titleEn: 'Belqis Spring Choram (6)' },
+      { id: 'd1', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/1.JPG', titleFa: 'طبیعت دیلگون (عکس ۱)', titleEn: 'Dilgun Nature (1)' },
+      { id: 'd2', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/2.JPG', titleFa: 'طبیعت دیلگون (عکس ۲)', titleEn: 'Dilgun Nature (2)' },
+      { id: 'd3', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/3.JPG', titleFa: 'طبیعت دیلگون (عکس ۳)', titleEn: 'Dilgun Nature (3)' },
+      { id: 'd4', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/4.JPG', titleFa: 'طبیعت دیلگون (عکس ۴)', titleEn: 'Dilgun Nature (4)' },
+      { id: 'd5', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/5.JPG', titleFa: 'طبیعت دیلگون (عکس ۵)', titleEn: 'Dilgun Nature (5)' },
+      { id: 'd7', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/7.JPG', titleFa: 'طبیعت دیلگون (عکس ۷)', titleEn: 'Dilgun Nature (7)' },
+      { id: 'd8', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/8.JPG', titleFa: 'طبیعت دیلگون (عکس ۸)', titleEn: 'Dilgun Nature (8)' },
+      { id: 'd9', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/9.JPG', titleFa: 'طبیعت دیلگون (عکس ۹)', titleEn: 'Dilgun Nature (9)' }
     ];
 
     function openModal(id) { document.getElementById(id).style.display = 'flex'; }
@@ -209,7 +224,7 @@
 
       if (!prompt) { alert('لطفاً توصیفی بنویسید'); return; }
 
-      resultBox.innerHTML = `<p style="color:#a855f7;">✨ در حال ساخت تصویر... لطفاً شکیبا باشید ✨</p>`;
+      resultBox.innerHTML = `<p style="color:#a855f7; font-weight:bold;">✨ در حال ساخت تصویر... لطفاً شکیبا باشید ✨</p>`;
 
       try {
         const transRes = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q=${encodeURIComponent(prompt)}`);
@@ -222,9 +237,13 @@
         const img = new Image();
         img.src = imgUrl;
         img.onload = () => {
-          resultBox.innerHTML = `<img src="${imgUrl}" class="generated-img"><br><a href="${imgUrl}" target="_blank" download class="btn" style="margin-top:10px;">📥 دانلود تصویر</a>`;
+          resultBox.innerHTML = `
+            <div style="display:flex; flex-direction:column; align-items:center; width:100%;">
+              <img src="${imgUrl}" class="generated-img">
+              <a href="${imgUrl}" target="_blank" download="ai-nature.jpg" class="btn" style="margin-top:10px;">📥 دانلود تصویر اصلی</a>
+            </div>`;
         };
-        img.onerror = () => { resultBox.innerHTML = `<p style="color:#ef4444;">❌ خطا در دریافت تصویر. فیلترشکن را بررسی کنید.</p>`; };
+        img.onerror = () => { resultBox.innerHTML = `<p style="color:#ef4444;">❌ خطا در دریافت تصویر. بررسی کنید فیلترشکن روشن باشد.</p>`; };
       } catch (e) {
         resultBox.innerHTML = `<p style="color:#ef4444;">❌ خطا در برقراری ارتباط.</p>`;
       }
@@ -245,21 +264,45 @@
         const data = await res.json();
         let out = "";
         data[0].forEach(i => { if (i[0]) out += i[0]; });
-        resBox.innerText = out;
+        resBox.innerText = out || "ترجمه یافت نشد";
       } catch (e) {
-        resBox.innerText = "خطا در انجام ترجمه.";
+        resBox.innerText = "خطا در انجام ترجمه. اتصال اینترنت را بررسی کنید.";
       }
+    }
+
+    // --- افزودن از لینک ---
+    function addURLMedia() {
+      const url = document.getElementById('url-input').value.trim();
+      const type = document.getElementById('url-type-select').value;
+      const title = document.getElementById('url-title-input').value.trim() || 'رسانه جدید';
+
+      if (!url) { alert('لطفاً لینک را وارد کنید'); return; }
+
+      mediaItems.unshift({ id: 'u_' + Date.now(), type: type, src: url, titleFa: title, titleEn: title });
+      renderGrid('all');
+      closeModal('url-modal');
+      document.getElementById('url-input').value = '';
+      document.getElementById('url-title-input').value = '';
     }
 
     // --- رندر کارت‌ها ---
     function renderGrid(filter = 'all') {
       const grid = document.getElementById('media-grid');
       grid.innerHTML = '';
-      mediaItems.filter(i => filter === 'all' || i.type === filter).forEach(item => {
+      
+      const filtered = mediaItems.filter(i => filter === 'all' || i.type === filter);
+      
+      filtered.forEach(item => {
         const card = document.createElement('div');
         card.className = 'media-card';
         let mediaTag = item.type === 'image' ? `<img src="${item.src}">` : item.type === 'video' ? `<video src="${item.src}" controls></video>` : `<audio src="${item.src}" controls></audio>`;
-        card.innerHTML = `${mediaTag}<div class="card-body"><b>${item.titleFa}</b><a href="${item.src}" download target="_blank" class="btn-action btn-rename" style="text-align:center; text-decoration:none;">دانلود</a></div>`;
+        card.innerHTML = `
+          ${mediaTag}
+          <div class="card-body">
+            <div class="card-title-fa">${item.titleFa}</div>
+            <div class="card-title-en">${item.titleEn || ''}</div>
+            <a href="${item.src}" download target="_blank" class="btn-download">📥 دانلود</a>
+          </div>`;
         grid.appendChild(card);
       });
     }
@@ -268,6 +311,10 @@
       document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       renderGrid(type);
+    }
+
+    function toggleLanguage() {
+      alert("Language toggled");
     }
 
     renderGrid();
