@@ -1,0 +1,21 @@
+{
+  "short_name": "NatureScenic2",
+  "name": "naturescenic2-ai | دستیار اختصاصی طبیعت",
+  "icons": [
+    {
+      "src": "https://lh3.googleusercontent.com/d/1EZf35v8476qtDC_rTS_h-6-_zIq0RNTh",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "https://lh3.googleusercontent.com/d/1EZf35v8476qtDC_rTS_h-6-_zIq0RNTh",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "./index.html",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "display": "standalone",
+  "orientation": "portrait"
+}
