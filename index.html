@@ -1,123 +1,829 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مترجم همراه</title>
-    <style>
-        * { box-sizing: border-box; font-family: Tahoma, Arial, sans-serif; margin: 0; padding: 0; }
-        body { background-color: #f4f6f9; padding: 20px; direction: rtl; }
-        .container { max-width: 600px; margin: 0 auto; background: #ffffff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #333; margin-bottom: 20px; }
-        .lang-select { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; gap: 10px; }
-        select { flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #ccc; background: #fff; font-size: 14px; }
-        textarea { width: 100%; height: 120px; padding: 12px; border-radius: 8px; border: 1px solid #ccc; resize: none; font-size: 15px; margin-bottom: 10px; }
-        .btn-action { width: 100%; padding: 12px; background-color: #007bff; color: #fff; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; }
-        .btn-action:hover { background-color: #0056b3; }
-        .output-box { margin-top: 20px; padding: 15px; background: #eef2f7; border-radius: 8px; min-height: 100px; position: relative; direction: ltr; text-align: left; }
-        .speak-btn { position: absolute; bottom: 10px; right: 10px; background: #28a745; color: white; border: none; padding: 8px 12px; border-radius: 50px; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 14px; }
-        .speak-btn:hover { background: #218838; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>naturescenic2-ai | دستیار اختصاصی طبیعت</title>
+
+  <!-- کتابخانه رسمی Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #0f172a; color: #f8fafc; padding: 20px; direction: rtl; text-align: right; }
+
+    .main-header { display: flex; justify-content: space-between; align-items: center; background: #1e293b; padding: 15px 25px; border-radius: 12px; border: 1px solid #334155; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
+    .header-brand { display: flex; align-items: center; gap: 15px; }
+    .site-logo { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 2px solid #38bdf8; box-shadow: 0 0 12px rgba(56, 189, 248, 0.4); transition: transform 0.3s ease; }
+    .site-logo:hover { transform: scale(1.08); }
+    .yt-logo-btn { display: flex; align-items: center; gap: 12px; background-color: #cc0000; color: #ffffff; padding: 10px 20px; border-radius: 10px; text-decoration: none; font-weight: bold; box-shadow: 0 4px 12px rgba(204, 0, 0, 0.4); transition: all 0.3s ease; }
+    .yt-logo-btn:hover { background-color: #ff0000; transform: translateY(-2px); }
+    .yt-icon { width: 28px; height: 28px; fill: white; }
+    .header-titles { text-align: right; }
+    .header-titles h2 { color: #38bdf8; font-size: 1.5rem; }
+    .header-titles p { font-size: 0.95rem; color: #94a3b8; }
+
+    .translate-section { background: #1e293b; padding: 12px 20px; border-radius: 10px; border: 2px solid #22c55e; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2); }
+    .translate-title { font-weight: bold; color: #4ade80; }
+
+    .control-panel { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; align-items: center; }
+    .btn { font-weight: bold; background-color: #1e293b; color: #ffffff; padding: 12px 20px; border-radius: 8px; border: 2px solid #38bdf8; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
+    .btn:hover { background-color: #38bdf8; color: #0f172a; }
+    .btn-lang { border-color: #f59e0b; color: #fbbf24; }
+    .btn-app { border-color: #10b981; color: #34d399; }
+    .btn-app:hover { background-color: #10b981; color: #0f172a; }
+
+    .btn-ai-gemini, .btn-chat-animated { 
+      border-color: #a855f7; 
+      background: linear-gradient(135deg, #7e22ce, #a855f7);
+      color: #ffffff; 
+      font-size: 1.1rem;
+      padding: 14px 24px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(168, 85, 247, 0.5);
+      animation: pulse 2s infinite;
+      cursor: pointer;
+    }
+    .btn-ai-gemini:hover, .btn-chat-animated:hover { background: linear-gradient(135deg, #9333ea, #c084fc); color: #ffffff; transform: scale(1.05); }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.7); }
+      70% { box-shadow: 0 0 0 15px rgba(168, 85, 247, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0); }
+    }
+
+    .btn-url { border-color: #eab308; color: #fef08a; }
+
+    .filter-menu { display: flex; gap: 10px; margin-bottom: 20px; background: #1e293b; padding: 10px; border-radius: 8px; border: 1px solid #334155; }
+    .filter-btn { background: #0f172a; color: #94a3b8; border: 1px solid #475569; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+    .filter-btn.active { background: #38bdf8; color: #0f172a; border-color: #38bdf8; }
+
+    .media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; }
+    .media-card { background: #1e293b; border-radius: 12px; overflow: hidden; border: 1px solid #334155; display: flex; flex-direction: column; box-shadow: 0 4px 15px rgba(0,0,0,0.4); position: relative; }
+    .media-card img, .media-card video, .media-card iframe { width: 100%; height: 240px; object-fit: cover; background-color: #0f172a; display: block; border: none; }
+    .media-card audio { width: 100%; margin-top: 20px; padding: 10px; }
+    .card-body { padding: 15px; display: flex; flex-direction: column; gap: 10px; flex-grow: 1; }
+    .card-title-fa { font-weight: bold; color: #f8fafc; font-size: 1rem; text-align: right; }
+    .card-title-en { font-size: 0.85rem; color: #94a3b8; direction: ltr; text-align: right; }
+    .rename-box { display: flex; gap: 5px; margin-top: auto; }
+    .rename-input { flex: 1; padding: 8px 10px; border-radius: 6px; border: 1px solid #475569; background: #0f172a; color: #fff; font-size: 0.85rem; text-align: right; }
+    .btn-action { padding: 8px 14px; border-radius: 6px; border: none; cursor: pointer; font-weight: bold; font-size: 0.85rem; }
+    .btn-rename { background-color: #0284c7; color: white; }
+    .btn-delete { background-color: #dc2626; color: white; width: 100%; margin-top: 5px; }
+
+    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+    .modal-content { background: #1e293b; padding: 25px; border-radius: 12px; border: 2px solid #a855f7; width: 95%; max-width: 800px; max-height: 90vh; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; direction: rtl; text-align: right; }
+    .gemini-modal-content { border: 3px solid #c084fc; box-shadow: 0 0 35px rgba(168, 85, 247, 0.4); padding: 35px; }
+    .gemini-modal-content h3 { font-size: 1.8rem; color: #c084fc; text-align: center; }
+    .gemini-modal-content input { font-size: 1.1rem; padding: 16px; border: 2px solid #a855f7; }
+    .modal-content input, .modal-content select, .modal-content textarea { padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; width: 100%; font-size: 0.95rem; text-align: right; direction: rtl; }
+    .modal-content textarea { height: 120px; resize: vertical; }
+
+    .lang-select-container { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .lang-select-container select { flex: 1; min-width: 140px; }
+
+    .translation-header { display: flex; justify-content: space-between; align-items: center; margin-top: 5px; }
+    .translation-result { min-height: 100px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 15px; color: #38bdf8; font-size: 1rem; line-height: 1.6; white-space: pre-wrap; position: relative; text-align: right; direction: rtl; }
+    .speaker-btn { background: #22c55e; color: white; border: none; border-radius: 50px; padding: 8px 16px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-weight: bold; font-size: 0.9rem; transition: background 0.2s; }
+    .speaker-btn:hover { background: #16a34a; }
+
+    .generated-img-container { width: 100%; min-height: 300px; display: flex; align-items: center; justify-content: center; background: #0f172a; border-radius: 8px; overflow: hidden; border: 1px solid #334155; }
+    .generated-img { width: 100%; max-height: 500px; object-fit: contain; }
+  </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>مترجم هوشمند</h2>
-
-    <div class="lang-select">
-        <select id="sourceLang">
-            <option value="fa" selected>فارسی (Persian)</option>
-            <option value="auto">تشخیص خودکار (Auto)</option>
-            <option value="en">انگلیسی (English)</option>
-            <option value="ar">عربی (Arabic)</option>
-            <option value="tr">ترکی (Turkish)</option>
-            <option value="fr">فرانسوی (French)</option>
-            <option value="de">آلمانی (German)</option>
-            <option value="es">اسپانیایی (Spanish)</option>
-            <option value="it">ایتالیایی (Italian)</option>
-            <option value="ru">روسی (Russian)</option>
-            <option value="zh-CN">چینی (Chinese)</option>
-            <option value="ja">ژاپنی (Japanese)</option>
-            <option value="ko">کره‌ای (Korean)</option>
-            <option value="hi">هندی (Hindi)</option>
-        </select>
-
-        <span>➔</span>
-
-        <select id="targetLang">
-            <option value="en" selected>انگلیسی (English)</option>
-            <option value="fa">فارسی (Persian)</option>
-            <option value="ar">عربی (Arabic)</option>
-            <option value="tr">ترکی (Turkish)</option>
-            <option value="fr">فرانسوی (French)</option>
-            <option value="de">آلمانی (German)</option>
-            <option value="es">اسپانیایی (Spanish)</option>
-            <option value="it">ایتالیایی (Italian)</option>
-            <option value="ru">روسی (Russian)</option>
-            <option value="zh-CN">چینی (Chinese)</option>
-            <option value="ja">ژاپنی (Japanese)</option>
-            <option value="ko">کره‌ای (Korean)</option>
-            <option value="hi">هندی (Hindi)</option>
-        </select>
+  <header class="main-header">
+    <div class="header-brand">
+      <img src="https://lh3.googleusercontent.com/d/1EZf35v8476qtDC_rTS_h-6-_zIq0RNTh" alt="naturescenic2 logo" class="site-logo">
+      <div class="header-titles">
+        <h2>naturescenic2-ai</h2>
+        <p id="sub-header">طبیعت ایران</p>
+      </div>
     </div>
 
-    <textarea id="inputText" placeholder="متن را اینجا بنویسید..."></textarea>
-    <button class="btn-action" onclick="translateText()">ترجمه کن</button>
+    <a href="https://youtube.com/@naturescenic2" target="_blank" class="yt-logo-btn">
+      <svg class="yt-icon" viewBox="0 0 24 24">
+        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+      </svg>
+      <span>naturescenic2 @ YouTube</span>
+    </a>
+  </header>
 
-    <div class="output-box">
-        <p id="translatedText">ترجمه در اینجا نمایش داده می‌شود...</p>
-        <button class="speak-btn" onclick="speakTranslation()">🔊 تلفظ</button>
+  <div class="translate-section">
+    <span class="translate-title" id="lbl-quick-trans">🌐 مترجم سریع صفحه / Quick Translator:</span>
+    <div id="google_translate_element"></div>
+  </div>
+
+  <div class="control-panel">
+    <button class="btn btn-lang" id="toggle-lang-btn" onclick="toggleLanguage()">🌐 Switch to English / تغییر زبان</button>
+    
+    <a href="https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/NatureScenic2-ai/app-release.apk" class="btn btn-app" id="btn-download-app" onclick="handleAppButtonClick(event)">📲 دانلود اپلیکیشن / Download App</a>
+
+    <label class="btn" id="lbl-upload-img">
+      📷 آپلود عکس / Wallpaper
+      <input type="file" id="upload-image" accept="image/*" hidden onchange="handleFileUpload(event, 'image')">
+    </label>
+
+    <label class="btn" id="lbl-upload-video">
+      🎥 آپلود ویدیو / Video
+      <input type="file" id="upload-video" accept="video/*" hidden onchange="handleFileUpload(event, 'video')">
+    </label>
+
+    <label class="btn" id="lbl-upload-audio">
+      🎵 آپلود صدا / Audio
+      <input type="file" id="upload-audio" accept="audio/*" hidden onchange="handleFileUpload(event, 'audio')">
+    </label>
+
+    <button class="btn btn-url" id="btn-upload-url" onclick="openURLModal()">🌐 آپلود از لینک / Upload via URL</button>
+    <button class="btn-ai-gemini" id="btn-ai-img" onclick="openAIModal()">✨ ساخت عکس با هوش مصنوعی GEMINI ✨</button>
+    <button class="btn-chat-animated" id="btn-translate-menu" onclick="openChatModal()">🌐 ترجمه متن جهانی / Universal Translator</button>
+  </div>
+
+  <div class="filter-menu">
+    <button class="filter-btn active" id="filter-all" onclick="filterMedia('all', this)">همه / All</button>
+    <button class="filter-btn" id="filter-img" onclick="filterMedia('image', this)">🖼️ فقط عکس‌ها / Images Only</button>
+    <button class="filter-btn" id="filter-vid" onclick="filterMedia('video', this)">🎥 فقط ویدیوها / Videos Only</button>
+    <button class="filter-btn" id="filter-aud" onclick="filterMedia('audio', this)">🎵 فقط صداها / Audio Only</button>
+  </div>
+
+  <div class="media-grid" id="media-grid"></div>
+
+  <!-- Modal GEMINI -->
+  <div class="modal-overlay" id="ai-modal">
+    <div class="modal-content gemini-modal-content">
+      <h3 id="modal-ai-title">✨ ساخت تصویر با هوش مصنوعی GEMINI ✨</h3>
+      <p id="modal-ai-desc" style="font-size:1rem; color:#cbd5e1; text-align:center;">توصیف تصویر را بنویسید؛ سیستم هوشمند آن را به انگلیسی ترجمه کرده و تصویر را می‌سازد:</p>
+      <input type="text" id="ai-prompt-input" placeholder="مثال: رودخانه خروشان، درختان سرسبز..." onkeydown="handleAIKeyDown(event)">
+      <div class="generated-img-container" id="ai-image-result">
+        <p style="color:#64748b; font-size:1.1rem;">تصویر ساخته شده توسط Gemini اینجا نمایش داده می‌شود</p>
+      </div>
+      <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap; margin-top:10px;">
+        <button class="btn-action btn-delete" style="width:auto; padding: 12px 24px; font-size:1rem;" onclick="closeAIModal()">بستن / Close</button>
+        <button class="btn-action btn-rename" style="background:#a855f7; padding: 12px 30px; font-size:1.1rem;" onclick="submitAIGeneration()">✨ تولید تصویر با Gemini</button>
+      </div>
     </div>
-</div>
+  </div>
 
-<script>
-    async function translateText() {
-        const text = document.getElementById('inputText').value.trim();
-        const sourceLang = document.getElementById('sourceLang').value;
-        const targetLang = document.getElementById('targetLang').value;
-        const outputElement = document.getElementById('translatedText');
+  <!-- Modal Translator با تمام کشورها و زبان‌های دنیا -->
+  <div class="modal-overlay" id="chat-modal">
+    <div class="modal-content">
+      <h3 id="modal-trans-title">🌐 مترجم پیشرفته تمام زبان‌های جهان</h3>
+      
+      <div class="lang-select-container">
+        <select id="trans-source-lang">
+          <option value="auto" selected>تشخیص خودکار (Auto Detect)</option>
+          <option value="fa">ایران - فارسی (Persian)</option>
+          <option value="en">امریکا/انگلیس - انگلیسی (English)</option>
 
-        if (!text) {
-            outputElement.innerText = "لطفاً متنی وارد کنید.";
-            return;
-        }
+          <option value="ar">عربستان/عرب‌زبانان - عربی (Arabic)</option>
+          <option value="tr">ترکیه - ترکی (Turkish)</option>
 
-        outputElement.innerText = "در حال ترجمه...";
+          <option value="fr">فرانسه - فرانسوی (French)</option>
+          <option value="de">آلمان - آلمانی (German)</option>
 
-        try {
-            const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
-            const response = await fetch(url);
-            const data = await response.json();
+          <option value="es">اسپانیا - اسپانیایی (Spanish)</option>
+          <option value="it">ایتالیا - ایتالیایی (Italian)</option>
 
-            let resultText = "";
-            if (data && data[0]) {
-                data[0].forEach(item => {
-                    if (item[0]) resultText += item[0];
-                });
-            }
-            outputElement.innerText = resultText || "خطا در دریافت ترجمه.";
-        } catch (error) {
-            outputElement.innerText = "ارتباط با سرور برقرار نشد.";
-        }
+          <option value="ru">روسیه - روسی (Russian)</option>
+          <option value="zh-CN">چین - چینی (Chinese)</option>
+
+          <option value="ja">ژاپن - ژاپنی (Japanese)</option>
+          <option value="ko">کره جنوبی - کره‌ای (Korean)</option>
+
+          <option value="hi">هند - هندی (Hindi)</option>
+          <option value="ur">پاکستان - اردو (Urdu)</option>
+
+          <!-- لیست تکمیلی تمام کشورهای دنیا -->
+          <option value="af">افغانستان - پشتو/دری (Pashto)</option>
+
+          <option value="sq">آلبانی - آلبانیایی (Albanian)</option>
+          <option value="hy">ارمنستان - ارمنی (Armenian)</option>
+
+          <option value="az">آذربایجان - ترکی آذربایجانی (Azerbaijani)</option>
+
+          <option value="eu">باسک - باسکی (Basque)</option>
+          <option value="be">بلاروس - بلاروسی (Belarusian)</option>
+          <option value="bn">بنگلادش - بنگالی (Bengali)</option>
+
+          <option value="bs">بوسنی و هرزگوین - بوسنیایی (Bosnian)</option>
+
+          <option value="bg">بلغارستان - بلغاری (Bulgarian)</option>
+
+          <option value="ca">کاتالونیا - کاتالان (Catalan)</option>
+          <option value="hr">کرواسی - کرواتی (Croatian)</option>
+
+          <option value="cs">جمهوری چک - چکی (Czech)</option>
+
+          <option value="da">دانمارک - دانمارکی (Danish)</option>
+
+          <option value="nl">هلند - هلندی (Dutch)</option>
+          <option value="et">استونی - استونیایی (Estonian)</option>
+
+          <option value="fi">فنلاند - فنلاندی (Finnish)</option>
+          <option value="ka">گرجستان - گرجی (Georgian)</option>
+
+          <option value="el">یونان - یونانی (Greek)</option>
+          <option value="gu">هند (گوجارات) - گوجراتی (Gujarati)</option>
+
+          <option value="he">اسرائیل - عبری (Hebrew)</option>
+          <option value="hu">مجارستان - مجاری (Hungarian)</option>
+
+          <option value="is">ایسلند - ایسلندی (Icelandic)</option>
+          <option value="id">اندونزی - اندونزیایی (Indonesian)</option>
+
+          <option value="ga">ایرلند - ایرلندی (Irish)</option>
+          <option value="kk">قزاقستان - قزاقی (Kazakh)</option>
+
+          <option value="km">کامبوج - خمر (Khmer)</option>
+          <option value="ku">کردستان - کردی (Kurdish)</option>
+
+          <option value="ky">قرقیزستان - قرقیزی (Kyrgyz)</option>
+
+          <option value="la">واتیکان - لاتین (Latin)</option>
+          <option value="lv">لاتویا - لتونیایی (Latvian)</option>
+
+          <option value="lt">لیتوانی - لیتوانیایی (Lithuanian)</option>
+
+          <option value="mk">مقدونیه - مقدونی (Macedonian)</option>
+          <option value="ms">مالزی - مالایی (Malay)</option>
+
+          <option value="ml">هند (مالایالام) - مالایالام (Malayalam)</option>
+
+          <option value="mn">مغولستان - مغولی (Mongolian)</option>
+
+          <option value="ne">نپال - نپالی (Nepali)</option>
+          <option value="no">نروژ - نروژی (Norwegian)</option>
+
+          <option value="ps">افغانستان - پشتو (Pashto)</option>
+
+          <option value="pl">لهستان - لهستانی (Polish)</option>
+
+          <option value="pt">پرتغال/برزیل - پرتغالی (Portuguese)</option>
+
+          <option value="pa">پنجاب - پنجابی (Punjabi)</option>
+
+          <option value="ro">رومانی - رومانیایی (Romanian)</option>
+
+          <option value="sr">صربستان - صربی (Serbian)</option>
+          <option value="si">سری‌لانکا - سن‌هالی (Sinhala)</option>
+
+          <option value="sk">اسلواکی - اسلواکی (Slovak)</option>
+
+          <option value="sl">اسلوونی - اسلوونیایی (Slovenian)</option>
+
+          <option value="sw">کنیا/تانزانیا - سواحیلی (Swahili)</option>
+
+          <option value="sv">سوئد - سوئدی (Swedish)</option>
+
+          <option value="tg">تاجیکستان - تاجیکی (Tajik)</option>
+
+          <option value="ta">هند/سری‌لانکا - تامیل (Tamil)</option>
+
+          <option value="th">تایلند - تایلندی (Thai)</option>
+          <option value="uk">اوکراین - اوکراینی (Ukrainian)</option>
+
+          <option value="uz">ازبکستان - ازبکی (Uzbek)</option>
+
+          <option value="vi">ویتنام - ویتنامی (Vietnamese)</option>
+          <option value="cy">ولز - ولزی (Welsh)</option>
+        </select>
+
+        <span style="font-weight:bold; color:#38bdf8;">➔</span>
+
+        <select id="trans-target-lang">
+          <option value="en" selected>امریکا/انگلیس - انگلیسی (English)</option>
+          <option value="fa">ایران - فارسی (Persian)</option>
+
+          <option value="ar">عربستان/عرب‌زبانان - عربی (Arabic)</option>
+
+          <option value="tr">ترکیه - ترکی (Turkish)</option>
+          <option value="fr">فرانسه - فرانسوی (French)</option>
+
+          <option value="de">آلمان - آلمانی (German)</option>
+          <option value="es">اسپانیا - اسپانیایی (Spanish)</option>
+
+          <option value="it">ایتالیا - ایتالیایی (Italian)</option>
+
+          <option value="ru">روسیه - روسی (Russian)</option>
+
+          <option value="zh-CN">چین - چینی (Chinese)</option>
+          <option value="ja">ژاپن - ژاپنی (Japanese)</option>
+
+          <option value="ko">کره جنوبی - کره‌ای (Korean)</option>
+
+          <option value="hi">هند - هندی (Hindi)</option>
+          <option value="ur">پاکستان - اردو (Urdu)</option>
+
+          <!-- لیست تکمیلی تمام کشورهای دنیا -->
+          <option value="af">افغانستان - پشتو/دری (Pashto)</option>
+          <option value="sq">آلبانی - آلبانیایی (Albanian)</option>
+
+          <option value="hy">ارمنستان - ارمنی (Armenian)</option>
+
+          <option value="az">آذربایجان - ترکی آذربایجانی (Azerbaijani)</option>
+
+          <option value="eu">باسک - باسکی (Basque)</option>
+
+          <option value="be">بلاروس - بلاروسی (Belarusian)</option>
+
+          <option value="bn">بنگلادش - بنگالی (Bengali)</option>
+          <option value="bs">بوسنی و هرزگوین - بوسنیایی (Bosnian)</option>
+
+          <option value="bg">بلغارستان - بلغاری (Bulgarian)</option>
+          <option value="ca">کاتالونیا - کاتالان (Catalan)</option>
+
+          <option value="hr">کرواسی - کرواتی (Croatian)</option>
+          <option value="cs">جمهوری چک - چکی (Czech)</option>
+
+          <option value="da">دانمارک - دانمارکی (Danish)</option>
+
+          <option value="nl">هلند - هلندی (Dutch)</option>
+
+          <option value="et">استونی - استونیایی (Estonian)</option>
+          <option value="fi">فنلاند - فنلاندی (Finnish)</option>
+
+          <option value="ka">گرجستان - گرجی (Georgian)</option>
+          <option value="el">یونان - یونانی (Greek)</option>
+
+          <option value="gu">هند (گوجارات) - گوجراتی (Gujarati)</option>
+
+          <option value="he">اسرائیل - عبری (Hebrew)</option>
+          <option value="hu">مجارستان - مجاری (Hungarian)</option>
+
+          <option value="is">ایسلند - ایسلندی (Icelandic)</option>
+
+          <option value="id">اندونزی - اندونزیایی (Indonesian)</option>
+          <option value="ga">ایرلند - ایرلندی (Irish)</option>
+
+          <option value="kk">قزاقستان - قزاقی (Kazakh)</option>
+          <option value="km">کامبوج - خمر (Khmer)</option>
+
+          <option value="ku">کردستان - کردی (Kurdish)</option>
+
+          <option value="ky">قرقیزستان - قرقیزی (Kyrgyz)</option>
+          <option value="la">واتیکان - لاتین (Latin)</option>
+
+          <option value="lv">لاتویا - لتونیایی (Latvian)</option>
+
+          <option value="lt">لیتوانی - لیتوانیایی (Lithuanian)</option>
+          <option value="mk">مقدونیه - مقدونی (Macedonian)</option>
+
+          <option value="ms">مالزی - مالایی (Malay)</option>
+          <option value="ml">هند (مالایالام) - مالایالام (Malayalam)</option>
+
+          <option value="mn">مغولستان - مغولی (Mongolian)</option>
+
+          <option value="ne">نپال - نپالی (Nepali)</option>
+
+          <option value="no">نروژ - نروژی (Norwegian)</option>
+
+          <option value="ps">افغانستان - پشتو (Pashto)</option>
+          <option value="pl">لهستان - لهستانی (Polish)</option>
+
+          <option value="pt">پرتغال/برزیل - پرتغالی (Portuguese)</option>
+
+          <option value="pa">پنجاب - پنجابی (Punjabi)</option>
+
+          <option value="ro">رومانی - رومانیایی (Romanian)</option>
+
+          <option value="sr">صربستان - صربی (Serbian)</option>
+
+          <option value="si">سری‌لانکا - سن‌هالی (Sinhala)</option>
+          <option value="sk">اسلواکی - اسلواکی (Slovak)</option>
+
+          <option value="sl">اسلوونی - اسلوونیایی (Slovenian)</option>
+
+          <option value="sw">کنیا/تانزانیا - سواحیلی (Swahili)</option>
+          <option value="sv">سوئد - سوئدی (Swedish)</option>
+
+          <option value="tg">تاجیکستان - تاجیکی (Tajik)</option>
+
+          <option value="ta">هند/سری‌لانکا - تامیل (Tamil)</option>
+
+          <option value="th">تایلند - تایلندی (Thai)</option>
+
+          <option value="uk">اوکراین - اوکراینی (Ukrainian)</option>
+          <option value="uz">ازبکستان - ازبکی (Uzbek)</option>
+
+          <option value="vi">ویتنام - ویتنامی (Vietnamese)</option>
+
+          <option value="cy">ولز - ولزی (Welsh)</option>
+        </select>
+      </div>
+
+      <textarea id="trans-text-input" placeholder="متن خود را اینجا بنویسید..."></textarea>
+
+      <button class="btn-action btn-rename" onclick="sendTranslationRequest()">ترجمه کن / Translate</button>
+      
+      <div class="translation-header">
+        <span style="color:#94a3b8; font-size:0.9rem;">نتیجه ترجمه:</span>
+        <button class="speaker-btn" onclick="playTextToSpeech()">🔊 تلفظ صوتی</button>
+      </div>
+
+      <div class="translation-result" id="translation-result">نتیجه ترجمه اینجا نمایش داده می‌شود...</div>
+      
+      <button class="btn-action btn-delete" style="width:auto; align-self:flex-end;" onclick="closeChatModal()">بستن / Close</button>
+    </div>
+  </div>
+
+  <!-- Modal URL -->
+  <div class="modal-overlay" id="url-modal">
+    <div class="modal-content">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3>🌐 آپلود مستقیم فایل از لینک اینترنتی</h3>
+        <button class="btn-action" style="background: #f59e0b; color: #000;" onclick="changeAdminPassword()">🔑 تغییر رمز عبور مدیر</button>
+      </div>
+      <input type="url" id="url-input" placeholder="لینک مستقیم تصویر، ویدیو یا یوتیوب">
+      <select id="url-type-select">
+        <option value="image">تصویر (Image)</option>
+        <option value="video">ویدیو (Video)</option>
+        <option value="audio">صدا (Audio)</option>
+      </select>
+      <input type="text" id="url-title-input" placeholder="عنوان فایل (به فارسی)...">
+      <div style="display:flex; gap:10px; justify-content:flex-end;">
+        <button class="btn-action btn-delete" style="width:auto; margin:0;" onclick="closeURLModal()">انصراف</button>
+        <button class="btn-action btn-rename" onclick="addURLMedia()">افزودن و نمایش</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({ pageLanguage: 'fa', layout: google.translate.TranslateElement.InlineLayout.SIMPLE }, 'google_translate_element');
+    }
+  </script>
+
+  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+  <script>
+    const SUPABASE_URL = "https://xvkbwsejloapnkjgrjde.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_PjBM2rAkc1U3WyrXhVfPCQ_5qrIs_da"; 
+    const BUCKET_NAME = "dilgon-image";
+
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    function getAdminPassword() {
+      return localStorage.getItem('app_admin_pass') || '1234';
     }
 
-    function speakTranslation() {
-        const text = document.getElementById('translatedText').innerText;
-        const targetLang = document.getElementById('targetLang').value;
+    function checkAdminAuth() {
+      const inputPass = prompt("لطفاً رمز عبور مدیر را وارد کنید:");
+      if (inputPass === getAdminPassword()) {
+        return true;
+      } else if (inputPass !== null) {
+        alert("رمز عبور اشتباه است! دسترسی امکان‌پذیر نیست.");
+      }
+      return false;
+    }
 
-        if (!text || text === "ترجمه در اینجا نمایش داده می‌شود..." || text === "در حال ترجمه...") return;
-
-        if ('speechSynthesis' in window) {
-            window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = targetLang === 'auto' ? 'en-US' : targetLang;
-            utterance.rate = 0.9;
-            window.speechSynthesis.speak(utterance);
+    function changeAdminPassword() {
+      const currentPass = prompt("رمز عبور فعلی را وارد کنید:");
+      if (currentPass === getAdminPassword()) {
+        const newPass = prompt("رمز عبور جدید را وارد کنید:");
+        if (newPass && newPass.trim() !== "") {
+          localStorage.setItem('app_admin_pass', newPass.trim());
+          alert("رمز عبور با موفقیت تغییر یافت.");
         } else {
-            alert("قابلیت تلفظ صوتی پشتیبانی نمی‌شود.");
+          alert("رمز عبور نمی‌تواند خالی باشد.");
         }
+      } else if (currentPass !== null) {
+        alert("رمز عبور فعلی نادرست است!");
+      }
     }
-</script>
 
+    function handleAppButtonClick(e) {
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      if (isMobile) {
+        e.preventDefault();
+        window.open(window.location.href, '_blank');
+      }
+    }
+
+    let currentLang = 'fa';
+
+    let mediaItems = [
+      { id: 'c1', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/1.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۱)', titleEn: 'Belqis Spring Choram (Photo 1)' },
+      { id: 'c2', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/2.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۲)', titleEn: 'Belqis Spring Choram (Photo 2)' },
+      { id: 'c3', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/3.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۳)', titleEn: 'Belqis Spring Choram (Photo 3)' },
+      { id: 'c4', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/4.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۴)', titleEn: 'Belqis Spring Choram (Photo 4)' },
+      { id: 'c5', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/5.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۵)', titleEn: 'Belqis Spring Choram (Photo 5)' },
+      { id: 'c6', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/6.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۶)', titleEn: 'Belqis Spring Choram (Photo 6)' },
+
+      { id: 'd1', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/1.JPG', titleFa: 'طبیعت دیلگون (عکس ۱)', titleEn: 'Dilgun Nature (Photo 1)' },
+      { id: 'd2', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/2.JPG', titleFa: 'طبیعت دیلگون (عکس ۲)', titleEn: 'Dilgun Nature (Photo 2)' },
+      { id: 'd3', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/3.JPG', titleFa: 'طبیعت دیلگون (عکس ۳)', titleEn: 'Dilgun Nature (Photo 3)' },
+      { id: 'd4', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/4.JPG', titleFa: 'طبیعت دیلگون (عکس ۴)', titleEn: 'Dilgun Nature (Photo 4)' },
+      { id: 'd5', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/5.JPG', titleFa: 'طبیعت دیلگون (عکس ۵)', titleEn: 'Dilgun Nature (Photo 5)' },
+      { id: 'd7', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/7.JPG', titleFa: 'طبیعت دیلگون (عکس ۷)', titleEn: 'Dilgun Nature (Photo 7)' },
+      { id: 'd8', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/8.JPG', titleFa: 'طبیعت دیلگون (عکس ۸)', titleEn: 'Dilgun Nature (Photo 8)' },
+      { id: 'd9', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/9.JPG', titleFa: 'طبیعت دیلگون (عکس ۹)', titleEn: 'Dilgun Nature (Photo 9)' },
+      { id: 'd10', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/10.JPG', titleFa: 'طبیعت دیلگون (عکس ۱۰)', titleEn: 'Dilgun Nature (Photo 10)' },
+      { id: 'd11', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/11.JPG', titleFa: 'طبیعت دیلگون (عکس ۱۱)', titleEn: 'Dilgun Nature (Photo 11)' },
+      { id: 'd12', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/12.JPG', titleFa: 'طبیعت دیلگون (عکس ۱۲)', titleEn: 'Dilgun Nature (Photo 12)' },
+      { id: 'd14', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/14.JPG', titleFa: 'طبیعت دیلگون (عکس ۱۴)', titleEn: 'Dilgun Nature (Photo 14)' },
+      { id: 'd15', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/15.JPG', titleFa: 'طبیعت دیلگون (عکس ۱۵)', titleEn: 'Dilgun Nature (Photo 15)' },
+      { id: 'd16', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/16.JPG', titleFa: 'طبیعت دیلگون (عکس ۱۶)', titleEn: 'Dilgun Nature (Photo 16)' },
+      { id: 'd17', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/17.JPG', titleFa: 'طبیعت دیلگون (عکس ۱۷)', titleEn: 'Dilgun Nature (Photo 17)' },
+      { id: 'd18', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/18.JPG', titleFa: 'طبیعت دیلگون (عکس ۱۸)', titleEn: 'Dilgun Nature (Photo 18)' },
+      { id: 'd20', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/20.JPG', titleFa: 'طبیعت دیلگون (عکس ۲۰)', titleEn: 'Dilgun Nature (Photo 20)' },
+      { id: 'd21', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/21.JPG', titleFa: 'طبیعت دیلگون (عکس ۲۱)', titleEn: 'Dilgun Nature (Photo 21)' },
+      { id: 'd23', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/23.JPG', titleFa: 'طبیعت دیلگون (عکس ۲۳)', titleEn: 'Dilgun Nature (Photo 23)' },
+      { id: 'd24', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/24.JPG', titleFa: 'طبیعت دیلگون (عکس ۲۴)', titleEn: 'Dilgun Nature (Photo 24)' }
+    ];
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderMediaItems();
+    });
+
+    function getYoutubeEmbedUrl(url) {
+      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+      const match = url.match(regExp);
+      return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}` : null;
+    }
+
+    function renderMediaItems() {
+      const grid = document.getElementById('media-grid');
+      grid.innerHTML = '';
+
+      mediaItems.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'media-card';
+        card.setAttribute('data-type', item.type);
+        card.id = `card-${item.id}`;
+
+        let mediaTag = '';
+        const ytUrl = getYoutubeEmbedUrl(item.src);
+
+        if (ytUrl) {
+          mediaTag = `<iframe src="${ytUrl}" allowfullscreen></iframe>`;
+        } else if (item.type === 'video') {
+          mediaTag = `<video src="${item.src}" controls></video>`;
+        } else if (item.type === 'audio') {
+          mediaTag = `<audio src="${item.src}" controls></audio>`;
+        } else {
+          mediaTag = `<img src="${item.src}" alt="${item.titleFa}">`;
+        }
+
+        card.innerHTML = `
+          ${mediaTag}
+          <div class="card-body">
+            <div class="card-title-fa" id="title-fa-${item.id}">${item.titleFa}</div>
+            <div class="card-title-en" id="title-en-${item.id}">${item.titleEn}</div>
+            <div class="rename-box">
+              <input type="text" class="rename-input" id="input-${item.id}" placeholder="نام جدید...">
+              <button class="btn-action btn-rename" onclick="renameItem('${item.id}')">تغییر نام</button>
+            </div>
+            <button class="btn-action btn-delete" onclick="deleteItem('${item.id}')">🗑️ حذف فایل (Delete)</button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function toggleLanguage() {
+      const body = document.body;
+      const langBtn = document.getElementById('toggle-lang-btn');
+      const appBtn = document.getElementById('btn-download-app');
+      
+      if (currentLang === 'fa') {
+        body.style.direction = 'ltr';
+        langBtn.innerText = '🌐 تغییر به فارسی / Switch to Persian';
+        appBtn.innerText = '📲 Download App';
+        document.getElementById('sub-header').innerText = 'Iran Nature';
+        document.getElementById('lbl-quick-trans').innerText = '🌐 Quick Translator:';
+        document.getElementById('lbl-upload-img').childNodes[0].textContent = '📷 Upload Image ';
+        document.getElementById('lbl-upload-video').childNodes[0].textContent = '🎥 Upload Video ';
+        document.getElementById('lbl-upload-audio').childNodes[0].textContent = '🎵 Upload Audio ';
+        document.getElementById('btn-upload-url').innerText = '🌐 Upload via URL';
+        document.getElementById('btn-ai-img').innerText = '✨ GEMINI AI Image Generator';
+        document.getElementById('btn-translate-menu').innerText = '🌐 Universal Text Translator';
+        document.getElementById('filter-all').innerText = 'All';
+        document.getElementById('filter-img').innerText = '🖼️ Images Only';
+        document.getElementById('filter-vid').innerText = '🎥 Videos Only';
+        document.getElementById('filter-aud').innerText = '🎵 Audio Only';
+        currentLang = 'en';
+      } else {
+        body.style.direction = 'rtl';
+        langBtn.innerText = '🌐 Switch to English / تغییر زبان';
+        appBtn.innerText = '📲 دانلود اپلیکیشن / Download App';
+        document.getElementById('sub-header').innerText = 'طبیعت ایران';
+        document.getElementById('lbl-quick-trans').innerText = '🌐 مترجم سریع صفحه / Quick Translator:';
+        document.getElementById('lbl-upload-img').childNodes[0].textContent = '📷 آپلود عکس / Wallpaper ';
+        document.getElementById('lbl-upload-video').childNodes[0].textContent = '🎥 آپلود ویدیو / Video ';
+        document.getElementById('lbl-upload-audio').childNodes[0].textContent = '🎵 آپلود صدا / Audio ';
+        document.getElementById('btn-upload-url').innerText = '🌐 آپلود از لینک / Upload via URL';
+        document.getElementById('btn-ai-img').innerText = '✨ ساخت عکس با هوش مصنوعی GEMINI ✨';
+        document.getElementById('btn-translate-menu').innerText = '🌐 ترجمه متن جهانی / Universal Translator';
+        document.getElementById('filter-all').innerText = 'همه / All';
+        document.getElementById('filter-img').innerText = '🖼️ فقط عکس‌ها / Images Only';
+        document.getElementById('filter-vid').innerText = '🎥 فقط ویدیوها / Videos Only';
+        document.getElementById('filter-aud').innerText = '🎵 فقط صداها / Audio Only';
+        currentLang = 'fa';
+      }
+    }
+
+    async function translateTextDirect(text, targetLangCode, sourceLangCode = 'auto') {
+      try {
+        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLangCode}&tl=${targetLangCode}&dt=t&q=${encodeURIComponent(text)}`;
+        const response = await fetch(url);
+        const data = await response.json();
+        let translatedText = '';
+        if (data && data[0]) {
+          data[0].forEach(item => { if (item[0]) translatedText += item[0]; });
+        }
+        return translatedText || text;
+      } catch (e) {
+        return text;
+      }
+    }
+
+    async function sendTranslationRequest() {
+      const text = document.getElementById('trans-text-input').value.trim();
+      const sourceLang = document.getElementById('trans-source-lang').value;
+      const targetLang = document.getElementById('trans-target-lang').value;
+      const resultDiv = document.getElementById('translation-result');
+
+      if (!text) {
+        resultDiv.innerText = "لطفاً متنی برای ترجمه وارد کنید.";
+        return;
+      }
+
+      resultDiv.innerText = "در حال ترجمه هوشمند...";
+      const translated = await translateTextDirect(text, targetLang, sourceLang);
+      resultDiv.innerText = translated || "خطا در دریافت ترجمه.";
+    }
+
+    function playTextToSpeech() {
+      const text = document.getElementById('translation-result').innerText;
+      const targetLang = document.getElementById('trans-target-lang').value;
+
+      if (!text || text === "نتیجه ترجمه..." || text === "در حال ترجمه هوشمند...") return;
+
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = targetLang === 'auto' ? 'en-US' : targetLang;
+        utterance.rate = 0.9;
+        window.speechSynthesis.speak(utterance);
+      } else {
+        alert("قابلیت تلفظ صوتی در مرورگر شما پشتیبانی نمی‌شود.");
+      }
+    }
+
+    async function renameItem(id) {
+      if (!checkAdminAuth()) return;
+      const inputVal = document.getElementById(`input-${id}`).value.trim();
+      if (!inputVal) return alert("لطفاً نام جدید را وارد کنید");
+
+      const item = mediaItems.find(i => i.id === id);
+      if (!item) return;
+
+      item.titleFa = inputVal;
+      item.titleEn = await translateTextDirect(inputVal, 'en');
+      renderMediaItems();
+    }
+
+    function deleteItem(id) {
+      if (!checkAdminAuth()) return;
+      if (confirm("آیا از حذف این فایل مطمئن هستید؟")) {
+        mediaItems = mediaItems.filter(i => i.id !== id);
+        renderMediaItems();
+      }
+    }
+
+    function filterMedia(type, btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const cards = document.querySelectorAll('.media-card');
+      cards.forEach(card => {
+        if (type === 'all' || card.getAttribute('data-type') === type) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    async function uploadFileToSupabase(file) {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
+
+      const { data, error } = await supabaseClient.storage
+        .from(BUCKET_NAME)
+        .upload(fileName, file, { cacheControl: '3600', upsert: false });
+
+      if (error) throw new Error(error.message);
+
+      const { data: publicUrlData } = supabaseClient.storage
+        .from(BUCKET_NAME)
+        .getPublicUrl(fileName);
+
+      return publicUrlData.publicUrl;
+    }
+
+    async function handleFileUpload(event, type) {
+      if (!checkAdminAuth()) {
+        event.target.value = '';
+        return;
+      }
+
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const tempId = String(Date.now());
+      
+      alert("در حال آپلود مستقیم فایل به باکت سوپابیس...");
+      try {
+        const directUrl = await uploadFileToSupabase(file);
+        const newItem = {
+          id: tempId,
+          type: type,
+          src: directUrl,
+          titleFa: file.name,
+          titleEn: await translateTextDirect(file.name, 'en')
+        };
+        mediaItems.unshift(newItem);
+        renderMediaItems();
+        alert("فایل با موفقیت آپلود شد و لینک مستقیم سوپابیس تولید گردید.");
+      } catch (error) {
+        alert("خطا در آپلود به سوپابیس: " + error.message);
+      }
+    }
+
+    function openURLModal() { 
+      if (!checkAdminAuth()) return;
+      document.getElementById('url-modal').style.display = 'flex'; 
+    }
+    function closeURLModal() { document.getElementById('url-modal').style.display = 'none'; }
+    function openAIModal() { document.getElementById('ai-modal').style.display = 'flex'; document.getElementById('ai-prompt-input').focus(); }
+    function closeAIModal() { document.getElementById('ai-modal').style.display = 'none'; }
+    function openChatModal() { document.getElementById('chat-modal').style.display = 'flex'; }
+    function closeChatModal() { document.getElementById('chat-modal').style.display = 'none'; }
+
+    function handleAIKeyDown(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        submitAIGeneration();
+      }
+    }
+
+    async function addURLMedia() {
+      const url = document.getElementById('url-input').value.trim();
+      let type = document.getElementById('url-type-select').value;
+      const titleFa = document.getElementById('url-title-input').value.trim() || 'فایل از لینک';
+
+      if (!url) return alert("لطفاً لینک را وارد کنید");
+      if (getYoutubeEmbedUrl(url)) type = 'video';
+
+      const tempId = String(Date.now());
+      const titleEn = await translateTextDirect(titleFa, 'en');
+
+      mediaItems.unshift({ id: tempId, type: type, src: url, titleFa: titleFa, titleEn: titleEn });
+      renderMediaItems();
+      
+      document.getElementById('url-input').value = '';
+      document.getElementById('url-title-input').value = '';
+      closeURLModal();
+    }
+
+    async function submitAIGeneration() {
+      const inputEl = document.getElementById('ai-prompt-input');
+      const userPrompt = inputEl.value.trim();
+      if (!userPrompt) return alert("لطفاً توصیف تصویر را بنویسید");
+
+      const resultDiv = document.getElementById('ai-image-result');
+      resultDiv.innerHTML = "<p style='color:#38bdf8;'>در حال پردازش هوشمند تصویر... لطفاً صبر کنید...</p>";
+
+      const englishPrompt = await translateTextDirect(userPrompt, 'en');
+      const seed = Math.floor(Math.random() * 999999);
+      const cleanPrompt = encodeURIComponent(`high quality realistic nature landscape of ${englishPrompt}, 8k resolution, photorealistic, beautiful lighting`);
+      
+      const primaryUrl = `https://image.pollinations.ai/prompt/${cleanPrompt}?seed=${seed}&width=1024&height=768&nologo=true`;
+      
+      const img = new Image();
+      img.onload = () => {
+        resultDiv.innerHTML = "";
+        const finalImg = document.createElement('img');
+        finalImg.src = primaryUrl;
+        finalImg.className = "generated-img";
+        resultDiv.appendChild(finalImg);
+
+        mediaItems.unshift({ 
+          id: String(Date.now()), 
+          type: 'image', 
+          src: primaryUrl, 
+          titleFa: `تصویر هوش مصنوعی: ${userPrompt}`, 
+          titleEn: `AI Image: ${englishPrompt}` 
+        });
+        renderMediaItems();
+      };
+      img.onerror = () => {
+        resultDiv.innerHTML = "<p style='color:#ef4444;'>خطا در ساخت تصویر. لطفاً مجدداً تلاش کنید.</p>";
+      };
+      img.src = primaryUrl;
+    }
+  </script>
 </body>
 </html>
