@@ -155,7 +155,7 @@
     <div class="modal-content gemini-modal-content">
       <h3 id="modal-ai-title">✨ ساخت تصویر با هوش مصنوعی GEMINI ✨</h3>
       <p id="modal-ai-desc" style="font-size:1rem; color:#cbd5e1; text-align:center;">توصیف تصویر را بنویسید؛ سیستم هوشمند آن را به انگلیسی ترجمه کرده و تصویر را می‌سازد:</p>
-      <input type="text" id="ai-prompt-input" placeholder="مثال: رودخانه خروشان، درختان سرسبز..." onkeydown="handleAIKeyDown(event)">
+      <input type="text" id="ai-prompt-input" placeholder="مثال: کودک خندان در طبیعت..." onkeydown="handleAIKeyDown(event)">
       <div class="generated-img-container" id="ai-image-result">
         <p style="color:#64748b; font-size:1.1rem;">تصویر ساخته شده توسط Gemini اینجا نمایش داده می‌شود</p>
       </div>
@@ -230,27 +230,17 @@
           <option value="pt">پرتغال/برزیل - پرتغالی (Portuguese)</option>
           <option value="pa">پنجاب - پنجابی (Punjabi)</option>
           <option value="ro">رومانی - رومانیایی (Romanian)</option>
-
           <option value="sr">صربستان - صربی (Serbian)</option>
           <option value="si">سری‌لانکا - سن‌هالی (Sinhala)</option>
-
           <option value="sk">اسلواکی - اسلواکی (Slovak)</option>
-
           <option value="sl">اسلوونی - اسلوونیایی (Slovenian)</option>
-
           <option value="sw">کنیا/تانزانیا - سواحیلی (Swahili)</option>
-
           <option value="sv">سوئد - سوئدی (Swedish)</option>
-
           <option value="tg">تاجیکستان - تاجیکی (Tajik)</option>
-
           <option value="ta">هند/سری‌لانکا - تامیل (Tamil)</option>
-
           <option value="th">تایلند - تایلندی (Thai)</option>
           <option value="uk">اوکراین - اوکراینی (Ukrainian)</option>
-
           <option value="uz">ازبکستان - ازبکی (Uzbek)</option>
-
           <option value="vi">ویتنام - ویتنامی (Vietnamese)</option>
           <option value="cy">ولز - ولزی (Welsh)</option>
         </select>
@@ -301,57 +291,31 @@
           <option value="ku">کردستان - کردی (Kurdish)</option>
           <option value="ky">قرقیزستان - قرقیزی (Kyrgyz)</option>
           <option value="la">واتیکان - لاتین (Latin)</option>
-
           <option value="lv">لاتویا - لتونیایی (Latvian)</option>
-
           <option value="lt">لیتوانی - لیتوانیایی (Lithuanian)</option>
-
           <option value="mk">مقدونیه - مقدونی (Macedonian)</option>
-
           <option value="ms">مالزی - مالایی (Malay)</option>
-
           <option value="ml">هند (مالایالام) - مالایالام (Malayalam)</option>
-
           <option value="mn">مغولستان - مغولی (Mongolian)</option>
-
           <option value="ne">نپال - نپالی (Nepali)</option>
-
           <option value="no">نروژ - نروژی (Norwegian)</option>
-
           <option value="ps">افغانستان - پشتو (Pashto)</option>
-
           <option value="pl">لهستان - لهستانی (Polish)</option>
-
           <option value="pt">پرتغال/برزیل - پرتغالی (Portuguese)</option>
-
           <option value="pa">پنجاب - پنجابی (Punjabi)</option>
-
           <option value="ro">رومانی - رومانیایی (Romanian)</option>
-
           <option value="sr">صربستان - صربی (Serbian)</option>
-
           <option value="si">سری‌لانکا - سن‌هالی (Sinhala)</option>
-
           <option value="sk">اسلواکی - اسلواکی (Slovak)</option>
-
           <option value="sl">اسلوونی - اسلوونیایی (Slovenian)</option>
-
           <option value="sw">کنیا/تانزانیا - سواحیلی (Swahili)</option>
-
           <option value="sv">سوئد - سوئدی (Swedish)</option>
-
           <option value="tg">تاجیکستان - تاجیکی (Tajik)</option>
-
           <option value="ta">هند/سری‌لانکا - تامیل (Tamil)</option>
-
           <option value="th">تایلند - تایلندی (Thai)</option>
-
           <option value="uk">اوکراین - اوکراینی (Ukrainian)</option>
-
           <option value="uz">ازبکستان - ازبکی (Uzbek)</option>
-
           <option value="vi">ویتنام - ویتنامی (Vietnamese)</option>
-
           <option value="cy">ولز - ولزی (Welsh)</option>
         </select>
       </div>
@@ -406,6 +370,63 @@
     const BUCKET_NAME = "dilgon-image";
 
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    function openAIModal() {
+      document.getElementById('ai-modal').style.display = 'flex';
+    }
+
+    function closeAIModal() {
+      document.getElementById('ai-modal').style.display = 'none';
+    }
+
+    function handleAIKeyDown(event) {
+      if (event.key === 'Enter') {
+        submitAIGeneration();
+      }
+    }
+
+    async function submitAIGeneration() {
+      const input = document.getElementById('ai-prompt-input');
+      const resultBox = document.getElementById('ai-image-result');
+      const promptText = input.value.trim();
+
+      if (!promptText) {
+        alert('لطفاً توصیف تصویر را وارد کنید.');
+        return;
+      }
+
+      resultBox.innerHTML = '<p style="color:#a855f7; font-size:1.1rem;">در حال ترجمه و ساخت تصویر... لطفاً شکیبا باشید.</p>';
+
+      try {
+        // ۱. ترجمه متن فارسی به انگلیسی برای درک صحیح هوش مصنوعی
+        const transRes = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q=${encodeURIComponent(promptText)}`);
+        const transData = await transRes.json();
+        const enPrompt = (transData && transData[0] && transData[0][0] && transData[0][0][0]) ? transData[0][0][0] : promptText;
+
+        // ۲. ساخت لینک تصویر بر اساس پرامپت انگلیسی برای دقت بالا و عدم انحراف موضوع
+        const cleanPrompt = encodeURIComponent(enPrompt);
+        const seed = Math.floor(Math.random() * 100000);
+        const imageUrl = `https://image.pollinations.ai/prompt/${cleanPrompt}?seed=${seed}&width=1024&height=1024&nologo=true`;
+
+        const img = new Image();
+        img.className = 'generated-img';
+        img.alt = promptText;
+        img.src = imageUrl;
+
+        img.onload = () => {
+          resultBox.innerHTML = '';
+          resultBox.appendChild(img);
+        };
+
+        img.onerror = () => {
+          resultBox.innerHTML = '<p style="color:#ef4444; font-size:1.1rem;">خطا در دریافت تصویر. لطفاً مجدداً تلاش کنید.</p>';
+        };
+
+      } catch (err) {
+        console.error(err);
+        resultBox.innerHTML = '<p style="color:#ef4444; font-size:1.1rem;">بروز خطا در برقراری ارتباط. لطفاً دوباره امتحان کنید.</p>';
+      }
+    }
 
     function getAdminPassword() {
       return localStorage.getItem('app_admin_pass') || '1234';
@@ -512,259 +533,12 @@
         card.innerHTML = `
           ${mediaTag}
           <div class="card-body">
-            <div class="card-title-fa" id="title-fa-${item.id}">${item.titleFa}</div>
-            <div class="card-title-en" id="title-en-${item.id}">${item.titleEn}</div>
-            <a href="${item.src}" download target="_blank" class="btn-action btn-download">
-              📥 دانلود فایل / Download File
-            </a>
-            <div class="rename-box">
-              <input type="text" class="rename-input" id="input-${item.id}" placeholder="نام جدید / New Title">
-              <button class="btn-action btn-rename" onclick="renameItem('${item.id}')">تغییر / Change</button>
-            </div>
-            <button class="btn-action btn-delete" onclick="deleteItem('${item.id}')">حذف / Delete</button>
+            <div class="card-title-fa">${item.titleFa}</div>
+            <div class="card-title-en">${item.titleEn}</div>
           </div>
         `;
         grid.appendChild(card);
       });
-    }
-
-    function filterMedia(type, btn) {
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      const cards = document.querySelectorAll('.media-card');
-      cards.forEach(card => {
-        if (type === 'all' || card.getAttribute('data-type') === type) {
-          card.style.display = 'flex';
-        } else {
-          card.style.display = 'none';
-        }
-      });
-    }
-
-    function renameItem(id) {
-      if (!checkAdminAuth()) return;
-      const input = document.getElementById(`input-${id}`);
-      const newTitle = input.value.trim();
-      if (!newTitle) {
-        alert("لطفاً عنوان جدید را وارد کنید.");
-        return;
-      }
-      const item = mediaItems.find(m => m.id === id);
-      if (item) {
-        item.titleFa = newTitle;
-        item.titleEn = newTitle;
-        document.getElementById(`title-fa-${id}`).innerText = newTitle;
-        document.getElementById(`title-en-${id}`).innerText = newTitle;
-        input.value = '';
-      }
-    }
-
-    function deleteItem(id) {
-      if (!checkAdminAuth()) return;
-      if (confirm("آیا از حذف این ایتم اطمینان دارید؟")) {
-        mediaItems = mediaItems.filter(m => m.id !== id);
-        const card = document.getElementById(`card-${id}`);
-        if (card) card.remove();
-      }
-    }
-
-    async function handleFileUpload(event, type) {
-      if (!checkAdminAuth()) {
-        event.target.value = '';
-        return;
-      }
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const fileName = `${Date.now()}_${file.name}`;
-      try {
-        const { data, error } = await supabaseClient.storage.from(BUCKET_NAME).upload(fileName, file);
-        if (error) throw error;
-
-        const { data: publicUrlData } = supabaseClient.storage.from(BUCKET_NAME).getPublicUrl(fileName);
-        const fileUrl = publicUrlData.publicUrl;
-
-        const newItem = {
-          id: 'u_' + Date.now(),
-          type: type,
-          src: fileUrl,
-          titleFa: file.name,
-          titleEn: file.name
-        };
-
-        mediaItems.unshift(newItem);
-        renderMediaItems();
-        alert("فایل با موفقیت آپلود شد.");
-      } catch (err) {
-        alert("خطا در آپلود فایل: " + err.message);
-      } finally {
-        event.target.value = '';
-      }
-    }
-
-    function openURLModal() {
-      if (!checkAdminAuth()) return;
-      document.getElementById('url-modal').style.display = 'flex';
-    }
-
-    function closeURLModal() {
-      document.getElementById('url-modal').style.display = 'none';
-    }
-
-    function addURLMedia() {
-      const url = document.getElementById('url-input').value.trim();
-      const type = document.getElementById('url-type-select').value;
-      const title = document.getElementById('url-title-input').value.trim() || 'فایل از لینک';
-
-      if (!url) {
-        alert("لطفاً آدرس لینک را وارد کنید.");
-        return;
-      }
-
-      const newItem = {
-        id: 'url_' + Date.now(),
-        type: type,
-        src: url,
-        titleFa: title,
-        titleEn: title
-      };
-
-      mediaItems.unshift(newItem);
-      renderMediaItems();
-      closeURLModal();
-
-      document.getElementById('url-input').value = '';
-      document.getElementById('url-title-input').value = '';
-    }
-
-    function toggleLanguage() {
-      currentLang = currentLang === 'fa' ? 'en' : 'fa';
-      const btn = document.getElementById('toggle-lang-btn');
-      if (currentLang === 'en') {
-        btn.innerText = "🌐 تغییر به فارسی / Switch to Persian";
-        document.body.style.direction = 'ltr';
-        document.body.style.textAlign = 'left';
-      } else {
-        btn.innerText = "🌐 Switch to English / تغییر زبان";
-        document.body.style.direction = 'rtl';
-        document.body.style.textAlign = 'right';
-      }
-    }
-
-    function openAIModal() {
-      document.getElementById('ai-modal').style.display = 'flex';
-    }
-
-    function closeAIModal() {
-      document.getElementById('ai-modal').style.display = 'none';
-    }
-
-    function handleAIKeyDown(e) {
-      if (e.key === 'Enter') submitAIGeneration();
-    }
-
-    async function submitAIGeneration() {
-      const promptText = document.getElementById('ai-prompt-input').value.trim();
-      if (!promptText) {
-        alert("لطفاً توصیف تصویر را بنویسید.");
-        return;
-      }
-
-      const resBox = document.getElementById('ai-image-result');
-      resBox.innerHTML = '<p style="color:#a855f7; font-weight:bold;">در حال ساخت تصویر با Gemini... لطفاً شکیبا باشید.</p>';
-
-      try {
-        const encodedPrompt = encodeURIComponent(promptText);
-        const imageUrl = `https://pollinations.ai/p/${encodedPrompt}?width=1280&height=720&seed=${Math.floor(Math.random() * 1000000)}&model=flux`;
-
-        const img = new Image();
-        img.src = imageUrl;
-        img.className = 'generated-img';
-        img.onload = () => {
-          resBox.innerHTML = '';
-          resBox.appendChild(img);
-
-          const saveBtn = document.createElement('button');
-          saveBtn.className = 'btn-action btn-rename';
-          saveBtn.style.marginTop = '10px';
-          saveBtn.innerText = '➕ افزودن به گالری سایت';
-          saveBtn.onclick = () => {
-            if (!checkAdminAuth()) return;
-            mediaItems.unshift({
-              id: 'ai_' + Date.now(),
-              type: 'image',
-              src: imageUrl,
-              titleFa: promptText,
-              titleEn: promptText
-            });
-            renderMediaItems();
-            closeAIModal();
-            alert("تصویر ساخت هوش مصنوعی به گالری اضافه شد.");
-          };
-          resBox.appendChild(saveBtn);
-        };
-      } catch (err) {
-        resBox.innerHTML = '<p style="color:#dc2626;">خطا در ساخت تصویر.</p>';
-      }
-    }
-
-    function openChatModal() {
-      document.getElementById('chat-modal').style.display = 'flex';
-    }
-
-    function closeChatModal() {
-      document.getElementById('chat-modal').style.display = 'none';
-    }
-
-    async function sendTranslationRequest() {
-      const text = document.getElementById('trans-text-input').value.trim();
-      const source = document.getElementById('trans-source-lang').value;
-      const target = document.getElementById('trans-target-lang').value;
-      const resBox = document.getElementById('translation-result');
-
-      if (!text) {
-        alert("لطفاً متنی برای ترجمه وارد کنید.");
-        return;
-      }
-
-      resBox.innerText = "در حال ترجمه... لطفاً منتظر بمانید.";
-
-      try {
-        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${source}&tl=${target}&dt=t&q=${encodeURIComponent(text)}`;
-        const response = await fetch(url);
-        const data = await response.json();
-
-        let translatedText = '';
-        if (data && data[0]) {
-          data[0].forEach(item => {
-            if (item[0]) translatedText += item[0];
-          });
-        }
-
-        resBox.innerText = translatedText || "خطا در دریافت ترجمه.";
-      } catch (err) {
-        resBox.innerText = "خطا در برقراری ارتباط با سرور ترجمه.";
-      }
-    }
-
-    function playTextToSpeech() {
-      const text = document.getElementById('translation-result').innerText;
-      const targetLang = document.getElementById('trans-target-lang').value;
-
-      if (!text || text === "نتیجه ترجمه اینجا نمایش داده می‌شود..." || text.startsWith("در حال ترجمه") || text.startsWith("خطا")) {
-        alert("متنی برای خواندن وجود ندارد.");
-        return;
-      }
-
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = targetLang;
-        window.speechSynthesis.speak(utterance);
-      } else {
-        alert("مرورگر شما از قابلیت خواندن صوتی پشتیبانی نمی‌کند.");
-      }
     }
   </script>
 </body>
