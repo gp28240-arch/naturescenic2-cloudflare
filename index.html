@@ -273,8 +273,8 @@
 
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // پیش‌فرض همیشگی برای سیستم مهندسی پرامپت
-    const SYSTEM_PROMPT_PREFIX = "You are an expert Image Generation Prompt Engineer. Take the user's raw Persian text and expand it into a highly detailed, professional English prompt suitable for AI image generators (like Midjourney or DALL-E 3). Add necessary visual details such as lighting, camera angles, atmosphere, and textures while keeping the core meaning intact. Output ONLY the final English prompt ";
+    // پیش‌فرض سیستم مهندسی پرامپت جهت بهینه‌سازی عکس
+    const SYSTEM_PROMPT_PREFIX = "A highly detailed, professional, ultra-realistic 8k prompt for AI generation: ";
 
     function getAdminPassword() {
       return localStorage.getItem('app_admin_pass') || '1234';
@@ -536,7 +536,7 @@
       if (e.key === 'Enter') submitAIGeneration();
     }
 
-    // تابع اصلی ترجمه آنلاین متن فارسی به انگلیسی و الصاق دستورالعمل ثابت
+    // اصلاح کامل تابع ترجمه: ترجمه واقعی متن به انگلیسی و الصاق به پرامپت
     async function translateFaToEnPrompt() {
       const faText = document.getElementById('fa-prompt-input').value.trim();
       if (!faText) {
@@ -545,7 +545,7 @@
       }
 
       const enInput = document.getElementById('ai-prompt-input');
-      enInput.value = "در حال ترجمه آنلاین به انگلیسی...";
+      enInput.value = "در حال ترجمه متن به انگلیسی...";
 
       try {
         const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=fa&tl=en&dt=t&q=${encodeURIComponent(faText)}`;
@@ -559,14 +559,14 @@
           });
         }
 
-        // بررسی اینکه آیا ترجمه با موفقیت انجام شده یا خیر
         if (translatedText && translatedText.trim() !== "") {
+          // الصاق متن کاملاً انگلیسی به ابتدای پرامپت
           enInput.value = SYSTEM_PROMPT_PREFIX + translatedText.trim();
         } else {
           enInput.value = SYSTEM_PROMPT_PREFIX + faText;
         }
       } catch (e) {
-        console.warn("خطا در شبکه ترجمه، قرار دادن پیش‌فرض...");
+        console.warn("خطا در سیستم ترجمه آنلاین");
         enInput.value = SYSTEM_PROMPT_PREFIX + faText;
       }
     }
