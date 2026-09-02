@@ -1,211 +1,123 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>naturescenic2-ai | دستیار اختصاصی طبیعت</title>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; direction: rtl; text-align: right; }
-    body { background-color: #0f172a; color: #f8fafc; padding: 20px; direction: rtl; text-align: right; }
-
-    .main-header { display: flex; justify-content: space-between; align-items: center; background: #1e293b; padding: 15px 25px; border-radius: 12px; border: 1px solid #334155; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; direction: rtl; }
-    .header-brand { display: flex; align-items: center; gap: 15px; }
-    .site-logo { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 2px solid #38bdf8; }
-    .yt-logo-btn { display: flex; align-items: center; gap: 12px; background-color: #cc0000; color: #ffffff; padding: 10px 20px; border-radius: 10px; text-decoration: none; font-weight: bold; }
-    .header-titles h2 { color: #38bdf8; font-size: 1.5rem; text-align: right; }
-    .header-titles p { font-size: 0.95rem; color: #94a3b8; text-align: right; }
-
-    .control-panel { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; align-items: center; direction: rtl; }
-    .btn { font-weight: bold; background-color: #1e293b; color: #ffffff; padding: 10px 18px; border-radius: 8px; border: 2px solid #38bdf8; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
-    .btn:hover { background-color: #38bdf8; color: #0f172a; }
-    .btn-app { border-color: #10b981; color: #34d399; }
-
-    .btn-ai-gemini, .btn-chat-animated { 
-      border-color: #a855f7; 
-      background: linear-gradient(135deg, #7e22ce, #a855f7);
-      color: #ffffff; 
-      font-size: 1rem;
-      padding: 10px 18px;
-      border-radius: 8px;
-      cursor: pointer;
-      border: none;
-      font-weight: bold;
-    }
-
-    .media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; direction: rtl; }
-    .media-card { background: #1e293b; border-radius: 12px; overflow: hidden; border: 1px solid #334155; display: flex; flex-direction: column; text-align: right; }
-    .media-card img, .media-card video { width: 100%; height: 200px; object-fit: cover; }
-
-    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 15px; direction: rtl; }
-    .modal-content { background: #1e293b; padding: 20px; border-radius: 12px; border: 2px solid #38bdf8; width: 100%; max-width: 600px; display: flex; flex-direction: column; gap: 12px; direction: rtl; text-align: right; }
-    .modal-content input, .modal-content select, .modal-content textarea { padding: 10px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; width: 100%; font-size: 0.95rem; direction: rtl; text-align: right; }
-    .modal-content textarea { height: 90px; resize: vertical; }
-
-    .translation-output-container {
-      position: relative;
-      background: #0f172a;
-      border: 1px solid #334155;
-      border-radius: 8px;
-      padding: 12px;
-      min-height: 80px;
-      color: #38bdf8;
-      font-size: 1rem;
-      direction: rtl;
-      text-align: right;
-    }
-    .speaker-btn {
-      position: absolute;
-      bottom: 8px;
-      left: 8px;
-      background: #38bdf8;
-      color: #0f172a;
-      border: none;
-      border-radius: 50%;
-      width: 32px;
-      height: 32px;
-      cursor: pointer;
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .speaker-btn:hover { background: #0284c7; color: white; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مترجم همراه</title>
+    <style>
+        * { box-sizing: border-box; font-family: Tahoma, Arial, sans-serif; margin: 0; padding: 0; }
+        body { background-color: #f4f6f9; padding: 20px; direction: rtl; }
+        .container { max-width: 600px; margin: 0 auto; background: #ffffff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #333; margin-bottom: 20px; }
+        .lang-select { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; gap: 10px; }
+        select { flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #ccc; background: #fff; font-size: 14px; }
+        textarea { width: 100%; height: 120px; padding: 12px; border-radius: 8px; border: 1px solid #ccc; resize: none; font-size: 15px; margin-bottom: 10px; }
+        .btn-action { width: 100%; padding: 12px; background-color: #007bff; color: #fff; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; }
+        .btn-action:hover { background-color: #0056b3; }
+        .output-box { margin-top: 20px; padding: 15px; background: #eef2f7; border-radius: 8px; min-height: 100px; position: relative; direction: ltr; text-align: left; }
+        .speak-btn { position: absolute; bottom: 10px; right: 10px; background: #28a745; color: white; border: none; padding: 8px 12px; border-radius: 50px; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 14px; }
+        .speak-btn:hover { background: #218838; }
+    </style>
 </head>
-<body dir="rtl">
+<body>
 
-  <header class="main-header">
-    <div class="header-brand">
-      <img src="https://lh3.googleusercontent.com/d/1EZf35v8476qtDC_rTS_h-6-_zIq0RNTh" alt="logo" class="site-logo">
-      <div class="header-titles">
-        <h2>naturescenic2-ai</h2>
-        <p>طبیعت ایران</p>
-      </div>
+<div class="container">
+    <h2>مترجم هوشمند</h2>
+
+    <div class="lang-select">
+        <select id="sourceLang">
+            <option value="fa" selected>فارسی (Persian)</option>
+            <option value="auto">تشخیص خودکار (Auto)</option>
+            <option value="en">انگلیسی (English)</option>
+            <option value="ar">عربی (Arabic)</option>
+            <option value="tr">ترکی (Turkish)</option>
+            <option value="fr">فرانسوی (French)</option>
+            <option value="de">آلمانی (German)</option>
+            <option value="es">اسپانیایی (Spanish)</option>
+            <option value="it">ایتالیایی (Italian)</option>
+            <option value="ru">روسی (Russian)</option>
+            <option value="zh-CN">چینی (Chinese)</option>
+            <option value="ja">ژاپنی (Japanese)</option>
+            <option value="ko">کره‌ای (Korean)</option>
+            <option value="hi">هندی (Hindi)</option>
+        </select>
+
+        <span>➔</span>
+
+        <select id="targetLang">
+            <option value="en" selected>انگلیسی (English)</option>
+            <option value="fa">فارسی (Persian)</option>
+            <option value="ar">عربی (Arabic)</option>
+            <option value="tr">ترکی (Turkish)</option>
+            <option value="fr">فرانسوی (French)</option>
+            <option value="de">آلمانی (German)</option>
+            <option value="es">اسپانیایی (Spanish)</option>
+            <option value="it">ایتالیایی (Italian)</option>
+            <option value="ru">روسی (Russian)</option>
+            <option value="zh-CN">چینی (Chinese)</option>
+            <option value="ja">ژاپنی (Japanese)</option>
+            <option value="ko">کره‌ای (Korean)</option>
+            <option value="hi">هندی (Hindi)</option>
+        </select>
     </div>
-    <a href="https://youtube.com/@naturescenic2" target="_blank" class="yt-logo-btn">naturescenic2 @ YouTube</a>
-  </header>
 
-  <div class="control-panel">
-    <a href="https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/NatureScenic2-ai/app-release.apk" target="_blank" download class="btn btn-app">📲 دانلود اپلیکیشن</a>
-    <button class="btn-ai-gemini" onclick="openAIModal()">✨ ساخت عکس با GEMINI</button>
-    <button class="btn-chat-animated" onclick="openChatModal()">🌐 مترجم پیشرفته</button>
-  </div>
+    <textarea id="inputText" placeholder="متن را اینجا بنویسید..."></textarea>
+    <button class="btn-action" onclick="translateText()">ترجمه کن</button>
 
-  <div class="media-grid" id="media-grid"></div>
-
-  <!-- Modal Gemini -->
-  <div class="modal-overlay" id="ai-modal">
-    <div class="modal-content">
-      <h3 style="color:#a855f7; text-align:right;">✨ ساخت تصویر با GEMINI</h3>
-      <input type="text" id="ai-prompt-input" placeholder="توصیف تصویر به فارسی (مثال: یک رودخانه زیبا در جنگل)...">
-      <div id="ai-image-result" style="text-align:center; min-height:150px; background:#0f172a; border-radius:8px; padding:10px;">
-        <p style="color:#64748b; text-align:center;">تصویر اینجا ساخته می‌شود</p>
-      </div>
-      <div style="display:flex; gap:10px; justify-content:flex-end;">
-        <button class="btn" style="border-color:#ef4444; color:#ef4444;" onclick="closeAIModal()">بستن</button>
-        <button class="btn-ai-gemini" onclick="submitAIGeneration()">تولید عکس</button>
-      </div>
+    <div class="output-box">
+        <p id="translatedText">ترجمه در اینجا نمایش داده می‌شود...</p>
+        <button class="speak-btn" onclick="speakTranslation()">🔊 تلفظ</button>
     </div>
-  </div>
+</div>
 
-  <!-- Modal Translator -->
-  <div class="modal-overlay" id="chat-modal">
-    <div class="modal-content">
-      <h3 style="color:#38bdf8; text-align:right;">🌐 مترجم تمام زبان‌های دنیا</h3>
-      <textarea id="trans-text-input" placeholder="متن خود را اینجا بنویسید..."></textarea>
-      
-      <select id="trans-target-lang">
-        <option value="en" selected>انگلیسی (English)</option>
-        <option value="fa">فارسی (Persian)</option>
-        <option value="ar">عربی (Arabic)</option>
-        <option value="fr">فرانسوی (French)</option>
-        <option value="de">آلمانی (German)</option>
-        <option value="es">اسپانیایی (Spanish)</option>
-        <option value="tr">ترکی (Turkish)</option>
-        <option value="ru">روسی (Russian)</option>
-      </select>
+<script>
+    async function translateText() {
+        const text = document.getElementById('inputText').value.trim();
+        const sourceLang = document.getElementById('sourceLang').value;
+        const targetLang = document.getElementById('targetLang').value;
+        const outputElement = document.getElementById('translatedText');
 
-      <button class="btn" onclick="sendTranslationRequest()">ترجمه کن</button>
-
-      <div class="translation-output-container">
-        <div id="translation-result" style="text-align:right;">نتیجه ترجمه...</div>
-        <button class="speaker-btn" onclick="playTextToSpeech()" title="پخش صدا">🔊</button>
-      </div>
-
-      <button class="btn" style="border-color:#ef4444; color:#ef4444; align-self:flex-end;" onclick="closeChatModal()">بستن</button>
-    </div>
-  </div>
-
-  <script>
-    function openAIModal() { document.getElementById('ai-modal').style.display = 'flex'; }
-    function closeAIModal() { document.getElementById('ai-modal').style.display = 'none'; }
-    function openChatModal() { document.getElementById('chat-modal').style.display = 'flex'; }
-    function closeChatModal() { document.getElementById('chat-modal').style.display = 'none'; }
-
-    async function translateTextDirect(text, targetLangCode) {
-      if (!text || !text.trim()) return '';
-      try {
-        let sl = (targetLangCode === 'fa') ? 'en' : 'fa';
-        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sl}&tl=${targetLangCode}&dt=t&q=${encodeURIComponent(text.trim())}`;
-        const response = await fetch(url);
-        const data = await response.json();
-        let result = '';
-        if (data && data[0]) {
-          data[0].forEach(item => { if (item[0]) result += item[0]; });
+        if (!text) {
+            outputElement.innerText = "لطفاً متنی وارد کنید.";
+            return;
         }
-        return result || text;
-      } catch (e) {
-        return text;
-      }
+
+        outputElement.innerText = "در حال ترجمه...";
+
+        try {
+            const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
+            const response = await fetch(url);
+            const data = await response.json();
+
+            let resultText = "";
+            if (data && data[0]) {
+                data[0].forEach(item => {
+                    if (item[0]) resultText += item[0];
+                });
+            }
+            outputElement.innerText = resultText || "خطا در دریافت ترجمه.";
+        } catch (error) {
+            outputElement.innerText = "ارتباط با سرور برقرار نشد.";
+        }
     }
 
-    async function sendTranslationRequest() {
-      const input = document.getElementById('trans-text-input').value;
-      const targetLang = document.getElementById('trans-target-lang').value;
-      const resultDiv = document.getElementById('translation-result');
+    function speakTranslation() {
+        const text = document.getElementById('translatedText').innerText;
+        const targetLang = document.getElementById('targetLang').value;
 
-      if (!input.trim()) return;
-      resultDiv.innerText = "⏳ در حال ترجمه...";
-      
-      const translated = await translateTextDirect(input, targetLang);
-      resultDiv.innerText = translated;
+        if (!text || text === "ترجمه در اینجا نمایش داده می‌شود..." || text === "در حال ترجمه...") return;
+
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = targetLang === 'auto' ? 'en-US' : targetLang;
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        } else {
+            alert("قابلیت تلفظ صوتی پشتیبانی نمی‌شود.");
+        }
     }
+</script>
 
-    function playTextToSpeech() {
-      const text = document.getElementById('translation-result').innerText;
-      const lang = document.getElementById('trans-target-lang').value;
-
-      if (!text || text === "نتیجه ترجمه..." || text.includes("در حال ترجمه")) return;
-
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = (lang === 'fa') ? 'fa-IR' : (lang === 'en') ? 'en-US' : lang;
-      window.speechSynthesis.speak(utterance);
-    }
-
-    async function submitAIGeneration() {
-      const prompt = document.getElementById('ai-prompt-input').value;
-      const resDiv = document.getElementById('ai-image-result');
-
-      if (!prompt.trim()) return;
-      resDiv.innerHTML = '<p style="color:#a855f7; text-align:center;">⏳ در حال ترجمه توصیف و ساخت تصویر...</p>';
-
-      const englishPrompt = await translateTextDirect(prompt, 'en');
-      const seed = Math.floor(Math.random() * 999999);
-      const imgUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(englishPrompt)}?seed=${seed}&width=800&height=500&nologo=true`;
-
-      const img = new Image();
-      img.onload = () => {
-        resDiv.innerHTML = `<img src="${imgUrl}" style="width:100%; border-radius:8px;" alt="AI Image">`;
-      };
-      img.onerror = () => {
-        resDiv.innerHTML = '<p style="color:#ef4444; text-align:center;">خطا در ساخت تصویر.</p>';
-      };
-      img.src = imgUrl;
-    }
-  </script>
 </body>
 </html>
