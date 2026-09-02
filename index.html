@@ -166,7 +166,7 @@
     </div>
   </div>
 
-  <!-- Modal Translator با تمام کشورها و زبان‌های دنیا -->
+  <!-- Modal Translator -->
   <div class="modal-overlay" id="chat-modal">
     <div class="modal-content">
       <h3 id="modal-trans-title">🌐 مترجم پیشرفته تمام زبان‌های جهان</h3>
@@ -284,7 +284,6 @@
           <option value="he">اسرائیل - عبری (Hebrew)</option>
           <option value="hu">مجارستان - مجاری (Hungarian)</option>
           <option value="is">ایسلند - ایسلندی (Icelandic)</option>
-
           <option value="id">اندونزی - اندونزیایی (Indonesian)</option>
           <option value="ga">ایرلند - ایرلندی (Irish)</option>
           <option value="kk">قزاقستان - قزاقی (Kazakh)</option>
@@ -298,7 +297,6 @@
           <option value="ms">مالزی - مالایی (Malay)</option>
           <option value="ml">هند (مالایالام) - مالایالام (Malayalam)</option>
           <option value="mn">مغولستان - مغولی (Mongolian)</option>
-
           <option value="ne">نپال - نپالی (Nepali)</option>
           <option value="no">نروژ - نروژی (Norwegian)</option>
           <option value="ps">افغانستان - پشتو (Pashto)</option>
@@ -314,7 +312,6 @@
           <option value="sv">سوئد - سوئدی (Swedish)</option>
           <option value="tg">تاجیکستان - تاجیکی (Tajik)</option>
           <option value="ta">هند/سری‌لانکا - تامیل (Tamil)</option>
-
           <option value="th">تایلند - تایلندی (Thai)</option>
           <option value="uk">اوکراین - اوکراینی (Ukrainian)</option>
           <option value="uz">ازبکستان - ازبکی (Uzbek)</option>
@@ -632,21 +629,41 @@
     }
 
     async function submitAIGeneration() {
-      const promptText = document.getElementById('ai-prompt-input').value.trim();
-      if (!promptText) {
+      const userPrompt = document.getElementById('ai-prompt-input').value.trim();
+      if (!userPrompt) {
         alert("لطفاً توصیف تصویر را بنویسید.");
         return;
       }
 
       const resBox = document.getElementById('ai-image-result');
-      resBox.innerHTML = '<p style="color:#a855f7; font-weight:bold;">در حال ساخت تصویر با Gemini... لطفاً شکیبا باشید.</p>';
+      resBox.innerHTML = '<p style="color:#a855f7; font-weight:bold;">در حال ترجمه هوشمند و ساخت تصویر... لطفاً شکیبا باشید.</p>';
 
+      let translatedPrompt = userPrompt;
+
+      // 1. ترجمه اتوماتیک متن فارسی به انگلیسی
+      try {
+        const transUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q=${encodeURIComponent(userPrompt)}`;
+        const response = await fetch(transUrl);
+        if (response.ok) {
+          const data = await response.json();
+          if (data && data[0] && data[0][0] && data[0][0][0]) {
+            translatedPrompt = data[0][0][0];
+          }
+        }
+      } catch (e) {
+        console.warn("خطا در ترجمه هوشمند، از متن اصلی استفاده می‌شود.");
+      }
+
+      // 2. مهندسی پرامپت انگلیسی: افزودن کلمات کلیدی سبک، نورپردازی و کیفیت
+      const finalEnglishPrompt = `A highly detailed nature scene, professional photography, ultra-realistic 8k resolution, cinematic natural lighting, vibrant colors, landscape 16:9 ratio, showing: ${translatedPrompt}`;
+
+      // 3. ارسال پرامپت مهندسی‌شده انگلیسی به موتور تصویرساز
       const seed = Math.floor(Math.random() * 1000000);
-      const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(promptText)}?seed=${seed}&width=1280&height=720&nologo=true`;
+      const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalEnglishPrompt)}?seed=${seed}&width=1280&height=720&nologo=true`;
 
       const img = new Image();
       img.className = 'generated-img';
-      img.alt = promptText;
+      img.alt = userPrompt;
 
       img.onload = () => {
         resBox.innerHTML = '';
@@ -662,8 +679,8 @@
             id: 'ai_' + Date.now(),
             type: 'image',
             src: imageUrl,
-            titleFa: promptText,
-            titleEn: promptText
+            titleFa: userPrompt,
+            titleEn: translatedPrompt
           });
           renderMediaItems();
           closeAIModal();
@@ -700,7 +717,6 @@
 
       resBox.innerText = "در حال ترجمه... لطفاً منتظر بمانید.";
 
-      // روش اول: گوگل ترنسلیت مستقیم
       try {
         const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${source}&tl=${target}&dt=t&q=${encodeURIComponent(text)}`;
         const response = await fetch(url);
@@ -722,7 +738,6 @@
         console.warn("گوگل ترنسلیت مستقیم موفق نبود، استفاده از API جایگزین...");
       }
 
-      // روش دوم: API عمومی MyMemory به عنوان پشتیبان (FallBack)
       try {
         const srcPair = source === 'auto' ? 'autodetect' : source;
         const pair = `${srcPair}|${target}`;
