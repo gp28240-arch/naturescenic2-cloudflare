@@ -510,7 +510,7 @@
       if (e.key === 'Enter') submitAIGeneration();
     }
 
-    // تابع اصلاح‌شده برای ترجمه همزمان متن فارسی به انگلیسی و اضافه کردن پرامپت پیش‌فرض به کادر اصلی
+    // تابع ترجمه همزمان متن فارسی به انگلیسی و الصاق دستورالعمل ثابت به ابتدای متن
     async function translateFaToEnPrompt() {
       const faText = document.getElementById('fa-prompt-input').value.trim();
       if (!faText) {
@@ -519,28 +519,28 @@
       }
 
       const enInput = document.getElementById('ai-prompt-input');
-      enInput.value = "در حال ترجمه به انگلیسی...";
+      enInput.value = "در حال ترجمه...";
 
       try {
         const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=fa&tl=en&dt=t&q=${encodeURIComponent(faText)}`;
         const response = await fetch(url);
         const data = await response.json();
 
-        let translatedEnglishText = '';
+        let translatedText = '';
         if (data && data[0]) {
           data[0].forEach(item => {
-            if (item[0]) translatedEnglishText += item[0];
+            if (item[0]) translatedText += item[0];
           });
         }
 
-        if (translatedEnglishText.trim()) {
-          enInput.value = SYSTEM_PROMPT_PREFIX + translatedEnglishText.trim();
+        // افزودن مستقیم دستورالعمل ثابت پیش‌فرض به ابتدای متن ترجمه‌شده داخل کادر اصلی پرامپت
+        if (translatedText) {
+          enInput.value = SYSTEM_PROMPT_PREFIX + translatedText;
         } else {
           enInput.value = SYSTEM_PROMPT_PREFIX + faText;
         }
       } catch (e) {
-        console.error("خطا در ترجمه:", e);
-        alert("خطا در برقراری ارتباط با سرویس ترجمه. لطفاً اتصال اینترنت خود را بررسی کنید.");
+        console.warn("خطا در ترجمه همزمان، استفاده از خود متن...");
         enInput.value = SYSTEM_PROMPT_PREFIX + faText;
       }
     }
