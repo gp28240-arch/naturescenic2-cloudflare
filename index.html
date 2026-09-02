@@ -76,7 +76,6 @@
     .modal-content { background: #1e293b; padding: 25px; border-radius: 12px; border: 2px solid #a855f7; width: 95%; max-width: 800px; max-height: 90vh; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; direction: rtl; text-align: right; }
     .gemini-modal-content { border: 3px solid #c084fc; box-shadow: 0 0 35px rgba(168, 85, 247, 0.4); padding: 35px; }
     .gemini-modal-content h3 { font-size: 1.8rem; color: #c084fc; text-align: center; }
-    .gemini-modal-content input { font-size: 1.1rem; padding: 16px; border: 2px solid #a855f7; }
     .modal-content input, .modal-content select, .modal-content textarea { padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; width: 100%; font-size: 0.95rem; text-align: right; direction: rtl; }
     .modal-content textarea { height: 120px; resize: vertical; }
 
@@ -316,10 +315,37 @@
 
     let currentLang = 'fa';
 
+    // تمامی عکس‌های چشمه بلقیس چرام و طبیعت دیلگون
     let mediaItems = [
+      // عکس‌های چشمه بلقیس چرام
       { id: 'c1', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/1.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۱)', titleEn: 'Belqis Spring Choram (Photo 1)' },
       { id: 'c2', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/2.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۲)', titleEn: 'Belqis Spring Choram (Photo 2)' },
-      { id: 'd1', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/1.JPG', titleFa: 'طبیعت دیلگون (عکس ۱)', titleEn: 'Dilgun Nature (Photo 1)' }
+      { id: 'c3', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/3.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۳)', titleEn: 'Belqis Spring Choram (Photo 3)' },
+      { id: 'c4', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/4.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۴)', titleEn: 'Belqis Spring Choram (Photo 4)' },
+      { id: 'c5', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/5.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۵)', titleEn: 'Belqis Spring Choram (Photo 5)' },
+      { id: 'c6', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/6.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۶)', titleEn: 'Belqis Spring Choram (Photo 6)' },
+
+      // عکس‌های طبیعت دیلگون
+      { id: 'd1', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/1.JPG', titleFa: 'طبیعت دیلگون (عکس ۱)', titleEn: 'Dilgun Nature (Photo 1)' },
+      { id: 'd2', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/2.JPG', titleFa: 'طبیعت دیلگون (عکس ۲)', titleEn: 'Dilgun Nature (Photo 2)' },
+      { id: 'd3', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/3.JPG', titleFa: 'طبیعت دیلگون (عکس ۳)', titleEn: 'Dilgun Nature (Photo 3)' },
+      { id: 'd4', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/4.JPG', titleFa: 'طبیعت دیلگون (عکس ۴)', titleEn: 'Dilgun Nature (Photo 4)' },
+      { id: 'd5', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/5.JPG', titleFa: 'طبیعت دیلگون (عکس ۵)', titleEn: 'Dilgun Nature (Photo 5)' },
+      { id: 'd7', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/7.JPG', titleFa: 'طبیعت دیلگون (عکس ۷)', titleEn: 'Dilgun Nature (Photo 7)' },
+      { id: 'd8', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/8.JPG', titleFa: 'طبیعت دیلگون (عکس ۸)', titleEn: 'Dilgun Nature (Photo 8)' },
+      { id: 'd9', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/9.JPG', titleFa: 'طبیعت دیلگون (عکس ۹)', titleEn: 'Dilgun Nature (Photo 9)' },
+      { id: 'd10', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/10.JPG', titleFa: 'طبیعت دیلگون (عکس ۱۰)', titleEn: 'Dilgun Nature (Photo 10)' },
+      { id: 'd11', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/11.JPG', titleFa: 'طبیعت دیلگون (عکس ۱۱)', titleEn: 'Dilgun Nature (Photo 11)' },
+      { id: 'd12', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/12.JPG', titleFa: 'طبیعت دیلگون (عکس ۱۲)', titleEn: 'Dilgun Nature (Photo 12)' },
+      { id: 'd14', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/14.JPG', titleFa: 'طبیعت دیلگون (عکس ۱۴)', titleEn: 'Dilgun Nature (Photo 14)' },
+      { id: 'd15', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/15.JPG', titleFa: 'طبیعت دیلگون (عکس ۱۵)', titleEn: 'Dilgun Nature (Photo 15)' },
+      { id: 'd16', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/16.JPG', titleFa: 'طبیعت دیلگون (عکس ۱۶)', titleEn: 'Dilgun Nature (Photo 16)' },
+      { id: 'd17', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/17.JPG', titleFa: 'طبیعت دیلگون (عکس ۱۷)', titleEn: 'Dilgun Nature (Photo 17)' },
+      { id: 'd18', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/18.JPG', titleFa: 'طبیعت دیلگون (عکس ۱۸)', titleEn: 'Dilgun Nature (Photo 18)' },
+      { id: 'd20', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/20.JPG', titleFa: 'طبیعت دیلگون (عکس ۲۰)', titleEn: 'Dilgun Nature (Photo 20)' },
+      { id: 'd21', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/21.JPG', titleFa: 'طبیعت دیلگون (عکس ۲۱)', titleEn: 'Dilgun Nature (Photo 21)' },
+      { id: 'd23', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/23.JPG', titleFa: 'طبیعت دیلگون (عکس ۲۳)', titleEn: 'Dilgun Nature (Photo 23)' },
+      { id: 'd24', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/24.JPG', titleFa: 'طبیعت دیلگون (عکس ۲۴)', titleEn: 'Dilgun Nature (Photo 24)' }
     ];
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -510,7 +536,7 @@
       if (e.key === 'Enter') submitAIGeneration();
     }
 
-    // تابع ترجمه همزمان متن فارسی به انگلیسی و الصاق دستورالعمل ثابت به ابتدای متن
+    // تابع اصلی ترجمه آنلاین متن فارسی به انگلیسی و الصاق دستورالعمل ثابت
     async function translateFaToEnPrompt() {
       const faText = document.getElementById('fa-prompt-input').value.trim();
       if (!faText) {
@@ -519,7 +545,7 @@
       }
 
       const enInput = document.getElementById('ai-prompt-input');
-      enInput.value = "در حال ترجمه...";
+      enInput.value = "در حال ترجمه آنلاین به انگلیسی...";
 
       try {
         const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=fa&tl=en&dt=t&q=${encodeURIComponent(faText)}`;
@@ -533,14 +559,14 @@
           });
         }
 
-        // افزودن مستقیم دستورالعمل ثابت پیش‌فرض به ابتدای متن ترجمه‌شده داخل کادر اصلی پرامپت
-        if (translatedText) {
-          enInput.value = SYSTEM_PROMPT_PREFIX + translatedText;
+        // بررسی اینکه آیا ترجمه با موفقیت انجام شده یا خیر
+        if (translatedText && translatedText.trim() !== "") {
+          enInput.value = SYSTEM_PROMPT_PREFIX + translatedText.trim();
         } else {
           enInput.value = SYSTEM_PROMPT_PREFIX + faText;
         }
       } catch (e) {
-        console.warn("خطا در ترجمه همزمان، استفاده از خود متن...");
+        console.warn("خطا در شبکه ترجمه، قرار دادن پیش‌فرض...");
         enInput.value = SYSTEM_PROMPT_PREFIX + faText;
       }
     }
