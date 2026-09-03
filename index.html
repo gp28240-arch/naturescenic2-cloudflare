@@ -166,9 +166,9 @@
       <h3 id="modal-ai-title">✨ ساخت تصویر با هوش مصنوعی GEMINI ✨</h3>
       <p id="modal-ai-desc" style="font-size:1rem; color:#cbd5e1; text-align:center;">توصیف تصویر را بنویسید؛ سیستم هوشمند تصویر متناظر را تولید می‌کند:</p>
       
-      <!-- کادر ترجمه همزمان گوگل -->
+      <!-- کادر ترجمه همزمان -->
       <div class="ai-translator-box">
-        <span style="color:#38bdf8; font-weight:bold; font-size:0.9rem;">🌐 ترجمه همزمان فارسی به انگلیسی (گوگل ترنسلیت):</span>
+        <span style="color:#38bdf8; font-weight:bold; font-size:0.9rem;">🌐 ترجمه همزمان فارسی به انگلیسی:</span>
         <input type="text" id="fa-prompt-input" placeholder="متن توصیف فارسی را اینجا بنویسید..." style="border-color:#38bdf8;">
         <button class="btn-action btn-rename" style="background:#22c55e;" onclick="translateFaToEnPrompt()">🔄 ترجمه به انگلیسی و انتقال به کادر ساخت تصویر</button>
       </div>
@@ -202,7 +202,7 @@
           <option value="es">اسپانیا - اسپانیایی (Spanish)</option>
           <option value="it">ایتالیا - ایتالیایی (Italian)</option>
           <option value="ru">روسیه - روسی (Russian)</option>
-          <option value="zh-CN">چین - چینی (Chinese)</option>
+          <option value="zh">چین - چینی (Chinese)</option>
           <option value="ja">ژاپن - ژاپنی (Japanese)</option>
           <option value="ko">کره جنوبی - کره‌ای (Korean)</option>
           <option value="hi">هند - هندی (Hindi)</option>
@@ -273,7 +273,6 @@
 
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // پیش‌فرض سیستم مهندسی پرامپت جهت بهینه‌سازی عکس
     const SYSTEM_PROMPT_PREFIX = "A highly detailed, professional, ultra-realistic 8k prompt for AI generation: ";
 
     function getAdminPassword() {
@@ -315,9 +314,7 @@
 
     let currentLang = 'fa';
 
-    // تمامی عکس‌های چشمه بلقیس چرام و طبیعت دیلگون
     let mediaItems = [
-      // عکس‌های چشمه بلقیس چرام
       { id: 'c1', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/1.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۱)', titleEn: 'Belqis Spring Choram (Photo 1)' },
       { id: 'c2', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/2.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۲)', titleEn: 'Belqis Spring Choram (Photo 2)' },
       { id: 'c3', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/3.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۳)', titleEn: 'Belqis Spring Choram (Photo 3)' },
@@ -325,7 +322,6 @@
       { id: 'c5', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/5.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۵)', titleEn: 'Belqis Spring Choram (Photo 5)' },
       { id: 'c6', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/6.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۶)', titleEn: 'Belqis Spring Choram (Photo 6)' },
 
-      // عکس‌های طبیعت دیلگون
       { id: 'd1', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/1.JPG', titleFa: 'طبیعت دیلگون (عکس ۱)', titleEn: 'Dilgun Nature (Photo 1)' },
       { id: 'd2', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/2.JPG', titleFa: 'طبیعت دیلگون (عکس ۲)', titleEn: 'Dilgun Nature (Photo 2)' },
       { id: 'd3', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/3.JPG', titleFa: 'طبیعت دیلگون (عکس ۳)', titleEn: 'Dilgun Nature (Photo 3)' },
@@ -536,7 +532,42 @@
       if (e.key === 'Enter') submitAIGeneration();
     }
 
-    // اصلاح تابع ترجمه پرامپت با استفاده مستقیم از API گوگل بدون فینگلیش
+    // موتور اختصاصی و مقاوم ترجمه جهت عبور از مسدودی مرورگرها و CORS
+    async function fetchTranslation(text, sourceLang, targetLang) {
+      const src = sourceLang === 'auto' ? 'autodetect' : sourceLang;
+      
+      // تلاش اول: MyMemory Translate API
+      try {
+        const langPair = `${sourceLang === 'auto' ? 'fa' : sourceLang}|${targetLang}`;
+        const url1 = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${langPair}`;
+        const res1 = await fetch(url1);
+        const data1 = await res1.json();
+        if (data1 && data1.responseData && data1.responseData.translatedText) {
+          return data1.responseData.translatedText;
+        }
+      } catch (e) {
+        console.warn("MyMemory API failed, fallback to Proxy Google...");
+      }
+
+      // تلاش دوم: Google Translate via CORS Proxy
+      try {
+        const sl = sourceLang === 'auto' ? 'auto' : sourceLang;
+        const targetUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sl}&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
+        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
+        const res2 = await fetch(proxyUrl);
+        const data2 = await res2.json();
+        let translatedText = '';
+        if (data2 && data2[0]) {
+          data2[0].forEach(item => { if (item[0]) translatedText += item[0]; });
+        }
+        if (translatedText) return translatedText;
+      } catch (e) {
+        console.warn("Proxy Google failed.");
+      }
+
+      throw new Error("تأمین‌کننده‌های ترجمه در دسترس نیستند.");
+    }
+
     async function translateFaToEnPrompt() {
       const faText = document.getElementById('fa-prompt-input').value.trim();
       if (!faText) {
@@ -548,24 +579,9 @@
       enInput.value = "در حال ترجمه متن به انگلیسی...";
 
       try {
-        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=fa&tl=en&dt=t&q=${encodeURIComponent(faText)}`;
-        const response = await fetch(url);
-        const data = await response.json();
-
-        let translatedText = '';
-        if (data && data[0]) {
-          data[0].forEach(item => {
-            if (item[0]) translatedText += item[0];
-          });
-        }
-
-        if (translatedText && translatedText.trim() !== "") {
-          enInput.value = SYSTEM_PROMPT_PREFIX + translatedText.trim();
-        } else {
-          enInput.value = SYSTEM_PROMPT_PREFIX + faText;
-        }
+        const translated = await fetchTranslation(faText, 'fa', 'en');
+        enInput.value = SYSTEM_PROMPT_PREFIX + translated;
       } catch (e) {
-        console.warn("خطا در سیستم ترجمه آنلاین:", e);
         enInput.value = SYSTEM_PROMPT_PREFIX + faText;
       }
     }
@@ -626,7 +642,6 @@
       document.getElementById('chat-modal').style.display = 'none';
     }
 
-    // اصلاح تابع مترجم جهانی با استفاده مستقیم از API گوگل بدون فینگلیش
     async function sendTranslationRequest() {
       const text = document.getElementById('trans-text-input').value.trim();
       const source = document.getElementById('trans-source-lang').value;
@@ -641,27 +656,10 @@
       resBox.innerText = "در حال ترجمه... لطفاً منتظر بمانید.";
 
       try {
-        const sl = source === 'auto' ? 'auto' : source;
-        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sl}&tl=${target}&dt=t&q=${encodeURIComponent(text)}`;
-        const response = await fetch(url);
-        if (!response.ok) throw new Error("Google Translate Network Error");
-        const data = await response.json();
-
-        let translatedText = '';
-        if (data && data[0]) {
-          data[0].forEach(item => {
-            if (item[0]) translatedText += item[0];
-          });
-        }
-
-        if (translatedText) {
-          resBox.innerText = translatedText;
-        } else {
-          resBox.innerText = "ترجمه‌ای یافت نشد.";
-        }
+        const translatedText = await fetchTranslation(text, source, target);
+        resBox.innerText = translatedText;
       } catch (e) {
-        console.warn("خطا در سیستم ترجمه:", e);
-        resBox.innerText = "خطا در دریافت ترجمه. لطفاً اتصال اینترنت خود را بررسی کنید.";
+        resBox.innerText = "خطا در برقراری ارتباط با سرور ترجمه. لطفاً چند لحظه بعد مجدداً امتحان کنید.";
       }
     }
 
