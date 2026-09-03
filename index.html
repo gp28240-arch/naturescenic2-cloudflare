@@ -536,7 +536,7 @@
       if (e.key === 'Enter') submitAIGeneration();
     }
 
-    // اصلاح تابع ترجمه پرامپت جهت رفع اختلال هم‌زمانی متن فارسی و انگلیسی
+    // اصلاح تابع ترجمه پرامپت با استفاده مستقیم از API گوگل بدون فینگلیش
     async function translateFaToEnPrompt() {
       const faText = document.getElementById('fa-prompt-input').value.trim();
       if (!faText) {
@@ -548,13 +548,19 @@
       enInput.value = "در حال ترجمه متن به انگلیسی...";
 
       try {
-        const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(faText)}&langpair=fa|en`;
+        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=fa&tl=en&dt=t&q=${encodeURIComponent(faText)}`;
         const response = await fetch(url);
         const data = await response.json();
 
-        if (data && data.responseData && data.responseData.translatedText) {
-          const translatedText = data.responseData.translatedText.trim();
-          enInput.value = SYSTEM_PROMPT_PREFIX + translatedText;
+        let translatedText = '';
+        if (data && data[0]) {
+          data[0].forEach(item => {
+            if (item[0]) translatedText += item[0];
+          });
+        }
+
+        if (translatedText && translatedText.trim() !== "") {
+          enInput.value = SYSTEM_PROMPT_PREFIX + translatedText.trim();
         } else {
           enInput.value = SYSTEM_PROMPT_PREFIX + faText;
         }
@@ -620,7 +626,7 @@
       document.getElementById('chat-modal').style.display = 'none';
     }
 
-    // اصلاح تابع ترجمه عمومی بخش مترجم پیشرفته
+    // اصلاح تابع مترجم جهانی با استفاده مستقیم از API گوگل بدون فینگلیش
     async function sendTranslationRequest() {
       const text = document.getElementById('trans-text-input').value.trim();
       const source = document.getElementById('trans-source-lang').value;
@@ -635,14 +641,21 @@
       resBox.innerText = "در حال ترجمه... لطفاً منتظر بمانید.";
 
       try {
-        const langPair = (source === 'auto' ? 'autodetect' : source) + '|' + target;
-        const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${encodeURIComponent(langPair)}`;
+        const sl = source === 'auto' ? 'auto' : source;
+        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sl}&tl=${target}&dt=t&q=${encodeURIComponent(text)}`;
         const response = await fetch(url);
-        if (!response.ok) throw new Error("خطا در شبکه");
+        if (!response.ok) throw new Error("Google Translate Network Error");
         const data = await response.json();
 
-        if (data && data.responseData && data.responseData.translatedText) {
-          resBox.innerText = data.responseData.translatedText;
+        let translatedText = '';
+        if (data && data[0]) {
+          data[0].forEach(item => {
+            if (item[0]) translatedText += item[0];
+          });
+        }
+
+        if (translatedText) {
+          resBox.innerText = translatedText;
         } else {
           resBox.innerText = "ترجمه‌ای یافت نشد.";
         }
