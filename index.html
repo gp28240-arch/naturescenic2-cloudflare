@@ -1,69 +1,692 @@
-async function sendTranslationRequest() {
-  const text = document.getElementById('trans-text-input').value.trim();
-  const source = document.getElementById('trans-source-lang').value;
-  const target = document.getElementById('trans-target-lang').value;
-  const resBox = document.getElementById('translation-result');
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>naturescenic2-ai | دستیار اختصاصی طبیعت</title>
 
-  if (!text) {
-    alert("لطفاً متنی برای ترجمه وارد کنید.");
-    return;
-  }
+  <!-- کتابخانه رسمی Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  resBox.innerText = "در حال ترجمه... لطفاً منتظر بمانید.";
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #0f172a; color: #f8fafc; padding: 20px; direction: rtl; text-align: right; }
 
-  try {
-    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${source}&tl=${target}&dt=t&q=${encodeURIComponent(text)}`;
-    const response = await fetch(url);
-    if (!response.ok) throw new Error("خطا در شبکه");
-    const data = await response.json();
+    .main-header { display: flex; justify-content: space-between; align-items: center; background: #1e293b; padding: 15px 25px; border-radius: 12px; border: 1px solid #334155; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
+    .header-brand { display: flex; align-items: center; gap: 15px; }
+    .site-logo { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 2px solid #38bdf8; box-shadow: 0 0 12px rgba(56, 189, 248, 0.4); transition: transform 0.3s ease; }
+    .site-logo:hover { transform: scale(1.08); }
+    .yt-logo-btn { display: flex; align-items: center; gap: 12px; background-color: #cc0000; color: #ffffff; padding: 10px 20px; border-radius: 10px; text-decoration: none; font-weight: bold; box-shadow: 0 4px 12px rgba(204, 0, 0, 0.4); transition: all 0.3s ease; }
+    .yt-logo-btn:hover { background-color: #ff0000; transform: translateY(-2px); }
+    .yt-icon { width: 28px; height: 28px; fill: white; }
+    .header-titles { text-align: right; }
+    .header-titles h2 { color: #38bdf8; font-size: 1.5rem; }
+    .header-titles p { font-size: 0.95rem; color: #94a3b8; }
 
-    let translatedText = '';
-    if (data && data[0]) {
-      data[0].forEach(item => {
-        if (item[0]) translatedText += item[0];
+    .translate-section { background: #1e293b; padding: 12px 20px; border-radius: 10px; border: 2px solid #22c55e; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2); }
+    .translate-title { font-weight: bold; color: #4ade80; }
+
+    .control-panel { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; align-items: center; }
+    .btn { font-weight: bold; background-color: #1e293b; color: #ffffff; padding: 12px 20px; border-radius: 8px; border: 2px solid #38bdf8; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
+    .btn:hover { background-color: #38bdf8; color: #0f172a; }
+    .btn-lang { border-color: #f59e0b; color: #fbbf24; }
+    .btn-app { border-color: #10b981; color: #34d399; }
+    .btn-app:hover { background-color: #10b981; color: #0f172a; }
+
+    .btn-ai-gemini, .btn-chat-animated { 
+      border-color: #a855f7; 
+      background: linear-gradient(135deg, #7e22ce, #a855f7);
+      color: #ffffff; 
+      font-size: 1.1rem;
+      padding: 14px 24px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(168, 85, 247, 0.5);
+      animation: pulse 2s infinite;
+      cursor: pointer;
+    }
+    .btn-ai-gemini:hover, .btn-chat-animated:hover { background: linear-gradient(135deg, #9333ea, #c084fc); color: #ffffff; transform: scale(1.05); }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.7); }
+      70% { box-shadow: 0 0 0 15px rgba(168, 85, 247, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0); }
+    }
+
+    .btn-url { border-color: #eab308; color: #fef08a; }
+
+    .filter-menu { display: flex; gap: 10px; margin-bottom: 20px; background: #1e293b; padding: 10px; border-radius: 8px; border: 1px solid #334155; }
+    .filter-btn { background: #0f172a; color: #94a3b8; border: 1px solid #475569; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+    .filter-btn.active { background: #38bdf8; color: #0f172a; border-color: #38bdf8; }
+
+    .media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; }
+    .media-card { background: #1e293b; border-radius: 12px; overflow: hidden; border: 1px solid #334155; display: flex; flex-direction: column; box-shadow: 0 4px 15px rgba(0,0,0,0.4); position: relative; }
+    .media-card img, .media-card video, .media-card iframe { width: 100%; height: 240px; object-fit: cover; background-color: #0f172a; display: block; border: none; }
+    .media-card audio { width: 100%; margin-top: 20px; padding: 10px; }
+    .card-body { padding: 15px; display: flex; flex-direction: column; gap: 10px; flex-grow: 1; }
+    .card-title-fa { font-weight: bold; color: #f8fafc; font-size: 1rem; text-align: right; }
+    .card-title-en { font-size: 0.85rem; color: #94a3b8; direction: ltr; text-align: right; }
+    .rename-box { display: flex; gap: 5px; margin-top: auto; }
+    .rename-input { flex: 1; padding: 8px 10px; border-radius: 6px; border: 1px solid #475569; background: #0f172a; color: #fff; font-size: 0.85rem; text-align: right; }
+    .btn-action { padding: 8px 14px; border-radius: 6px; border: none; cursor: pointer; font-weight: bold; font-size: 0.85rem; }
+    .btn-rename { background-color: #0284c7; color: white; }
+    .btn-delete { background-color: #dc2626; color: white; width: 100%; margin-top: 5px; }
+    .btn-download { background-color: #22c55e; color: white; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 5px; margin-top: 5px; width: 100%; text-align: center; }
+
+    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+    .modal-content { background: #1e293b; padding: 25px; border-radius: 12px; border: 2px solid #a855f7; width: 95%; max-width: 800px; max-height: 90vh; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; direction: rtl; text-align: right; }
+    .gemini-modal-content { border: 3px solid #c084fc; box-shadow: 0 0 35px rgba(168, 85, 247, 0.4); padding: 35px; }
+    .gemini-modal-content h3 { font-size: 1.8rem; color: #c084fc; text-align: center; }
+    .modal-content input, .modal-content select, .modal-content textarea { padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; width: 100%; font-size: 0.95rem; text-align: right; direction: rtl; }
+    .modal-content textarea { height: 120px; resize: vertical; }
+
+    .lang-select-container { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .lang-select-container select { flex: 1; min-width: 140px; }
+
+    .translation-header { display: flex; justify-content: space-between; align-items: center; margin-top: 5px; }
+    .translation-result { min-height: 100px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 15px; color: #38bdf8; font-size: 1rem; line-height: 1.6; white-space: pre-wrap; position: relative; text-align: right; direction: rtl; }
+    .speaker-btn { background: #22c55e; color: white; border: none; border-radius: 50px; padding: 8px 16px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-weight: bold; font-size: 0.9rem; transition: background 0.2s; }
+    .speaker-btn:hover { background: #16a34a; }
+
+    .generated-img-container { width: 100%; min-height: 300px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #0f172a; border-radius: 8px; overflow: hidden; border: 1px solid #334155; padding: 10px; }
+    .generated-img { width: 100%; max-height: 500px; object-fit: contain; border-radius: 8px; }
+
+    .ai-translator-box {
+      background: #0f172a;
+      border: 1px solid #38bdf8;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="main-header">
+    <div class="header-brand">
+      <img src="https://lh3.googleusercontent.com/d/1EZf35v8476qtDC_rTS_h-6-_zIq0RNTh" alt="naturescenic2 logo" class="site-logo">
+      <div class="header-titles">
+        <h2>naturescenic2-ai</h2>
+        <p id="sub-header">طبیعت ایران</p>
+      </div>
+    </div>
+
+    <a href="https://youtube.com/@naturescenic2" target="_blank" class="yt-logo-btn">
+      <svg class="yt-icon" viewBox="0 0 24 24">
+        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+      </svg>
+      <span>naturescenic2 @ YouTube</span>
+    </a>
+  </header>
+
+  <div class="translate-section">
+    <span class="translate-title" id="lbl-quick-trans">🌐 مترجم سریع صفحه / Quick Translator:</span>
+    <div id="google_translate_element"></div>
+  </div>
+
+  <div class="control-panel">
+    <button class="btn btn-lang" id="toggle-lang-btn" onclick="toggleLanguage()">🌐 Switch to English / تغییر زبان</button>
+    
+    <a href="https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/NatureScenic2-ai/app-release.apk" class="btn btn-app" id="btn-download-app" onclick="handleAppButtonClick(event)">📲 دانلود اپلیکیشن / Download App</a>
+
+    <label class="btn" id="lbl-upload-img">
+      📷 آپلود عکس / Wallpaper
+      <input type="file" id="upload-image" accept="image/*" hidden onchange="handleFileUpload(event, 'image')">
+    </label>
+
+    <label class="btn" id="lbl-upload-video">
+      🎥 آپلود ویدیو / Video
+      <input type="file" id="upload-video" accept="video/*" hidden onchange="handleFileUpload(event, 'video')">
+    </label>
+
+    <label class="btn" id="lbl-upload-audio">
+      🎵 آپلود صدا / Audio
+      <input type="file" id="upload-audio" accept="audio/*" hidden onchange="handleFileUpload(event, 'audio')">
+    </label>
+
+    <button class="btn btn-url" id="btn-upload-url" onclick="openURLModal()">🌐 آپلود از لینک / Upload via URL</button>
+    <button class="btn-ai-gemini" id="btn-ai-img" onclick="openAIModal()">✨ ساخت عکس با هوش مصنوعی GEMINI ✨</button>
+    <button class="btn-chat-animated" id="btn-translate-menu" onclick="openChatModal()">🌐 ترجمه متن جهانی / Universal Translator</button>
+  </div>
+
+  <div class="filter-menu">
+    <button class="filter-btn active" id="filter-all" onclick="filterMedia('all', this)">همه / All</button>
+    <button class="filter-btn" id="filter-img" onclick="filterMedia('image', this)">🖼️ فقط عکس‌ها / Images Only</button>
+    <button class="filter-btn" id="filter-vid" onclick="filterMedia('video', this)">🎥 فقط ویدیوها / Videos Only</button>
+    <button class="filter-btn" id="filter-aud" onclick="filterMedia('audio', this)">🎵 فقط صداها / Audio Only</button>
+  </div>
+
+  <div class="media-grid" id="media-grid"></div>
+
+  <!-- Modal GEMINI -->
+  <div class="modal-overlay" id="ai-modal">
+    <div class="modal-content gemini-modal-content">
+      <h3 id="modal-ai-title">✨ ساخت تصویر با هوش مصنوعی GEMINI ✨</h3>
+      <p id="modal-ai-desc" style="font-size:1rem; color:#cbd5e1; text-align:center;">توصیف تصویر را بنویسید؛ سیستم هوشمند تصویر متناظر را تولید می‌کند:</p>
+      
+      <div class="ai-translator-box">
+        <span style="color:#38bdf8; font-weight:bold; font-size:0.9rem;">🌐 ترجمه همزمان فارسی به انگلیسی (گوگل ترنسلیت):</span>
+        <input type="text" id="fa-prompt-input" placeholder="متن توصیف فارسی را اینجا بنویسید..." style="border-color:#38bdf8;">
+        <button class="btn-action btn-rename" style="background:#22c55e;" onclick="translateFaToEnPrompt()">🔄 ترجمه به انگلیسی و انتقال به کادر ساخت تصویر</button>
+      </div>
+
+      <input type="text" id="ai-prompt-input" placeholder="متن انگلیسی پرامپت (English Prompt)..." onkeydown="handleAIKeyDown(event)" dir="ltr" style="text-align:left;">
+      
+      <div class="generated-img-container" id="ai-image-result">
+        <p style="color:#64748b; font-size:1.1rem;">تصویر ساخته شده توسط Gemini اینجا نمایش داده می‌شود</p>
+      </div>
+      <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap; margin-top:10px;">
+        <button class="btn-action btn-delete" style="width:auto; padding: 12px 24px; font-size:1rem;" onclick="closeAIModal()">بستن / Close</button>
+        <button class="btn-action btn-rename" style="background:#a855f7; padding: 12px 30px; font-size:1.1rem;" onclick="submitAIGeneration()">✨ تولید تصویر با Gemini</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Translator -->
+  <div class="modal-overlay" id="chat-modal">
+    <div class="modal-content">
+      <h3 id="modal-trans-title">🌐 مترجم پیشرفته تمام زبان‌های جهان</h3>
+      
+      <div class="lang-select-container">
+        <select id="trans-source-lang">
+          <option value="auto" selected>تشخیص خودکار (Auto Detect)</option>
+          <option value="fa">ایران - فارسی (Persian)</option>
+          <option value="en">امریکا/انگلیس - انگلیسی (English)</option>
+          <option value="ar">عربستان/عرب‌زبانان - عربی (Arabic)</option>
+          <option value="tr">ترکیه - ترکی (Turkish)</option>
+          <option value="fr">فرانسه - فرانسوی (French)</option>
+          <option value="de">آلمان - آلمانی (German)</option>
+          <option value="es">اسپانیا - اسپانیایی (Spanish)</option>
+          <option value="it">ایتالیا - ایتالیایی (Italian)</option>
+          <option value="ru">روسیه - روسی (Russian)</option>
+          <option value="zh-CN">چین - چینی (Chinese)</option>
+          <option value="ja">ژاپن - ژاپنی (Japanese)</option>
+          <option value="ko">کره جنوبی - کره‌ای (Korean)</option>
+          <option value="hi">هند - هندی (Hindi)</option>
+          <option value="ur">پاکستان - اردو (Urdu)</option>
+        </select>
+
+        <span style="font-weight:bold; color:#38bdf8;">➔</span>
+
+        <select id="trans-target-lang">
+          <option value="en" selected>امریکا/انگلیس - انگلیسی (English)</option>
+          <option value="fa">ایران - فارسی (Persian)</option>
+          <option value="ar">عربستان/عرب‌زبانان - عربی (Arabic)</option>
+          <option value="tr">ترکیه - ترکی (Turkish)</option>
+          <option value="fr">فرانسه - فرانسوی (French)</option>
+          <option value="de">آلمان - آلمانی (German)</option>
+          <option value="es">اسپانیا - اسپانیایی (Spanish)</option>
+        </select>
+      </div>
+
+      <textarea id="trans-text-input" placeholder="متن خود را اینجا بنویسید..."></textarea>
+
+      <button class="btn-action btn-rename" onclick="sendTranslationRequest()">ترجمه کن / Translate</button>
+      
+      <div class="translation-header">
+        <span style="color:#94a3b8; font-size:0.9rem;">نتیجه ترجمه:</span>
+        <button class="speaker-btn" onclick="playTextToSpeech()">🔊 تلفظ صوتی</button>
+      </div>
+
+      <div class="translation-result" id="translation-result">نتیجه ترجمه اینجا نمایش داده می‌شود...</div>
+      
+      <button class="btn-action btn-delete" style="width:auto; align-self:flex-end;" onclick="closeChatModal()">بستن / Close</button>
+    </div>
+  </div>
+
+  <!-- Modal URL -->
+  <div class="modal-overlay" id="url-modal">
+    <div class="modal-content">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3>🌐 آپلود مستقیم فایل از لینک اینترنتی</h3>
+        <button class="btn-action" style="background: #f59e0b; color: #000;" onclick="changeAdminPassword()">🔑 تغییر رمز عبور مدیر</button>
+      </div>
+      <input type="url" id="url-input" placeholder="لینک مستقیم تصویر، ویدیو یا یوتیوب">
+      <select id="url-type-select">
+        <option value="image">تصویر (Image)</option>
+        <option value="video">ویدیو (Video)</option>
+        <option value="audio">صدا (Audio)</option>
+      </select>
+      <input type="text" id="url-title-input" placeholder="عنوان فایل (به فارسی)...">
+      <div style="display:flex; gap:10px; justify-content:flex-end;">
+        <button class="btn-action btn-delete" style="width:auto; margin:0;" onclick="closeURLModal()">انصراف</button>
+        <button class="btn-action btn-rename" onclick="addURLMedia()">افزودن و نمایش</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({ pageLanguage: 'fa', layout: google.translate.TranslateElement.InlineLayout.SIMPLE }, 'google_translate_element');
+    }
+  </script>
+
+  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+  <script>
+    const SUPABASE_URL = "https://xvkbwsejloapnkjgrjde.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_PjBM2rAkc1U3WyrXhVfPCQ_5qrIs_da"; 
+    const BUCKET_NAME = "dilgon-image";
+
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const SYSTEM_PROMPT_PREFIX = "A highly detailed, professional, ultra-realistic 8k prompt for AI generation: ";
+
+    function getAdminPassword() {
+      return localStorage.getItem('app_admin_pass') || '1234';
+    }
+
+    function checkAdminAuth() {
+      const inputPass = prompt("لطفاً رمز عبور مدیر را وارد کنید:");
+      if (inputPass === getAdminPassword()) {
+        return true;
+      } else if (inputPass !== null) {
+        alert("رمز عبور اشتباه است! دسترسی امکان‌پذیر نیست.");
+      }
+      return false;
+    }
+
+    function changeAdminPassword() {
+      const currentPass = prompt("رمز عبور فعلی را وارد کنید:");
+      if (currentPass === getAdminPassword()) {
+        const newPass = prompt("رمز عبور جدید را وارد کنید:");
+        if (newPass && newPass.trim() !== "") {
+          localStorage.setItem('app_admin_pass', newPass.trim());
+          alert("رمز عبور با موفقیت تغییر یافت.");
+        } else {
+          alert("رمز عبور نمی‌تواند خالی باشد.");
+        }
+      } else if (currentPass !== null) {
+        alert("رمز عبور فعلی نادرست است!");
+      }
+    }
+
+    function handleAppButtonClick(e) {
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      if (isMobile) {
+        e.preventDefault();
+        window.open(window.location.href, '_blank');
+      }
+    }
+
+    let currentLang = 'fa';
+
+    let mediaItems = [
+      { id: 'c1', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/1.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۱)', titleEn: 'Belqis Spring Choram (Photo 1)' },
+      { id: 'c2', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/2.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۲)', titleEn: 'Belqis Spring Choram (Photo 2)' },
+      { id: 'c3', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/3.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۳)', titleEn: 'Belqis Spring Choram (Photo 3)' },
+      { id: 'c4', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/4.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۴)', titleEn: 'Belqis Spring Choram (Photo 4)' },
+      { id: 'c5', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/5.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۵)', titleEn: 'Belqis Spring Choram (Photo 5)' },
+      { id: 'c6', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/Photos-of-Belqis-Spring/6.JPG', titleFa: 'چشمه بلقیس چرام (عکس ۶)', titleEn: 'Belqis Spring Choram (Photo 6)' },
+
+      { id: 'd1', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/1.JPG', titleFa: 'طبیعت دیلگون (عکس ۱)', titleEn: 'Dilgun Nature (Photo 1)' },
+      { id: 'd2', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/2.JPG', titleFa: 'طبیعت دیلگون (عکس ۲)', titleEn: 'Dilgun Nature (Photo 2)' },
+      { id: 'd3', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/3.JPG', titleFa: 'طبیعت دیلگون (عکس ۳)', titleEn: 'Dilgun Nature (Photo 3)' },
+      { id: 'd4', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/4.JPG', titleFa: 'طبیعت دیلگون (عکس ۴)', titleEn: 'Dilgun Nature (Photo 4)' },
+      { id: 'd5', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/5.JPG', titleFa: 'طبیعت دیلگون (عکس ۵)', titleEn: 'Dilgun Nature (Photo 5)' },
+      { id: 'd7', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/7.JPG', titleFa: 'طبیعت دیلگون (عکس ۷)', titleEn: 'Dilgun Nature (Photo 7)' },
+      { id: 'd8', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/8.JPG', titleFa: 'طبیعت دیلگون (عکس ۸)', titleEn: 'Dilgun Nature (Photo 8)' },
+      { id: 'd9', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/9.JPG', titleFa: 'طبیعت دیلگون (عکس ۹)', titleEn: 'Dilgun Nature (Photo 9)' },
+      { id: 'd10', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/10.JPG', titleFa: 'طبیعت دیلگون (عکس ۱۰)', titleEn: 'Dilgun Nature (Photo 10)' },
+      { id: 'd11', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/11.JPG', titleFa: 'طبیعت دیلگون (عکس ۱۱)', titleEn: 'Dilgun Nature (Photo 11)' },
+      { id: 'd12', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/12.JPG', titleFa: 'طبیعت دیلگون (عکس ۱۲)', titleEn: 'Dilgun Nature (Photo 12)' },
+      { id: 'd14', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/14.JPG', titleFa: 'طبیعت دیلگون (عکس ۱۴)', titleEn: 'Dilgun Nature (Photo 14)' },
+      { id: 'd15', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/15.JPG', titleFa: 'طبیعت دیلگون (عکس ۱۵)', titleEn: 'Dilgun Nature (Photo 15)' },
+      { id: 'd16', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/16.JPG', titleFa: 'طبیعت دیلگون (عکس ۱۶)', titleEn: 'Dilgun Nature (Photo 16)' },
+      { id: 'd17', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/17.JPG', titleFa: 'طبیعت دیلگون (عکس ۱۷)', titleEn: 'Dilgun Nature (Photo 17)' },
+      { id: 'd18', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/18.JPG', titleFa: 'طبیعت دیلگون (عکس ۱۸)', titleEn: 'Dilgun Nature (Photo 18)' },
+      { id: 'd20', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/20.JPG', titleFa: 'طبیعت دیلگون (عکس ۲۰)', titleEn: 'Dilgun Nature (Photo 20)' },
+      { id: 'd21', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/21.JPG', titleFa: 'طبیعت دیلگون (عکس ۲۱)', titleEn: 'Dilgun Nature (Photo 21)' },
+      { id: 'd23', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/23.JPG', titleFa: 'طبیعت دیلگون (عکس ۲۳)', titleEn: 'Dilgun Nature (Photo 23)' },
+      { id: 'd24', type: 'image', src: 'https://xvkbwsejloapnkjgrjde.supabase.co/storage/v1/object/public/dilgon-image/24.JPG', titleFa: 'طبیعت دیلگون (عکس ۲۴)', titleEn: 'Dilgun Nature (Photo 24)' }
+    ];
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderMediaItems();
+    });
+
+    function getYoutubeEmbedUrl(url) {
+      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+      const match = url.match(regExp);
+      return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}` : null;
+    }
+
+    function renderMediaItems() {
+      const grid = document.getElementById('media-grid');
+      grid.innerHTML = '';
+
+      mediaItems.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'media-card';
+        card.setAttribute('data-type', item.type);
+        card.id = `card-${item.id}`;
+
+        let mediaTag = '';
+        const ytUrl = getYoutubeEmbedUrl(item.src);
+
+        if (ytUrl) {
+          mediaTag = `<iframe src="${ytUrl}" allowfullscreen></iframe>`;
+        } else if (item.type === 'video') {
+          mediaTag = `<video src="${item.src}" controls></video>`;
+        } else if (item.type === 'audio') {
+          mediaTag = `<audio src="${item.src}" controls></audio>`;
+        } else {
+          mediaTag = `<img src="${item.src}" alt="${item.titleFa}">`;
+        }
+
+        card.innerHTML = `
+          ${mediaTag}
+          <div class="card-body">
+            <div class="card-title-fa" id="title-fa-${item.id}">${item.titleFa}</div>
+            <div class="card-title-en" id="title-en-${item.id}">${item.titleEn}</div>
+            <a href="${item.src}" download target="_blank" class="btn-action btn-download">
+              📥 دانلود فایل / Download File
+            </a>
+            <div class="rename-box">
+              <input type="text" class="rename-input" id="input-${item.id}" placeholder="نام جدید / New Title">
+              <button class="btn-action btn-rename" onclick="renameItem('${item.id}')">تغییر / Change</button>
+            </div>
+            <button class="btn-action btn-delete" onclick="deleteItem('${item.id}')">حذف / Delete</button>
+          </div>
+        `;
+        grid.appendChild(card);
       });
     }
 
-    if (translatedText) {
-      resBox.innerText = translatedText;
-    } else {
-      resBox.innerText = "ترجمه‌ای یافت نشد.";
+    function filterMedia(type, btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const cards = document.querySelectorAll('.media-card');
+      cards.forEach(card => {
+        if (type === 'all' || card.getAttribute('data-type') === type) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
     }
-  } catch (e) {
-    console.error("خطای ترجمه:", e);
-    resBox.innerText = "خطا در دریافت ترجمه. ممکن است دسترسی اینترنت یا سرویس ترجمه محدود شده باشد.";
-  }
-}
 
-function playTextToSpeech() {
-  const text = document.getElementById('translation-result').innerText;
-  const targetLang = document.getElementById('trans-target-lang').value;
+    function renameItem(id) {
+      if (!checkAdminAuth()) return;
+      const input = document.getElementById(`input-${id}`);
+      const newTitle = input.value.trim();
+      if (!newTitle) {
+        alert("لطفاً عنوان جدید را وارد کنید.");
+        return;
+      }
+      const item = mediaItems.find(m => m.id === id);
+      if (item) {
+        item.titleFa = newTitle;
+        item.titleEn = newTitle;
+        document.getElementById(`title-fa-${id}`).innerText = newTitle;
+        document.getElementById(`title-en-${id}`).innerText = newTitle;
+        input.value = '';
+      }
+    }
 
-  if (!text || text === "نتیجه ترجمه اینجا نمایش داده می‌شود..." || text.startsWith("در حال ترجمه") || text.startsWith("خطا")) {
-    alert("متنی برای خواندن وجود ندارد.");
-    return;
-  }
+    function deleteItem(id) {
+      if (!checkAdminAuth()) return;
+      if (confirm("آیا از حذف این ایتم اطمینان دارید؟")) {
+        mediaItems = mediaItems.filter(m => m.id !== id);
+        const card = document.getElementById(`card-${id}`);
+        if (card) card.remove();
+      }
+    }
 
-  // ۱. اولویت اول: استفاده از سرویس صوتی گوگل (قابل اجرا در اپ موبایل و وب)
-  try {
-    const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=${targetLang}&client=tw-ob`;
-    const audio = new Audio(audioUrl);
-    audio.play().catch(() => {
-      // ۲. اولویت دوم: پشتیبان مرورگر در صورت مسدود شدن پخش خودکار
-      fallbackWebSpeech(text, targetLang);
-    });
-  } catch (e) {
-    fallbackWebSpeech(text, targetLang);
-  }
-}
+    async function handleFileUpload(event, type) {
+      if (!checkAdminAuth()) {
+        event.target.value = '';
+        return;
+      }
+      const file = event.target.files[0];
+      if (!file) return;
 
-function fallbackWebSpeech(text, lang) {
-  if ('speechSynthesis' in window) {
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = lang;
-    window.speechSynthesis.speak(utterance);
-  } else {
-    alert("قابلیت خواندن صوتی در این دستگاه یا مرورگر پشتیبانی نمی‌شود.");
-  }
-}
+      const fileName = `${Date.now()}_${file.name}`;
+      try {
+        const { data, error } = await supabaseClient.storage.from(BUCKET_NAME).upload(fileName, file);
+        if (error) throw error;
+
+        const { data: publicUrlData } = supabaseClient.storage.from(BUCKET_NAME).getPublicUrl(fileName);
+        const fileUrl = publicUrlData.publicUrl;
+
+        const newItem = {
+          id: 'u_' + Date.now(),
+          type: type,
+          src: fileUrl,
+          titleFa: file.name,
+          titleEn: file.name
+        };
+
+        mediaItems.unshift(newItem);
+        renderMediaItems();
+        alert("فایل با موفقیت آپلود شد.");
+      } catch (err) {
+        alert("خطا در آپلود فایل: " + err.message);
+      } finally {
+        event.target.value = '';
+      }
+    }
+
+    function openURLModal() {
+      if (!checkAdminAuth()) return;
+      document.getElementById('url-modal').style.display = 'flex';
+    }
+
+    function closeURLModal() {
+      document.getElementById('url-modal').style.display = 'none';
+    }
+
+    function addURLMedia() {
+      const url = document.getElementById('url-input').value.trim();
+      const type = document.getElementById('url-type-select').value;
+      const title = document.getElementById('url-title-input').value.trim() || 'فایل از لینک';
+
+      if (!url) {
+        alert("لطفاً آدرس لینک را وارد کنید.");
+        return;
+      }
+
+      const newItem = {
+        id: 'url_' + Date.now(),
+        type: type,
+        src: url,
+        titleFa: title,
+        titleEn: title
+      };
+
+      mediaItems.unshift(newItem);
+      renderMediaItems();
+      closeURLModal();
+
+      document.getElementById('url-input').value = '';
+      document.getElementById('url-title-input').value = '';
+    }
+
+    function toggleLanguage() {
+      currentLang = currentLang === 'fa' ? 'en' : 'fa';
+      const btn = document.getElementById('toggle-lang-btn');
+      if (currentLang === 'en') {
+        btn.innerText = "🌐 تغییر به فارسی / Switch to Persian";
+        document.body.style.direction = 'ltr';
+        document.body.style.textAlign = 'left';
+      } else {
+        btn.innerText = "🌐 Switch to English / تغییر زبان";
+        document.body.style.direction = 'rtl';
+        document.body.style.textAlign = 'right';
+      }
+    }
+
+    function openAIModal() {
+      document.getElementById('ai-modal').style.display = 'flex';
+    }
+
+    function closeAIModal() {
+      document.getElementById('ai-modal').style.display = 'none';
+    }
+
+    function handleAIKeyDown(e) {
+      if (e.key === 'Enter') submitAIGeneration();
+    }
+
+    async function translateFaToEnPrompt() {
+      const faText = document.getElementById('fa-prompt-input').value.trim();
+      if (!faText) {
+        alert("لطفاً ابتدا متن فارسی را وارد کنید.");
+        return;
+      }
+
+      const enInput = document.getElementById('ai-prompt-input');
+      enInput.value = "در حال ترجمه متن به انگلیسی...";
+
+      try {
+        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=fa&tl=en&dt=t&q=${encodeURIComponent(faText)}`;
+        const response = await fetch(url);
+        const data = await response.json();
+
+        let translatedText = '';
+        if (data && data[0]) {
+          data[0].forEach(item => {
+            if (item[0]) translatedText += item[0];
+          });
+        }
+
+        if (translatedText && translatedText.trim() !== "") {
+          enInput.value = SYSTEM_PROMPT_PREFIX + translatedText.trim();
+        } else {
+          enInput.value = SYSTEM_PROMPT_PREFIX + faText;
+        }
+      } catch (e) {
+        console.warn("خطا در سیستم ترجمه آنلاین");
+        enInput.value = SYSTEM_PROMPT_PREFIX + faText;
+      }
+    }
+
+    async function submitAIGeneration() {
+      const fullPrompt = document.getElementById('ai-prompt-input').value.trim();
+      if (!fullPrompt) {
+        alert("لطفاً توصیف تصویر را بنویسید.");
+        return;
+      }
+
+      const resBox = document.getElementById('ai-image-result');
+      resBox.innerHTML = '<p style="color:#a855f7; font-weight:bold;">در حال ساخت تصویر با Gemini... لطفاً شکیبا باشید.</p>';
+
+      const seed = Math.floor(Math.random() * 1000000);
+      const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(fullPrompt)}?seed=${seed}&width=1280&height=720&nologo=true`;
+
+      const img = new Image();
+      img.className = 'generated-img';
+      img.alt = fullPrompt;
+
+      img.onload = () => {
+        resBox.innerHTML = '';
+        resBox.appendChild(img);
+
+        const saveBtn = document.createElement('button');
+        saveBtn.className = 'btn-action btn-rename';
+        saveBtn.style.marginTop = '15px';
+        saveBtn.innerText = '➕ افزودن به گالری سایت';
+        saveBtn.onclick = () => {
+          if (!checkAdminAuth()) return;
+          mediaItems.unshift({
+            id: 'ai_' + Date.now(),
+            type: 'image',
+            src: imageUrl,
+            titleFa: fullPrompt,
+            titleEn: fullPrompt
+          });
+          renderMediaItems();
+          closeAIModal();
+          alert("تصویر ساخت هوش مصنوعی به گالری اضافه شد.");
+        };
+        resBox.appendChild(saveBtn);
+      };
+
+      img.onerror = () => {
+        resBox.innerHTML = '<p style="color:#dc2626; font-weight:bold;">خطا در دریافت تصویر از سرور هوش مصنوعی. لطفاً دوباره تلاش کنید.</p>';
+      };
+
+      img.src = imageUrl;
+    }
+
+    function openChatModal() {
+      document.getElementById('chat-modal').style.display = 'flex';
+    }
+
+    function closeChatModal() {
+      document.getElementById('chat-modal').style.display = 'none';
+    }
+
+    async function sendTranslationRequest() {
+      const text = document.getElementById('trans-text-input').value.trim();
+      const source = document.getElementById('trans-source-lang').value;
+      const target = document.getElementById('trans-target-lang').value;
+      const resBox = document.getElementById('translation-result');
+
+      if (!text) {
+        alert("لطفاً متنی برای ترجمه وارد کنید.");
+        return;
+      }
+
+      resBox.innerText = "در حال ترجمه... لطفاً منتظر بمانید.";
+
+      try {
+        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${source}&tl=${target}&dt=t&q=${encodeURIComponent(text)}`;
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("خطا در شبکه");
+        const data = await response.json();
+
+        let translatedText = '';
+        if (data && data[0]) {
+          data[0].forEach(item => {
+            if (item[0]) translatedText += item[0];
+          });
+        }
+
+        if (translatedText) {
+          resBox.innerText = translatedText;
+        } else {
+          resBox.innerText = "ترجمه‌ای یافت نشد.";
+        }
+      } catch (e) {
+        console.error("خطای ترجمه:", e);
+        resBox.innerText = "خطا در دریافت ترجمه. ممکن است دسترسی اینترنت یا سرویس ترجمه محدود شده باشد.";
+      }
+    }
+
+    function playTextToSpeech() {
+      const text = document.getElementById('translation-result').innerText;
+      const targetLang = document.getElementById('trans-target-lang').value;
+
+      if (!text || text === "نتیجه ترجمه اینجا نمایش داده می‌شود..." || text.startsWith("در حال ترجمه") || text.startsWith("خطا")) {
+        alert("متنی برای خواندن وجود ندارد.");
+        return;
+      }
+
+      try {
+        const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=${targetLang}&client=tw-ob`;
+        const audio = new Audio(audioUrl);
+        audio.play().catch(() => {
+          fallbackWebSpeech(text, targetLang);
+        });
+      } catch (e) {
+        fallbackWebSpeech(text, targetLang);
+      }
+    }
+
+    function fallbackWebSpeech(text, lang) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = lang;
+        window.speechSynthesis.speak(utterance);
+      } else {
+        alert("قابلیت خواندن صوتی در این دستگاه یا مرورگر پشتیبانی نمی‌شود.");
+      }
+    }
+  </script>
+</body>
+</html>
