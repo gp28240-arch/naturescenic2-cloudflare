@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -6,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>naturescenic2-ai | دستیار اختصاصی طبیعت</title>
 
-  <!-- کتابخانه رسمی Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
@@ -622,10 +620,6 @@
 <div class="media-grid" id="media-grid"></div>
 
 
-<!-- =========================
-     MODAL ساخت تصویر با FLUX
-========================= -->
-
 <div class="modal-overlay" id="ai-modal">
 
   <div class="modal-content gemini-modal-content">
@@ -640,9 +634,6 @@
     >
       توصیف تصویر را بنویسید؛ سیستم ابتدا آن را به انگلیسی ترجمه و سپس با مدل FLUX تصویر را تولید می‌کند:
     </p>
-
-
-    <!-- ترجمه اتوماتیک پرامپت -->
 
     <div class="ai-translator-box">
 
@@ -673,9 +664,6 @@
 
     </div>
 
-
-    <!-- پرامپت نهایی -->
-
     <input
       type="text"
       id="ai-prompt-input"
@@ -685,9 +673,6 @@
       style="text-align:left;"
     >
 
-
-    <!-- نتیجه تصویر -->
-
     <div
       class="generated-img-container"
       id="ai-image-result"
@@ -696,7 +681,6 @@
         تصویر ساخته شده توسط FLUX اینجا نمایش داده می‌شود
       </p>
     </div>
-
 
     <div
       style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap; margin-top:10px;"
@@ -724,10 +708,6 @@
   </div>
 </div>
 
-
-<!-- =========================
-     MODAL Translator
-========================= -->
 
 <div class="modal-overlay" id="chat-modal">
 
@@ -887,10 +867,6 @@
 </div>
 
 
-<!-- =========================
-     MODAL URL
-========================= -->
-
 <div class="modal-overlay" id="url-modal">
 
   <div class="modal-content">
@@ -982,13 +958,14 @@
     "dilgon-image";
 
   const supabaseClient =
-    supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
 
 
   /* =========================================================
-     مهم:
-     هیچ SYSTEM PROMPT PREFIX وجود ندارد.
-     پرامپت کاربر دقیقاً همان چیزی است که به مدل تصویرسازی می‌رود.
+     IMAGE MODEL
   ========================================================= */
 
   const IMAGE_MODEL = "flux";
@@ -1846,10 +1823,6 @@
         : sourceLang;
 
 
-    /* -----------------------------------------
-       تلاش اول: MyMemory
-    ----------------------------------------- */
-
     try {
 
       const langPair =
@@ -1886,10 +1859,6 @@
 
     }
 
-
-    /* -----------------------------------------
-       تلاش دوم: Google Translate Proxy
-    ----------------------------------------- */
 
     try {
 
@@ -1956,10 +1925,6 @@
 
   /* =========================================================
      ترجمه اتوماتیک پرامپت
-     
-     نکته مهم:
-     نتیجه ترجمه مستقیماً داخل کادر پرامپت قرار می‌گیرد.
-     هیچ عبارت اضافی به آن اضافه نمی‌شود.
   ========================================================= */
 
   async function translateFaToEnPrompt() {
@@ -2025,12 +1990,6 @@
     button.style.opacity = "0.6";
 
 
-    /*
-      Promise را ذخیره می‌کنیم تا اگر کاربر
-      سریعاً روی تولید تصویر زد، تابع تولید
-      بتواند منتظر پایان ترجمه بماند.
-    */
-
     promptTranslationPromise =
       fetchTranslation(
         faText,
@@ -2044,11 +2003,6 @@
       const translated =
         await promptTranslationPromise;
 
-
-      /*
-        فقط ترجمه خالص وارد کادر می‌شود.
-        هیچ prefix یا متن دیگری اضافه نمی‌شود.
-      */
 
       enInput.value =
         translated.trim();
@@ -2082,12 +2036,6 @@
         "❌ ترجمه انجام نشد. لطفاً دوباره تلاش کنید.";
 
 
-      /*
-        مهم:
-        در صورت شکست ترجمه، متن فارسی را
-        به عنوان پرامپت انگلیسی ارسال نمی‌کنیم.
-      */
-
       enInput.value = "";
 
 
@@ -2104,11 +2052,7 @@
 
 
   /* =========================================================
-     ساخت URL تصویر با FLUX
-     
-     پرامپت نهایی = دقیقاً متن داخل ai-prompt-input
-     
-     هیچ عبارت پیش‌فرضی اضافه نمی‌شود.
+     FLUX URL
   ========================================================= */
 
   function buildFluxImageUrl(finalPrompt) {
@@ -2167,11 +2111,6 @@
       );
 
 
-    /*
-      اگر ترجمه هنوز در حال انجام است،
-      حتماً صبر می‌کنیم.
-    */
-
     if (
       promptTranslationState === "loading" &&
       promptTranslationPromise
@@ -2198,12 +2137,6 @@
     let finalPrompt =
       promptInput.value.trim();
 
-
-    /*
-      اگر کاربر متن فارسی وارد کرده و ترجمه
-      هنوز انجام نشده، خودکار ترجمه می‌کنیم
-      و بعد تصویر می‌سازیم.
-    */
 
     if (
       faText &&
@@ -2234,10 +2167,6 @@
     }
 
 
-    /*
-      اگر هنوز پرامپت نداریم، متوقف شو.
-    */
-
     if (!finalPrompt) {
 
       alert(
@@ -2247,10 +2176,6 @@
       return;
     }
 
-
-    /*
-      جلوگیری از ارسال عبارت وضعیت ترجمه
-    */
 
     if (
       finalPrompt ===
@@ -2276,12 +2201,6 @@
         🎨 در حال ساخت تصویر با FLUX... لطفاً شکیبا باشید.
       </p>`;
 
-
-    /*
-      این متغیر دقیقاً همان پرامپت نهایی کاربر است.
-      
-      هیچ متن اضافه‌ای به آن متصل نمی‌شود.
-    */
 
     const imageUrl =
       buildFluxImageUrl(
@@ -2342,11 +2261,6 @@
           src:
             imageUrl,
 
-          /*
-            عنوان گالری نیز از همان
-            پرامپت واقعی استفاده می‌کند.
-          */
-
           titleFa:
             faText || finalPrompt,
 
@@ -2397,10 +2311,6 @@
         "1";
     };
 
-
-    /*
-      ارسال دقیقاً همین URL
-    */
 
     img.src =
       imageUrl;
@@ -2455,9 +2365,10 @@
 
 
     const resBox =
-      document.getElementById(
-        'translation-result'
-      );
+      document
+        .getElementById(
+          'translation-result'
+        );
 
 
     if (!text) {
@@ -2499,26 +2410,47 @@
 
   /* =========================================================
      TEXT TO SPEECH
-     این بخش دست‌کاری اساسی نشده است.
+     
+     نسخه اصلاح‌شده برای Android WebView
+     
+     روش اول:
+     استفاده از speechSynthesis
+     
+     روش دوم:
+     استفاده از Google TTS در صورت
+     در دسترس نبودن speechSynthesis
   ========================================================= */
+
+  let ttsAudio = null;
+
+  let ttsChunks = [];
+
+  let ttsChunkIndex = 0;
+
 
   function playTextToSpeech() {
 
+    const resultBox =
+      document.getElementById(
+        'translation-result'
+      );
+
+
     const text =
-      document
-        .getElementById(
-          'translation-result'
-        )
-        .innerText;
+      resultBox
+        ? resultBox.innerText.trim()
+        : "";
 
 
     const targetLang =
-      document
-        .getElementById(
-          'trans-target-lang'
-        )
-        .value;
+      document.getElementById(
+        'trans-target-lang'
+      ).value;
 
+
+    /* -----------------------------------------
+       بررسی متن
+    ----------------------------------------- */
 
     if (
       !text ||
@@ -2536,39 +2468,554 @@
     }
 
 
-    if (
-      'speechSynthesis' in window
-    ) {
+    /* -----------------------------------------
+       توقف صدای قبلی
+    ----------------------------------------- */
 
-      window.speechSynthesis.cancel();
+    try {
 
+      if (
+        window.speechSynthesis
+      ) {
 
-      const utterance =
-        new SpeechSynthesisUtterance(
-          text
-        );
+        window.speechSynthesis.cancel();
 
+      }
 
-      utterance.lang =
-        targetLang;
+    } catch (e) {
 
-
-      window.speechSynthesis.speak(
-        utterance
-      );
-
-
-    } else {
-
-      alert(
-        "مرورگر شما از قابلیت خواندن صوتی پشتیبانی نمی‌کند."
+      console.warn(
+        "speechSynthesis cancel failed:",
+        e
       );
 
     }
+
+
+    try {
+
+      if (ttsAudio) {
+
+        ttsAudio.pause();
+
+        ttsAudio.currentTime = 0;
+
+        ttsAudio = null;
+
+      }
+
+    } catch (e) {
+
+      console.warn(
+        "Previous TTS audio stop failed:",
+        e
+      );
+
+    }
+
+
+    /* -----------------------------------------
+       روش اول:
+       Web Speech API
+    ----------------------------------------- */
+
+    if (
+      'speechSynthesis' in window &&
+      typeof SpeechSynthesisUtterance !== 'undefined'
+    ) {
+
+      try {
+
+        const speakWithBrowser =
+          () => {
+
+            try {
+
+              window.speechSynthesis.cancel();
+
+
+              const utterance =
+                new SpeechSynthesisUtterance(
+                  text
+                );
+
+
+              utterance.lang =
+                targetLang || 'en';
+
+
+              utterance.rate =
+                0.9;
+
+
+              utterance.pitch =
+                1;
+
+
+              utterance.volume =
+                1;
+
+
+              utterance.onerror =
+                function () {
+
+                  console.warn(
+                    "Browser speech failed. Using Google TTS fallback."
+                  );
+
+
+                  playGoogleTTSFallback(
+                    text,
+                    targetLang
+                  );
+
+                };
+
+
+              window.speechSynthesis.speak(
+                utterance
+              );
+
+
+              return true;
+
+            } catch (e) {
+
+              console.warn(
+                "Browser speech failed:",
+                e
+              );
+
+              return false;
+
+            }
+
+          };
+
+
+        /*
+
+          Android WebView گاهی Voiceها را
+          کمی دیر آماده می‌کند.
+
+        */
+
+        if (
+          typeof speechSynthesis.getVoices ===
+          'function'
+        ) {
+
+          const voices =
+            speechSynthesis.getVoices();
+
+
+          if (
+            voices &&
+            voices.length > 0
+          ) {
+
+            const started =
+              speakWithBrowser();
+
+
+            if (started) return;
+
+          }
+
+
+          let finished = false;
+
+
+          const onVoicesChanged =
+            () => {
+
+              if (finished) return;
+
+              finished = true;
+
+
+              try {
+
+                speechSynthesis
+                  .removeEventListener(
+                    'voiceschanged',
+                    onVoicesChanged
+                  );
+
+              } catch (e) {}
+
+
+              const started =
+                speakWithBrowser();
+
+
+              if (!started) {
+
+                playGoogleTTSFallback(
+                  text,
+                  targetLang
+                );
+
+              }
+
+            };
+
+
+          try {
+
+            speechSynthesis
+              .addEventListener(
+                'voiceschanged',
+                onVoicesChanged
+              );
+
+          } catch (e) {}
+
+
+          setTimeout(
+            () => {
+
+              if (finished) return;
+
+              finished = true;
+
+
+              try {
+
+                speechSynthesis
+                  .removeEventListener(
+                    'voiceschanged',
+                    onVoicesChanged
+                  );
+
+              } catch (e) {}
+
+
+              const started =
+                speakWithBrowser();
+
+
+              if (!started) {
+
+                playGoogleTTSFallback(
+                  text,
+                  targetLang
+                );
+
+              }
+
+            },
+            700
+          );
+
+
+          return;
+
+        }
+
+
+        const started =
+          speakWithBrowser();
+
+
+        if (started) return;
+
+
+      } catch (e) {
+
+        console.warn(
+          "Web Speech API unavailable:",
+          e
+        );
+
+      }
+
+    }
+
+
+    /* -----------------------------------------
+       روش دوم:
+       Google TTS
+    ----------------------------------------- */
+
+    playGoogleTTSFallback(
+      text,
+      targetLang
+    );
+
+  }
+
+
+  /* =========================================================
+     GOOGLE TTS FALLBACK
+  ========================================================= */
+
+  function playGoogleTTSFallback(
+    text,
+    lang
+  ) {
+
+    ttsChunks =
+      splitTextForTTS(
+        text,
+        180
+      );
+
+
+    ttsChunkIndex = 0;
+
+
+    if (
+      !ttsChunks.length
+    ) {
+
+      alert(
+        "متنی برای پخش صوتی وجود ندارد."
+      );
+
+      return;
+    }
+
+
+    playNextTTSChunk(
+      lang || 'en'
+    );
+
+  }
+
+
+  /* =========================================================
+     تقسیم متن به بخش‌های کوچک‌تر
+  ========================================================= */
+
+  function splitTextForTTS(
+    text,
+    maxLength
+  ) {
+
+    const words =
+      text.split(/\s+/);
+
+
+    const chunks = [];
+
+    let current =
+      "";
+
+
+    words.forEach(
+      word => {
+
+        const test =
+          current
+            ? current + " " + word
+            : word;
+
+
+        if (
+          test.length <= maxLength
+        ) {
+
+          current = test;
+
+        } else {
+
+          if (current) {
+
+            chunks.push(
+              current
+            );
+
+          }
+
+          current = word;
+
+        }
+
+      }
+    );
+
+
+    if (current) {
+
+      chunks.push(
+        current
+      );
+
+    }
+
+
+    return chunks;
+
+  }
+
+
+  /* =========================================================
+     پخش بخش بعدی Google TTS
+  ========================================================= */
+
+  function playNextTTSChunk(
+    lang
+  ) {
+
+    if (
+      ttsChunkIndex >=
+      ttsChunks.length
+    ) {
+
+      ttsAudio = null;
+
+      return;
+
+    }
+
+
+    const chunk =
+      ttsChunks[
+        ttsChunkIndex
+      ];
+
+
+    const ttsUrl =
+      "https://translate.google.com/translate_tts" +
+      "?ie=UTF-8" +
+      "&client=tw-ob" +
+      "&tl=" +
+      encodeURIComponent(
+        lang || 'en'
+      ) +
+      "&q=" +
+      encodeURIComponent(
+        chunk
+      );
+
+
+    try {
+
+      if (ttsAudio) {
+
+        ttsAudio.pause();
+
+        ttsAudio = null;
+
+      }
+
+
+      ttsAudio =
+        new Audio(
+          ttsUrl
+        );
+
+
+      ttsAudio.preload =
+        "auto";
+
+
+      ttsAudio.onended =
+        function () {
+
+          ttsChunkIndex++;
+
+
+          playNextTTSChunk(
+            lang
+          );
+
+        };
+
+
+      ttsAudio.onerror =
+        function (e) {
+
+          console.error(
+            "Google TTS audio error:",
+            e
+          );
+
+
+          ttsAudio = null;
+
+
+          alert(
+            "پخش صوتی در APK انجام نشد. لطفاً اتصال اینترنت را بررسی کنید."
+          );
+
+        };
+
+
+      const playPromise =
+        ttsAudio.play();
+
+
+      if (
+        playPromise &&
+        typeof playPromise.catch ===
+        'function'
+      ) {
+
+        playPromise.catch(
+          function (error) {
+
+            console.error(
+              "Google TTS play failed:",
+              error
+            );
+
+
+            setTimeout(
+              function () {
+
+                if (!ttsAudio) return;
+
+
+                const retry =
+                  ttsAudio.play();
+
+
+                if (
+                  retry &&
+                  typeof retry.catch ===
+                  'function'
+                ) {
+
+                  retry.catch(
+                    function () {
+
+                      alert(
+                        "پخش صوتی در APK انجام نشد. لطفاً اتصال اینترنت را بررسی کنید."
+                      );
+
+                    }
+                  );
+
+                }
+
+              },
+              300
+            );
+
+          }
+        );
+
+      }
+
+    } catch (e) {
+
+      console.error(
+        "Google TTS exception:",
+        e
+      );
+
+
+      alert(
+        "امکان پخش صوتی وجود ندارد."
+      );
+
+    }
+
   }
 
 </script>
 
 </body>
 </html>
-```
